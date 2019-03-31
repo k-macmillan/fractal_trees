@@ -1,5 +1,11 @@
 # Fractals
 
+## Unit Tests
+
+Because some of the 3D graphics is enough over my head to get wrong and not even notice, there are
+unit tests in the `fractals/tests/` submodule. Run them by running the command `nosetests` from the
+repository root directory.
+
 ## Process
 
 I'm thinking a three-four part process to rendering the fractals.
