@@ -69,22 +69,47 @@ class TestTurtle3D(unittest.TestCase):
         t.forward()
         self.assertTrue(np.all(t.position == np.array([0, 0, 4])))
 
-    @unittest.skip('TODO: Write this test.')
     def test_pitch(self):
-        self.fail()
+        t = Turtle3D(step=self.step, angle=self.angle)
+        self.assertTrue(np.all(t.position == np.array([0, 0, 0])))
+        # The starting orientation should be the turtle facing straight up with
+        # its back towards the x axis.
+        self.assertEqual(t.orientation, Quaternion(axis=[0, 0, 1], angle=0))
 
-    @unittest.skip('TODO: Write this test.')
+        t.pitch()
+        # Should not move.
+        self.assertTrue(np.all(t.position == np.array([0, 0, 0])))
+        # Should be oriented in the x direction.
+        self.assertEqual(t.orientation, Quaternion(axis=[1, 0, 0], angle=0))
+
+        t.forward()
+        self.assertTrue(np.all(t.position == np.array([1, 0, 0])))
+
+        t.pitch(down=True)
+        self.assertTrue(np.all(t.position == np.array([1, 0, 0])))
+        self.assertEqual(t.orientation, Quaternion(axis=[0, 0, 1], angle=0))
+
+        t.forward()
+        self.assertTrue(np.all(t.position == np.array([1, 0, 1])))
+
+        t = Turtle3D(step=self.step, angle=self.angle)
+        t.pitch(down=True)
+        self.assertEqual(t.orientation, Quaternion(axis=[-1, 0, 0], angle=0))
+        t.forward()
+        self.assertTrue(np.all(t.position == np.array([-1, 0, 0])))
+
+    @unittest.skip("TODO: Write this test.")
     def test_yaw(self):
         self.fail()
 
-    @unittest.skip('TODO: Write this test.')
+    @unittest.skip("TODO: Write this test.")
     def test_roll(self):
         self.fail()
 
-    @unittest.skip('TODO: Write this test.')
+    @unittest.skip("TODO: Write this test.")
     def test_save(self):
         self.fail()
 
-    @unittest.skip('TODO: Write this test.')
+    @unittest.skip("TODO: Write this test.")
     def test_restore(self):
         self.fail()
