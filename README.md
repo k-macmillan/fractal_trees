@@ -43,7 +43,7 @@ Eventually the material will be used to set the material of the given cylinder.
 Then run
 
 ```shell
-blender test.blend
+blender data/test.blend
 ```
 
 to open the generated cylinders with Blender.
