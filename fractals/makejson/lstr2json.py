@@ -1,13 +1,13 @@
-import itertools
-import json
-import numpy as np
-
 from fractals.graphics import Turtle3D
 
-class Lstr2json:
-    """Apply production rules to strings."""
+import itertools
+import json
 
-    def __init__(self, string="", path='dat/output'):
+
+class Lstr2json:
+    """Build json file by moving turtle based on string input"""
+
+    def __init__(self, string="", path='data/output'):
         """Init class.
         """
         self.string = string
