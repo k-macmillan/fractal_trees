@@ -9,7 +9,7 @@ class Turtle3D:
         if isinstance(orientation, Quaternion):
             self.orientation = orientation
         elif orientation is None:
-            self.orientation = Quaternion(axis=[0, 0, 1], angle=0)
+            self.orientation = Quaternion(scalar=0, vector=[0, 0, 1])
         else:
             raise ValueError("Orientation must be a pyquaternion.Quaternion object.")
         if isinstance(position, (list, tuple, np.ndarray)) and len(position) == 3:

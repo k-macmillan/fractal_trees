@@ -12,7 +12,7 @@ class TestTurtle3D(unittest.TestCase):
 
     def setUp(self):
         self.start_position = np.array([0, 0, 0])
-        self.start_orientation = Quaternion(axis=[0, 0, 1], angle=0)
+        self.start_orientation = Quaternion(scalar=0, vector=[0, 0, 1])
 
         self.step = 1
         self.angle = np.radians(90)
