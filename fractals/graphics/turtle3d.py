@@ -58,10 +58,10 @@ class Turtle3D:
         :param down: bool, optional
         """
         if not down:
-            q = Quaternion(axis=[1, 0, 0], angle=self.angle)
+            q = Quaternion(axis=[0, 1, 0], angle=self.angle)
         else:
-            q = Quaternion(axis=[1, 0, 0], angle=-self.angle)
-        self.orientation = self.orientation.rotate(q)
+            q = Quaternion(axis=[0, 1, 0], angle=-self.angle)
+        self.orientation = q.rotate(self.orientation)
 
     def yaw(self, right=False):
         """Yaw the turtle left by the configured angle.
