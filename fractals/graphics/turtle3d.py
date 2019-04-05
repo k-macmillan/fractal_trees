@@ -44,9 +44,9 @@ class Turtle3D:
         :param cw: bool, optional
         """
         if cw:
-            q = Quaternion(axis=[0, 0, 1], angle = self.angle)
+            q = Quaternion(axis=[0, 0, 1], angle=self.angle)
         else:
-            q = Quaternion(axis=[0, 0, 1], angle = -self.angle)
+            q = Quaternion(axis=[0, 0, 1], angle=-self.angle)
         self.orientation = self.orientation.rotate(q)
 
     def pitch(self, down=False):
@@ -56,9 +56,9 @@ class Turtle3D:
         :param down: bool, optional
         """
         if not down:
-            q = Quaternion(axis=[1, 0, 0], angle = self.angle)
+            q = Quaternion(axis=[1, 0, 0], angle=self.angle)
         else:
-            q = Quaternion(axis=[1, 0, 0], angle = -self.angle)
+            q = Quaternion(axis=[1, 0, 0], angle=-self.angle)
         self.orientation = self.orientation.rotate(q)
 
     def yaw(self, right=False):
@@ -68,9 +68,9 @@ class Turtle3D:
         :param right: bool, optional
         """
         if right:
-            q = Quaternion(axis=[0, 1, 0], angle = self.angle)
+            q = Quaternion(axis=[0, 1, 0], angle=self.angle)
         else:
-            q = Quaternion(axis=[0, 1, 0], angle = -self.angle)
+            q = Quaternion(axis=[0, 1, 0], angle=-self.angle)
         self.orientation = self.orientation.rotate(q)
 
     def save(self):

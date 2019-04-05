@@ -1,3 +1,5 @@
+import json
+
 import numpy as np
 
 from .turtle3d import Turtle3D
@@ -9,8 +11,6 @@ class Graphics:
     Command strings are composed of the following symbols.
 
     F,G - Advance in the current direction one unit while drawing.
-    f,g - Advance in the current direction one unit without drawing.
-    TODO: What about `|` to reverse direction?
     <,> - Roll CCW or CW, respectively, by one unit.
     ^,v - Pitch up or down, respectively, by one unit.
     -,+ - Yaw left or right, respectively, by one unit.
@@ -30,7 +30,7 @@ class Graphics:
     TODO: Add 2D stdlib turtle mode?
     """
 
-    symbols = frozenset("FGfg-+<>^vcCrR[]")
+    symbols = frozenset("FG-+<>^vcCrR[]")
     unhandled = frozenset("<>^vcCrR[]")
 
     @staticmethod
@@ -89,29 +89,33 @@ class Graphics:
             length = 0
             start = self.turtle.position
             # Combine G and F?
-            if commands[i] == 'G':
-                while i < len(commands) and commands[i] == 'G':
+            if commands[i] == "G":
+                while i < len(commands) and commands[i] == "G":
                     # self.turtle.forward(commands[i])
                     # self.turtle.forward()
                     length += 1
                     i += 1
-            elif commands[i] == 'F':
-                while i < len(commands) and commands[i] == 'F':
+            elif commands[i] == "F":
+                while i < len(commands) and commands[i] == "F":
                     # self.turtle.forward(commands[i])
                     # self.turtle.forward()
                     length += 1
                     i += 1
-            elif commands[i] == '-':
+            elif commands[i] == "-":
                 self.turtle.yaw()
-            elif commands[i] == '+':
+            elif commands[i] == "+":
                 self.turtle.yaw(right=True)
 
             if length > 0:
                 end = self.turtle.position
-                data.append({'from': start.tolist(),
-                             'to': end.tolist(),
-                             'radius': self.radius * self.proportion,
-                             'material': self.material})
+                data.append(
+                    {
+                        "from": start.tolist(),
+                        "to": end.tolist(),
+                        "radius": self.radius * self.proportion,
+                        "material": self.material,
+                    }
+                )
             else:
                 i += 1
 
@@ -119,5 +123,5 @@ class Graphics:
 
     def dump(self, data, path):
         if len(data) > 0:
-            with open(path + '.json', 'w') as outfile:
+            with open(path + ".json", "w") as outfile:
                 json.dump(data, outfile)
