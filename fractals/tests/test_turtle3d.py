@@ -80,7 +80,7 @@ class TestTurtle3D(unittest.TestCase):
         # Should not move.
         self.assertTrue(np.all(t.position == np.array([0, 0, 0])))
         # Should be oriented in the x direction.
-        self.assertEqual(t.orientation, Quaternion(axis=[1, 0, 0], angle=0))
+        self.assertEqual(t.orientation, Quaternion(axis=[1, 0, 0], angle=np.pi / 2))
 
         t.forward()
         self.assertTrue(np.all(t.position == np.array([1, 0, 0])))

@@ -43,7 +43,11 @@ class Turtle3D:
         :param cw: Whether to roll CW instead, defaults to False
         :param cw: bool, optional
         """
-        raise NotImplementedError
+        if cw:
+            q = Quaternion(axis=[0, 0, 1], angle = self.angle)
+        else:
+            q = Quaternion(axis=[0, 0, 1], angle = -self.angle)
+        self.orientation = self.orientation.rotate(q)
 
     def pitch(self, down=False):
         """Pitch the turtle up by the configured angle.
@@ -51,7 +55,11 @@ class Turtle3D:
         :param down: Whether to pitch down instead, defaults to False
         :param down: bool, optional
         """
-        raise NotImplementedError
+        if not down:
+            q = Quaternion(axis=[1, 0, 0], angle = self.angle)
+        else:
+            q = Quaternion(axis=[1, 0, 0], angle = -self.angle)
+        self.orientation = self.orientation.rotate(q)
 
     def yaw(self, right=False):
         """Yaw the turtle left by the configured angle.
@@ -59,7 +67,11 @@ class Turtle3D:
         :param right: Whether to yaw right instead, defaults to False
         :param right: bool, optional
         """
-        raise NotImplementedError
+        if right:
+            q = Quaternion(axis=[0, 1, 0], angle = self.angle)
+        else:
+            q = Quaternion(axis=[0, 1, 0], angle = -self.angle)
+        self.orientation = self.orientation.rotate(q)
 
     def save(self):
         """Save the turtle's state on the stack."""
