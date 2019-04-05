@@ -72,6 +72,19 @@ class TestTurtle3D(unittest.TestCase):
         t.forward()
         self.assertArrayAlmostEqual(t.position, np.array([0, 0, 4]))
 
+    def test_forward_orientation(self):
+        # A unit vector pointing towards (1, 1, 1)
+        orientation = np.array([1 / np.sqrt(3), 1 / np.sqrt(3), 1 / np.sqrt(3)])
+        t = Turtle3D(
+            step=self.step, angle=self.angle, orientation=Quaternion(scalar=0, vector=orientation)
+        )
+        self.assertArrayAlmostEqual(t.position, np.array([0, 0, 0]))
+
+        t.forward()
+        self.assertArrayAlmostEqual(t.position, self.step * orientation)
+        t.forward()
+        self.assertArrayAlmostEqual(t.position, 2 * self.step * orientation)
+
     def test_pitch(self):
         t = Turtle3D(step=self.step, angle=self.angle)
         self.assertArrayAlmostEqual(t.position, np.array([0, 0, 0]))
