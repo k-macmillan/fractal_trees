@@ -82,5 +82,42 @@ class Graphics:
         :return: A list of cylinder dictionaries.
         """
         self.__validate(commands)
+        i = 0
+        data = []
 
-        return [{}]
+        while i < len(self.string):
+            length = 0
+            start = turtle.position
+            # Combine G and F?
+            if self.string[i] == 'G':
+                while self.string[i] == 'G':
+                    # self.turtle.forward(self.string[i])
+                    # self.turtle.forward()
+                    length += 1
+                    i += 1
+                end = self.turtle.position
+            elif self.string[i] == 'F':
+                while self.string[i] == 'F':
+                    # self.turtle.forward(self.string[i])
+                    # self.turtle.forward()
+                    length += 1
+                    i += 1
+            elif self.string[i] == '-':
+                self.turtle.yaw()
+            elif self.string[i] == '+':
+                self.turtle.yaw(right=True)
+
+            if length > 0:
+                data.append({'from': start.tolist(),
+                                  'to': end.tolist(),
+                                  'radius': self.radius * self.proportion,
+                                  'material': self.material})
+            else:
+                i += 1
+
+        return data
+
+    def dump(self, data, path):
+        if len(data) > 0:
+            with open(path + '.json', 'w') as outfile:
+                json.dump(data, outfile)
