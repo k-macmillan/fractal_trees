@@ -71,7 +71,7 @@ class Graphics:
         self.angle = np.radians(angle)
         self.material = material
         self.radius = radius if radius is not None else 0.2
-        self.proportion = proportion
+        self.proportion = 1.0
 
         self.turtle = Turtle3D(step=self.unit, angle=self.angle)
 
@@ -85,29 +85,29 @@ class Graphics:
         i = 0
         data = []
 
-        while i < len(self.string):
+        while i < len(commands):
             length = 0
-            start = turtle.position
+            start = self.turtle.position
             # Combine G and F?
-            if self.string[i] == 'G':
-                while self.string[i] == 'G':
-                    # self.turtle.forward(self.string[i])
+            if commands[i] == 'G':
+                while i < len(commands) and commands[i] == 'G':
+                    # self.turtle.forward(commands[i])
                     # self.turtle.forward()
                     length += 1
                     i += 1
-                end = self.turtle.position
-            elif self.string[i] == 'F':
-                while self.string[i] == 'F':
-                    # self.turtle.forward(self.string[i])
+            elif commands[i] == 'F':
+                while i < len(commands) and commands[i] == 'F':
+                    # self.turtle.forward(commands[i])
                     # self.turtle.forward()
                     length += 1
                     i += 1
-            elif self.string[i] == '-':
+            elif commands[i] == '-':
                 self.turtle.yaw()
-            elif self.string[i] == '+':
+            elif commands[i] == '+':
                 self.turtle.yaw(right=True)
 
             if length > 0:
+                end = self.turtle.position
                 data.append({'from': start.tolist(),
                              'to': end.tolist(),
                              'radius': self.radius * self.proportion,
