@@ -85,7 +85,7 @@ class TestTurtle3D(unittest.TestCase):
         t.forward()
         self.assertArrayAlmostEqual(t.position, 2 * self.step * orientation)
 
-    def test_pitch(self):
+    def test_pitch_up(self):
         t = Turtle3D(step=self.step, angle=self.angle)
         self.assertArrayAlmostEqual(t.position, np.array([0, 0, 0]))
         # The starting orientation should be the turtle facing in the z direction with
@@ -98,23 +98,42 @@ class TestTurtle3D(unittest.TestCase):
         # Should be oriented in the x direction.
         self.assertEqual(t.orientation, Quaternion(scalar=0, vector=[1, 0, 0]))
 
-        t.forward()
-        self.assertArrayAlmostEqual(t.position, np.array([1, 0, 0]))
+    def test_pitch_down(self):
+        t = Turtle3D(step=self.step, angle=self.angle)
+        self.assertArrayAlmostEqual(t.position, np.array([0, 0, 0]))
+        # The starting orientation should be the turtle facing in the z direction with
+        # its back towards the x axis.
+        self.assertEqual(t.orientation, self.start_orientation)
 
         t.pitch(down=True)
         # Should not move.
-        self.assertArrayAlmostEqual(t.position, np.array([1, 0, 0]))
-        # Should be be oriented back in the z direction.
+        self.assertArrayAlmostEqual(t.position, np.array([0, 0, 0]))
+        # Should be oriented in the x direction.
+        self.assertEqual(t.orientation, Quaternion(scalar=0, vector=[-1, 0, 0]))
+
+    def test_pitch_up_orientation(self):
+        # A unit vector pointing towards (0, 1, 1)
+        orientation = np.array([0, 1 / np.sqrt(2), 1 / np.sqrt(2)])
+        t = Turtle3D(
+            step=self.step, angle=np.pi / 4, orientation=Quaternion(scalar=0, vector=orientation)
+        )
+        t.pitch()
+        # Should not move.
+        self.assertArrayAlmostEqual(t.position, np.array([0, 0, 0]))
+        # Should be oriented in the z direction.
         self.assertEqual(t.orientation, Quaternion(scalar=0, vector=[0, 0, 1]))
 
-        t.forward()
-        self.assertArrayAlmostEqual(t.position, np.array([1, 0, 1]))
-
-        t = Turtle3D(step=self.step, angle=self.angle)
+    def test_pitch_down_orientation(self):
+        # A unit vector pointing towards (0, 1, 1)
+        orientation = np.array([0, 1 / np.sqrt(2), 1 / np.sqrt(2)])
+        t = Turtle3D(
+            step=self.step, angle=np.pi / 4, orientation=Quaternion(scalar=0, vector=orientation)
+        )
         t.pitch(down=True)
-        self.assertEqual(t.orientation, Quaternion(scalar=0, vector=[-1, 0, 0]))
-        t.forward()
-        self.assertArrayAlmostEqual(t.position, np.array([-1, 0, 0]))
+        # Should not move.
+        self.assertArrayAlmostEqual(t.position, np.array([0, 0, 0]))
+        # Should be oriented in the y direction.
+        self.assertEqual(t.orientation, Quaternion(scalar=0, vector=[0, 1, 0]))
 
     @unittest.skip("TODO: Write this test.")
     def test_yaw(self):
