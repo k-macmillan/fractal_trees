@@ -32,10 +32,12 @@ class Turtle3D:
         self.position = None
         self.orientation = None
         self.__init_position(position, orientation)
+        self.initial_direction = self.orientation.get_axis(undefined=[0, 0, 1])
 
     def forward(self):
         """Advance the turtle forward one step."""
-        raise NotImplementedError
+        direction = self.orientation.rotate(self.initial_direction)
+        self.position = self.position + self.step * direction
 
     def roll(self, cw=False):
         """Roll the turtle CCW by the configured angle.
