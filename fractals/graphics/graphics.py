@@ -109,9 +109,9 @@ class Graphics:
 
             if length > 0:
                 data.append({'from': start.tolist(),
-                                  'to': end.tolist(),
-                                  'radius': self.radius * self.proportion,
-                                  'material': self.material})
+                             'to': end.tolist(),
+                             'radius': self.radius * self.proportion,
+                             'material': self.material})
             else:
                 i += 1
 
