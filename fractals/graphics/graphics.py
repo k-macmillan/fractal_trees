@@ -1,8 +1,6 @@
 import json
 
-import numpy as np
-
-from fractals.turtle import Turtle
+from .turtle import Turtle
 
 
 class Graphics:
