@@ -33,6 +33,8 @@ class Graphics:
     symbols = frozenset("FG-+<>^vcCrR[]")
     unhandled = frozenset("<>^vcCrR[]")
 
+    SYMBOLS = {'F' : 0.5, 'G' : 1.0, '-' : 0, '+' : 0}
+
     @staticmethod
     def __check_args(radius, proportion):
         if radius is not None and proportion is not None:
@@ -69,6 +71,8 @@ class Graphics:
 
         self.unit = unit
         self.angle = angle
+        self.SYMBOLS['-'] = -angle
+        self.SYMBOLS['+'] = angle
         self.material = material
         self.radius = radius if radius is not None else 0.2
         self.proportion = 1.0
@@ -92,19 +96,19 @@ class Graphics:
             if commands[i] == "G":
                 while i < len(commands) and commands[i] == "G":
                     # self.turtle.forward(commands[i])
-                    self.turtle.move(self.unit)
+                    self.turtle.move(self.SYMBOLS[commands[i]])
                     length += 1
                     i += 1
             elif commands[i] == "F":
                 while i < len(commands) and commands[i] == "F":
                     # self.turtle.forward(commands[i])
-                    self.turtle.move(self.unit)
+                    self.turtle.move(self.SYMBOLS[commands[i]])
                     length += 1
                     i += 1
             elif commands[i] == "-":
-                self.turtle.yaw(-self.angle)
+                self.turtle.yaw(self.SYMBOLS[commands[i]])
             elif commands[i] == "+":
-                self.turtle.yaw(self.angle)
+                self.turtle.yaw(self.SYMBOLS[commands[i]])
 
             if length > 0:
                 end = self.turtle.position
