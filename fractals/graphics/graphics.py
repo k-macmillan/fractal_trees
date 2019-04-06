@@ -86,7 +86,11 @@ class Graphics:
             while command in ("G", "F"):
                 self.mappings[command]()
                 length += self.unit
-                command = next(commands)
+                try:
+                    command = next(commands)
+                except StopIteration:
+                    # We've consumed the last command.
+                    break
             end = self.turtle.position
 
             if length > 0:
@@ -102,7 +106,7 @@ class Graphics:
                     }
                 )
 
-            if command in self.mappings:
+            if command in self.mappings and command not in ("G", "F"):
                 self.mappings[command]()
 
         return cylinders
