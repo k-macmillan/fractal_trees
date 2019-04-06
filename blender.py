@@ -75,8 +75,8 @@ def main(args):
     )
     print("Drawing the cylinders.")
     cylinders = graphics.draw(lstring)
-    print("Saving", len(cylinders), "cylinders to '" + basename + ".json'")
-    graphics.dump(cylinders, basename)
+    print("Saving", len(cylinders), "cylinders to '" + basename + "-cylinders.json'")
+    graphics.dump(cylinders, basename + "-cylinders")
 
     print("Adding cylinders to Blender scene.")
     bpy.ops.wm.read_factory_settings(use_empty=True)
