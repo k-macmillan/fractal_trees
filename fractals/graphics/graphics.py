@@ -60,7 +60,6 @@ class Graphics:
         self.mappings = {
             # Bind the distance and angle parameters to the turtle methods.
             "F": partial(self.turtle.move, unit),
-            # TODO: Should 'G' be longer than 'F'?
             "G": partial(self.turtle.move, unit),
             "-": partial(self.turtle.yaw, -angle),
             "+": partial(self.turtle.yaw, +angle),
@@ -78,26 +77,23 @@ class Graphics:
         :param commands: A string of successive graphics commands.
         :return: A list of cylinder dictionaries.
         """
-        i = 0
-        data = []
-
-        while i < len(commands):
+        cylinders = []
+        commands = iter(commands)
+        for command in commands:
             length = 0
             start = self.turtle.position
-            if commands[i] == "G" or commands[i] == "F":
-                while i < len(commands) and (commands[i] == "G" or commands[i] == "F"):
-                    self.mappings[commands[i]]()
-                    length += self.unit
-                    i += 1
-            elif commands[i] in self.mappings:
-                self.mappings[commands[i]]()
+            # Consume consecutive forward commands.
+            while command in ("G", "F"):
+                self.mappings[command]()
+                length += self.unit
+                command = next(commands)
+            end = self.turtle.position
 
             if length > 0:
-                end = self.turtle.position
                 if self.proportion is not None:
                     self.radius = self.proportion * length
 
-                data.append(
+                cylinders.append(
                     {
                         "from": start,
                         "to": end,
@@ -105,10 +101,11 @@ class Graphics:
                         "material": "Branch" if length > 1 else "Leaf",
                     }
                 )
-            else:
-                i += 1
 
-        return data
+            if command in self.mappings:
+                self.mappings[command]()
+
+        return cylinders
 
     @staticmethod
     def dump(data, path):
