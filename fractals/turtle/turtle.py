@@ -1,7 +1,16 @@
+import sys
+
 import numpy as np
 
 import bpy
 from mathutils import Matrix, Vector
+
+
+def matmul(left, right):
+    if sys.version_info[0] == 3 and sys.version_info[1] >= 6:
+        return left @ right
+    else:
+        return left * right
 
 
 class Turtle:
@@ -14,7 +23,7 @@ class Turtle:
         self.stack = []
         # rotate such that heading is in +Z (we want to grow upwards in blender)
         # we thus have heading = +Z, left = -Y, up = +X
-        self.mat.__imatmul__(Matrix.Rotation(3 * np.pi / 2, 4, "Y"))
+        self.mat = matmul(self.mat, Matrix.Rotation(3 * np.pi / 2, 4, "Y"))
 
     @property
     def position(self):
@@ -31,17 +40,17 @@ class Turtle:
 
     def move(self, stepsize):
         """Move turtle in its heading direction."""
-        vec = self.mat.__matmul__(Vector((stepsize, 0, 0, 0)))
+        vec = matmul(self.mat, Vector((stepsize, 0, 0, 0)))
         self.mat.col[3] += vec
 
     def yaw(self, angle):
-        self.mat.__imatmul__(Matrix.Rotation(angle, 4, "Z"))
+        self.mat = matmul(self.mat, Matrix.Rotation(angle, 4, "Z"))
 
     def pitch(self, angle):
-        self.mat.__imatmul__(Matrix.Rotation(angle, 4, "Y"))
+        self.mat = matmul(self.mat, Matrix.Rotation(angle, 4, "Y"))
 
     def roll(self, angle):
-        self.mat.__imatmul__(Matrix.Rotation(angle, 4, "X"))
+        self.mat = matmul(self.mat, Matrix.Rotation(angle, 4, "X"))
 
     def look_at(self, target):
         """
