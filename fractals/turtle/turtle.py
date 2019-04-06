@@ -14,7 +14,7 @@ class Turtle:
         self.stack = []
         # rotate such that heading is in +Z (we want to grow upwards in blender)
         # we thus have heading = +Z, left = -Y, up = +X
-        self.mat @= Matrix.Rotation(3 * np.pi / 2, 4, "Y")
+        self.mat.__imatmul__(Matrix.Rotation(3 * np.pi / 2, 4, "Y"))
 
     @property
     def position(self):
@@ -31,17 +31,17 @@ class Turtle:
 
     def move(self, stepsize):
         """Move turtle in its heading direction."""
-        vec = self.mat @ Vector((stepsize, 0, 0, 0))
+        vec = self.mat.__matmul__(Vector((stepsize, 0, 0, 0)))
         self.mat.col[3] += vec
 
     def yaw(self, angle):
-        self.mat @= Matrix.Rotation(angle, 4, "Z")
+        self.mat.__imatmul__(Matrix.Rotation(angle, 4, "Z"))
 
     def pitch(self, angle):
-        self.mat @= Matrix.Rotation(angle, 4, "Y")
+        self.mat.__imatmul__(Matrix.Rotation(angle, 4, "Y"))
 
     def roll(self, angle):
-        self.mat @= Matrix.Rotation(angle, 4, "X")
+        self.mat.__imatmul__(Matrix.Rotation(angle, 4, "X"))
 
     def look_at(self, target):
         """

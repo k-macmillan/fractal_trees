@@ -44,10 +44,10 @@ class Graphics:
 
         for command in commands:
             if command not in Graphics.symbols:
-                raise ValueError(f"Unknown command: '{command}'.")
+                raise ValueError("Unknown command: '{}'.".format(command))
             # TODO: This is temporary, until we figure out how to handle these.
             if command in Graphics.unhandled:
-                raise NotImplementedError(f"Command: '{command}' not yet implemented.")
+                raise NotImplementedError("Command: '{}' not yet implemented.".format(command))
 
         if self.proportion is not None and ("r" in commands or "R" in commands):
             raise ValueError("Cannot modify cylinder radius in proportional mode.")
