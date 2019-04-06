@@ -1,13 +1,14 @@
 import argparse
+import itertools
 import json
 import sys
 
 import numpy as np
 
 import bpy
-from mathutils import Vector
-
+from fractals.grammar import Grammar
 from fractals.graphics import Graphics
+from mathutils import Vector
 
 
 def draw(cylinder):
@@ -36,7 +37,7 @@ def draw(cylinder):
 def parse_args(argv):
     parser = argparse.ArgumentParser(description="Draw a collection of cylinders on Blender.")
 
-    parser.add_argument("lstring", type=str, help="The lstring to draw and render.")
+    # parser.add_argument("lstring", type=str, help="The lstring to draw and render.")
 
     return parser.parse_args(argv)
 
@@ -47,15 +48,33 @@ def parse_json(filename):
 
 
 def main(args):
-    g = Graphics(unit=2, angle=np.pi / 4)
-    cyls = g.draw(args.lstring)
-    g.dump(cyls, "data/lstring")
+    # TODO: Read in the config from a json file.
+    config = {
+        "unit": 2,
+        "angle": np.pi / 4,
+        "axiom": "F",
+        "iterations": 5,
+        "rules": {"F": "G[-F][F][+F]", "G": "GG"},
+    }
+    grammar = Grammar(config["rules"])
+
+    print("Running", config["iterations"], "iterations on axiom:", config["axiom"])
+    lstrings = grammar.iapply(config["axiom"])
+    lstring = next(itertools.islice(lstrings, config["iterations"], config["iterations"] + 1))
+    print("L-string:")
+    print(lstring)
+
+    graphics = Graphics(unit=config["unit"], angle=config["angle"])
+    cylinders = graphics.draw(lstring)
+    print("Saving", len(cylinders), "cylinders to 'data/lstring.json'")
+    # graphics.dump(cylinders, "data/lstring")
 
     bpy.ops.wm.read_factory_settings(use_empty=True)
 
-    for cylinder in cyls:
+    for cylinder in cylinders:
         draw(cylinder)
 
+    print("Rendering cylinders to 'data/lstring.blend'")
     bpy.ops.wm.save_mainfile(filepath="data/lstring.blend")
 
 
