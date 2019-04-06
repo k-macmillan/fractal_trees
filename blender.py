@@ -55,6 +55,8 @@ def parse_json(filename):
 def main(args):
     # TODO: Validate the JSON file.
     config = parse_json(args.config)
+    # Extensionless filename to save everything as.
+    basename = args.config.replace(".json", "")
 
     # Run the L-system rules for the given number of iterations.
     grammar = Grammar(config["rules"])
@@ -73,16 +75,16 @@ def main(args):
     )
     print("Drawing the cylinders.")
     cylinders = graphics.draw(lstring)
-    print("Saving", len(cylinders), "cylinders to 'data/lstring.json'")
-    graphics.dump(cylinders, "data/lstring")
+    print("Saving", len(cylinders), "cylinders to '" + basename + ".json'")
+    graphics.dump(cylinders, basename)
 
     print("Adding cylinders to Blender scene.")
     bpy.ops.wm.read_factory_settings(use_empty=True)
     for cylinder in cylinders:
         draw(cylinder)
 
-    print("Saving scene to 'data/lstring.blend'")
-    bpy.ops.wm.save_mainfile(filepath="data/lstring.blend")
+    print("Saving scene to '" + basename + ".blend'")
+    bpy.ops.wm.save_mainfile(filepath=basename + ".blend")
 
 
 if __name__ == "__main__":
