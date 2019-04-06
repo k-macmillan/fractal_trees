@@ -1,5 +1,7 @@
 import json
 
+import bpy
+
 from .turtle import Turtle
 
 
@@ -94,12 +96,13 @@ class Graphics:
                 end = self.turtle.position
                 if self.proportion is not None:
                     self.radius = self.proportion * length
+                    
                 data.append(
                     {
                         "from": list(start.to_tuple()),
                         "to": list(end.to_tuple()),
                         "radius": self.radius,
-                        "material": self.material,
+                        "material": "Branch" if length > 1 else "Leaf",
                     }
                 )
             else:
