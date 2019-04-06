@@ -16,7 +16,7 @@ class Turtle:
         self.stack = []
         # rotate such that heading is in +Z (we want to grow upwards in blender)
         # we thus have heading = +Z, left = -Y, up = +X
-        self.mat *= Matrix.Rotation(radians(270), 4, "Y")
+        self.mat @= Matrix.Rotation(radians(270), 4, "Y")
 
     def push(self):
         """Push turtle state to stack"""
@@ -33,13 +33,13 @@ class Turtle:
         self.mat.col[3] += vec
 
     def turn(self, angle_degrees):
-        self.mat *= Matrix.Rotation(radians(angle_degrees), 4, "Z")
+        self.mat @= Matrix.Rotation(radians(angle_degrees), 4, "Z")
 
     def pitch(self, angle_degrees):
-        self.mat *= Matrix.Rotation(radians(angle_degrees), 4, "Y")
+        self.mat @= Matrix.Rotation(radians(angle_degrees), 4, "Y")
 
     def roll(self, angle_degrees):
-        self.mat *= Matrix.Rotation(radians(angle_degrees), 4, "X")
+        self.mat @= Matrix.Rotation(radians(angle_degrees), 4, "X")
 
     def look_at(self, target):
         """
@@ -155,7 +155,7 @@ class DrawingTurtle(Turtle):
                 bpy.ops.object.empty_add(type="ARROWS", radius=0)
                 empty = bpy.context.object
                 empty.name = "Node"
-                empty.matrix_world *= self.mat
+                empty.matrix_world @= self.mat
                 self.add_child_to_current_branch_parent(empty)
                 self.current_parent = empty
                 bpy.ops.object.select_all(action="DESELECT")
@@ -215,7 +215,7 @@ class DrawingTurtle(Turtle):
             obj.material_slots[0].link = "OBJECT"
             obj.material_slots[0].material = bpy.data.materials[self.materialindex]
         # align object with turtle
-        obj.matrix_world *= self.mat
+        obj.matrix_world @= self.mat
         # set scale
         obj.scale = scale
         # add obj to existing structure
