@@ -99,8 +99,8 @@ class Graphics:
                     
                 data.append(
                     {
-                        "from": list(start.to_tuple()),
-                        "to": list(end.to_tuple()),
+                        "from": start,
+                        "to": end,
                         "radius": self.radius,
                         "material": "Branch" if length > 1 else "Leaf",
                     }
@@ -110,7 +110,9 @@ class Graphics:
 
         return data
 
-    def dump(self, data, path):
-        if len(data) > 0:
+    @staticmethod
+    def dump(data, path):
+        """Dump the cylinder data to a JSON file."""
+        if data:
             with open(path + ".json", "w") as outfile:
                 json.dump(data, outfile)

@@ -32,8 +32,7 @@ class Turtle:
     @property
     def position(self):
         """Get the Turtle's current position."""
-        # TODO: call to_tuple() here?
-        return self.mat.col[3].xyz
+        return self.mat.col[3].xyz.to_tuple()
 
     def push(self):
         """Push turtle state to stack."""
