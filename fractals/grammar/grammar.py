@@ -26,7 +26,7 @@ class Grammar:
 
     def apply(self, text):
         """Apply the production rules to the given text."""
-        self.__check_text_symbols(text)
+        # self.__check_text_symbols(text)
 
         # Use a chunk size for efficiency with smaller text.
         return "".join(
