@@ -79,7 +79,7 @@ class Graphics:
         self.SYMBOLS['>'] = angle
         self.material = material
         self.radius = radius if radius is not None else 0.2
-        self.proportion = proportion if proportion is not None else 1.0
+        self.proportion = proportion if proportion is not None else 0.1
 
         self.turtle = Turtle()
 
