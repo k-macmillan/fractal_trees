@@ -2,8 +2,12 @@ import argparse
 import json
 import sys
 
+import numpy as np
+
 import bpy
 from mathutils import Vector
+
+from fractals.graphics import Graphics
 
 
 def draw(cylinder):
@@ -32,7 +36,7 @@ def draw(cylinder):
 def parse_args(argv):
     parser = argparse.ArgumentParser(description="Draw a collection of cylinders on Blender.")
 
-    parser.add_argument("json", type=str, help="The JSON collection of cylinders to draw.")
+    parser.add_argument("lstring", type=str, help="The lstring to draw and render.")
 
     return parser.parse_args(argv)
 
@@ -43,13 +47,16 @@ def parse_json(filename):
 
 
 def main(args):
-    bpy.ops.wm.read_factory_settings(use_empty=True)
-    collection = parse_json(args.json)
+    g = Graphics(unit=2, angle=np.pi / 4)
+    cyls = g.draw(args.lstring)
+    g.dump(cyls, "data/lstring")
 
-    for cylinder in collection:
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+
+    for cylinder in cyls:
         draw(cylinder)
 
-    bpy.ops.wm.save_mainfile(filepath=args.json.replace(".json", ".blend"))
+    bpy.ops.wm.save_mainfile(filepath="data/lstring.blend")
 
 
 if __name__ == "__main__":
