@@ -79,7 +79,7 @@ class Graphics:
         self.SYMBOLS['>'] = angle
         self.material = material
         self.radius = radius if radius is not None else 0.2
-        self.proportion = proportion if proportion is not None else 0.1
+        self.proportion = proportion
 
         self.turtle = Turtle()
 
@@ -114,11 +114,15 @@ class Graphics:
 
             if length > 0:
                 end = self.turtle.position
+                if self.proportion is None:
+                    radius = 0.2
+                else:
+                    radius = self.proportion * length
                 data.append(
                     {
                         "from": list(start.to_tuple()),
                         "to": list(end.to_tuple()),
-                        "radius": self.proportion * length,
+                        "radius": radius,
                         "material": self.material,
                     }
                 )
