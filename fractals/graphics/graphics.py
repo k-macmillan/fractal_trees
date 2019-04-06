@@ -2,7 +2,7 @@ import json
 
 import numpy as np
 
-from .turtle3d import Turtle3D
+from fractals.turtle import Turtle
 
 
 class Graphics:
@@ -73,7 +73,7 @@ class Graphics:
         self.radius = radius if radius is not None else 0.2
         self.proportion = 1.0
 
-        self.turtle = Turtle3D(step=self.unit, angle=self.angle)
+        self.turtle = Turtle()
 
     def draw(self, commands):
         """Generate the 3D cylinders from the given graphics commands.
@@ -92,26 +92,26 @@ class Graphics:
             if commands[i] == "G":
                 while i < len(commands) and commands[i] == "G":
                     # self.turtle.forward(commands[i])
-                    # self.turtle.forward()
+                    self.turtle.move(self.unit)
                     length += 1
                     i += 1
             elif commands[i] == "F":
                 while i < len(commands) and commands[i] == "F":
                     # self.turtle.forward(commands[i])
-                    # self.turtle.forward()
+                    self.turtle.move(self.unit)
                     length += 1
                     i += 1
             elif commands[i] == "-":
-                self.turtle.yaw()
+                self.turtle.yaw(-self.angle)
             elif commands[i] == "+":
-                self.turtle.yaw(right=True)
+                self.turtle.yaw(self.angle)
 
             if length > 0:
                 end = self.turtle.position
                 data.append(
                     {
-                        "from": start.tolist(),
-                        "to": end.tolist(),
+                        "from": list(start.to_tuple()),
+                        "to": list(end.to_tuple()),
                         "radius": self.radius * self.proportion,
                         "material": self.material,
                     }

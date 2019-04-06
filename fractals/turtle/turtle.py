@@ -1,4 +1,4 @@
-from math import radians
+import numpy as np
 
 import bpy
 from mathutils import Matrix, Vector
@@ -7,39 +7,41 @@ from mathutils import Matrix, Vector
 class Turtle:
     """This is the base class of the turtle that does not create any objects, but can be used to perform a dry-run interpretation to query the turtle state at different moments"""
 
-    def __init__(self, _linewidth, _materialindex):
+    def __init__(self):
         # turtle state consists of a 4x4 matrix and some drawing attributes
         self.mat = Matrix()
-        self.linewidth = _linewidth
-        self.materialindex = _materialindex
         # stack to save and restore turtle state
         self.stack = []
         # rotate such that heading is in +Z (we want to grow upwards in blender)
         # we thus have heading = +Z, left = -Y, up = +X
-        self.mat @= Matrix.Rotation(radians(270), 4, "Y")
+        self.mat @= Matrix.Rotation(3 * np.pi / 2, 4, "Y")
+
+    @property
+    def position(self):
+        return self.mat.col[3].xyz
 
     def push(self):
         """Push turtle state to stack"""
         # push state to stack
-        self.stack.append((self.mat.copy(), self.linewidth, self.materialindex))
+        self.stack.append(self.mat.copy())
 
     def pop(self):
         """Pop last turtle state from stack and use as current"""
-        (self.mat, self.linewidth, self.materialindex) = self.stack.pop()
+        self.mat = self.stack.pop()
 
     def move(self, stepsize):
         """Move turtle in its heading direction."""
-        vec = self.mat * Vector((stepsize, 0, 0, 0))
+        vec = self.mat @ Vector((stepsize, 0, 0, 0))
         self.mat.col[3] += vec
 
-    def turn(self, angle_degrees):
-        self.mat @= Matrix.Rotation(radians(angle_degrees), 4, "Z")
+    def yaw(self, angle):
+        self.mat @= Matrix.Rotation(angle, 4, "Z")
 
-    def pitch(self, angle_degrees):
-        self.mat @= Matrix.Rotation(radians(angle_degrees), 4, "Y")
+    def pitch(self, angle):
+        self.mat @= Matrix.Rotation(angle, 4, "Y")
 
-    def roll(self, angle_degrees):
-        self.mat @= Matrix.Rotation(radians(angle_degrees), 4, "X")
+    def roll(self, angle):
+        self.mat @= Matrix.Rotation(angle, 4, "X")
 
     def look_at(self, target):
         """
@@ -72,9 +74,6 @@ class Turtle:
         result_mat.col[1] = Vector.cross(left, turtle_to_target).normalized().resized(4)
 
         self.mat = result_mat
-
-    def draw_internode_module(self, length=None, width=None):
-        """DELIBERATELY NOT IMPLEMENTED."""
 
 
 class DrawingTurtle(Turtle):
