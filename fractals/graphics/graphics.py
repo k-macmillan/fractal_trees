@@ -59,7 +59,7 @@ class Graphics:
         of 0.2.
 
         :param unit: The length of each 'forward' command.
-        :param angle: The angle of each 'rotate' and 'bend' command. In degrees.
+        :param angle: The angle of each 'rotate' and 'bend' command. In radians.
         :param material: The Blender material to make each cylinder object with, defaults to None.
         :param radius: The radius of each cylinder. Mutually exclusive with `proportion`.
         :param proportion: Make each cylinder's radius proportional to its length. Mutually
@@ -68,7 +68,7 @@ class Graphics:
         self.__check_args(radius, proportion)
 
         self.unit = unit
-        self.angle = np.radians(angle)
+        self.angle = angle
         self.material = material
         self.radius = radius if radius is not None else 0.2
         self.proportion = 1.0
