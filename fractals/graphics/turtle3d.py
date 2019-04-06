@@ -57,6 +57,7 @@ class Turtle3D:
         :param down: Whether to pitch down instead, defaults to False
         :param down: bool, optional
         """
+        # TODO: This is the rotation axis in global coordinates. We want to rotate relative to the turtle.
         if not down:
             q = Quaternion(axis=[0, 1, 0], angle=self.angle)
         else:
