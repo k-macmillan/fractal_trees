@@ -17,7 +17,7 @@ class Grammar:
         """Ensure the given text contains only known symbols."""
         for symbol in filter(str.isalpha, text):
             if symbol not in self.symbols:
-                raise ValueError(f"Unknown symbol '{symbol}'")
+                raise ValueError("Unknown symbol '{}'".format(symbol))
 
     @staticmethod
     def _apply_symbol(args):
