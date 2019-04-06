@@ -1,5 +1,4 @@
 import itertools
-from multiprocessing.pool import Pool as ProcPool
 
 
 class Grammar:
@@ -13,7 +12,6 @@ class Grammar:
         """
         self.productions = productions
         self.symbols = frozenset(filter(str.isalpha, productions.keys()))
-        self.pool = ProcPool()
 
     def __check_text_symbols(self, text):
         """Ensure the given text contains only known symbols."""
@@ -32,8 +30,8 @@ class Grammar:
 
         # Use a chunk size for efficiency with smaller text.
         return "".join(
-            self.pool.imap(
-                self._apply_symbol, zip(text, itertools.repeat(self.productions)), chunksize=64
+            map(
+                self._apply_symbol, zip(text, itertools.repeat(self.productions))
             )
         )
 
