@@ -92,16 +92,8 @@ class Graphics:
         while i < len(commands):
             length = 0
             start = self.turtle.position
-            # Combine G and F?
-            if commands[i] == "G":
-                while i < len(commands) and commands[i] == "G":
-                    # self.turtle.forward(commands[i])
-                    self.turtle.move(self.SYMBOLS[commands[i]])
-                    length += 1
-                    i += 1
-            elif commands[i] == "F":
-                while i < len(commands) and commands[i] == "F":
-                    # self.turtle.forward(commands[i])
+            if commands[i] == "G" or commands[i] == "F":
+                while i < len(commands) and (commands[i] == "G" or commands[i] == "F"):
                     self.turtle.move(self.SYMBOLS[commands[i]])
                     length += 1
                     i += 1
