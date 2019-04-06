@@ -34,13 +34,13 @@ def draw(cylinder):
         if bpy.app.version < (2, 80, 0):
             mat.diffuse_color = (0.0, 102 / 255, 0.0)
         else:
-            mat.diffuse_color = (0.0, 102 / 255, 0.0, 0.0)
+            mat.diffuse_color = (0.0, 102 / 255, 0.0, 1.0)
     else:
         mat = bpy.data.materials.new("material_branch")
         if bpy.app.version < (2, 80, 0):
             mat.diffuse_color = (51 / 255, 26 / 255, 0.0)
         else:
-            mat.diffuse_color = (51 / 255, 26 / 255, 0.0, 0.0)
+            mat.diffuse_color = (51 / 255, 26 / 255, 0.0, 1.0)
 
     bpy.context.active_object.active_material = mat
     bpy.ops.object.shade_smooth()
