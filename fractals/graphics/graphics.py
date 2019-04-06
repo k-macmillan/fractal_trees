@@ -31,9 +31,9 @@ class Graphics:
     """
 
     symbols = frozenset("FG-+<>^vcCrR[]")
-    unhandled = frozenset("<>^vcCrR[]")
+    unhandled = frozenset("cCrR")
 
-    SYMBOLS = {'F' : 0.5, 'G' : 1.0, '-' : 0, '+' : 0}
+    SYMBOLS = {'F' : 0.5, 'G' : 1.0, '-' : 0, '+' : 0, '^' : 0, 'v' : 0, '<' : 0, '>' : 0}
 
     @staticmethod
     def __check_args(radius, proportion):
@@ -67,15 +67,19 @@ class Graphics:
         :param proportion: Make each cylinder's radius proportional to its length. Mutually
         exclusive with `radius`.
         """
-        self.__check_args(radius, proportion)
+        # self.__check_args(radius, proportion)
 
-        self.unit = unit
-        self.angle = angle
+        self.SYMBOLS['F'] = unit
+        self.SYMBOLS['G'] = unit
         self.SYMBOLS['-'] = -angle
         self.SYMBOLS['+'] = angle
+        self.SYMBOLS['v'] = -angle
+        self.SYMBOLS['^'] = angle
+        self.SYMBOLS['<'] = -angle
+        self.SYMBOLS['>'] = angle
         self.material = material
         self.radius = radius if radius is not None else 0.2
-        self.proportion = 1.0
+        self.proportion = proportion if proportion is not None else 1.0
 
         self.turtle = Turtle()
 
@@ -95,12 +99,18 @@ class Graphics:
             if commands[i] == "G" or commands[i] == "F":
                 while i < len(commands) and (commands[i] == "G" or commands[i] == "F"):
                     self.turtle.move(self.SYMBOLS[commands[i]])
-                    length += 1
+                    length += self.SYMBOLS[commands[i]]
                     i += 1
-            elif commands[i] == "-":
+            elif commands[i] == "-" or commands[i] == "+":
                 self.turtle.yaw(self.SYMBOLS[commands[i]])
-            elif commands[i] == "+":
-                self.turtle.yaw(self.SYMBOLS[commands[i]])
+            elif commands[i] == "^" or commands[i] == "v":
+                self.turtle.pitch(self.SYMBOLS[commands[i]])
+            elif commands[i] == "<" or commands[i] == ">":
+                self.turtle.roll(self.SYMBOLS[commands[i]])
+            elif commands[i] == "[":
+                self.turtle.push()
+            elif commands[i] == "]":
+                self.turtle.pop()
 
             if length > 0:
                 end = self.turtle.position
@@ -108,7 +118,7 @@ class Graphics:
                     {
                         "from": list(start.to_tuple()),
                         "to": list(end.to_tuple()),
-                        "radius": self.radius * self.proportion,
+                        "radius": self.proportion * length,
                         "material": self.material,
                     }
                 )
