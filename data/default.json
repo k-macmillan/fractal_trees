@@ -1,0 +1,12 @@
+{
+    "unit": 2,
+    "angle": 0.7853981633974483,
+    "radius": null,
+    "proportion": null,
+    "axiom": "F",
+    "iterations": 4,
+    "rules": {
+        "F": "G[-F][F][+F]",
+        "G": "GG"
+    }
+}
