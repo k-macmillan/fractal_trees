@@ -6,11 +6,15 @@ import bpy
 from mathutils import Matrix, Vector
 
 
-def matmul(left, right):
-    if sys.version_info[0] == 3 and sys.version_info[1] >= 6:
-        return left @ right
-    else:
-        return left * right
+def __matmul35(left, right):
+    return left * right
+
+
+def __matmul36(left, right):
+    return left @ right
+
+
+matmul = __matmul36 if sys.version_info[0] == 3 and sys.version_info[1] >= 6 else __matmul35
 
 
 class Turtle:
