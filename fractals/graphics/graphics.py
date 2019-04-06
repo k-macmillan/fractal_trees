@@ -1,4 +1,5 @@
 import json
+from functools import partial
 
 import bpy
 
@@ -28,8 +29,6 @@ class Graphics:
           includes the color (or material), direction, pen up/down state, and cylinder radius.
     """
 
-    SYMBOLS = {"F": 0.5, "G": 1.0, "-": 0, "+": 0, "^": 0, "v": 0, "<": 0, ">": 0}
-
     @staticmethod
     def __check_args(radius, proportion):
         if radius is not None and proportion is not None:
@@ -50,19 +49,28 @@ class Graphics:
         """
         self.__check_args(radius, proportion)
 
-        self.SYMBOLS["F"] = unit
-        self.SYMBOLS["G"] = unit
-        self.SYMBOLS["-"] = -angle
-        self.SYMBOLS["+"] = angle
-        self.SYMBOLS["v"] = -angle
-        self.SYMBOLS["^"] = angle
-        self.SYMBOLS["<"] = -angle
-        self.SYMBOLS[">"] = angle
         self.material = material
         self.radius = radius if radius is not None else 0.2
         self.proportion = proportion
+        self.unit = unit
+        self.angle = angle
 
         self.turtle = Turtle()
+
+        self.mappings = {
+            # Bind the distance and angle parameters to the turtle methods.
+            "F": partial(self.turtle.move, unit),
+            # TODO: Should 'G' be longer than 'F'?
+            "G": partial(self.turtle.move, unit),
+            "-": partial(self.turtle.yaw, -angle),
+            "+": partial(self.turtle.yaw, +angle),
+            "v": partial(self.turtle.pitch, -angle),
+            "^": partial(self.turtle.pitch, +angle),
+            "<": partial(self.turtle.roll, -angle),
+            ">": partial(self.turtle.roll, +angle),
+            "[": self.turtle.push,
+            "]": self.turtle.pop,
+        }
 
     def draw(self, commands):
         """Generate the 3D cylinders from the given graphics commands.
@@ -78,25 +86,17 @@ class Graphics:
             start = self.turtle.position
             if commands[i] == "G" or commands[i] == "F":
                 while i < len(commands) and (commands[i] == "G" or commands[i] == "F"):
-                    self.turtle.move(self.SYMBOLS[commands[i]])
-                    length += self.SYMBOLS[commands[i]]
+                    self.mappings[commands[i]]()
+                    length += self.unit
                     i += 1
-            elif commands[i] == "-" or commands[i] == "+":
-                self.turtle.yaw(self.SYMBOLS[commands[i]])
-            elif commands[i] == "^" or commands[i] == "v":
-                self.turtle.pitch(self.SYMBOLS[commands[i]])
-            elif commands[i] == "<" or commands[i] == ">":
-                self.turtle.roll(self.SYMBOLS[commands[i]])
-            elif commands[i] == "[":
-                self.turtle.push()
-            elif commands[i] == "]":
-                self.turtle.pop()
+            elif commands[i] in self.mappings:
+                self.mappings[commands[i]]()
 
             if length > 0:
                 end = self.turtle.position
                 if self.proportion is not None:
                     self.radius = self.proportion * length
-                    
+
                 data.append(
                     {
                         "from": start,
