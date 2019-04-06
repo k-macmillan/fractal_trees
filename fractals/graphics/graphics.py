@@ -114,15 +114,13 @@ class Graphics:
 
             if length > 0:
                 end = self.turtle.position
-                if self.proportion is None:
-                    radius = 0.2
-                else:
-                    radius = self.proportion * length
+                if self.proportion is not None:
+                    self.radius = self.proportion * length
                 data.append(
                     {
                         "from": list(start.to_tuple()),
                         "to": list(end.to_tuple()),
-                        "radius": radius,
+                        "radius": self.radius,
                         "material": self.material,
                     }
                 )
