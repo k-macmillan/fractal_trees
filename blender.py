@@ -25,23 +25,28 @@ def draw(cylinder):
     q = u.rotation_difference(v)
 
     bpy.ops.mesh.primitive_cylinder_add(
-        radius=cylinder["radius"],
-        depth=v.magnitude,
-        location=center,
+        radius=cylinder["radius"], depth=v.magnitude, location=center
     )
 
-    if cylinder['material'] == 'Leaf':
+    # Blender 2.80 expects an alpha channel...
+    if cylinder["material"] == "Leaf":
         mat = bpy.data.materials.new("material_leaf")
-        mat.diffuse_color = (0.0, 102/255, 0.0)
+        if bpy.app.version < (2, 80, 0):
+            mat.diffuse_color = (0.0, 102 / 255, 0.0)
+        else:
+            mat.diffuse_color = (0.0, 102 / 255, 0.0, 0.0)
     else:
         mat = bpy.data.materials.new("material_branch")
-        mat.diffuse_color = (51/255, 26/255, 0.0)
+        if bpy.app.version < (2, 80, 0):
+            mat.diffuse_color = (51 / 255, 26 / 255, 0.0)
+        else:
+            mat.diffuse_color = (51 / 255, 26 / 255, 0.0, 0.0)
 
     bpy.context.active_object.active_material = mat
     bpy.ops.object.shade_smooth()
     bpy.context.active_object.rotation_mode = "QUATERNION"
     bpy.context.active_object.rotation_quaternion = (q.w, q.x, q.y, q.z)
-    
+
     # TODO: Set cylinder material.
     # TODO: Join cylinder to existing cylinders?
 
