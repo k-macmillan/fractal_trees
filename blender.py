@@ -30,13 +30,14 @@ def draw(cylinder):
         location=center,
     )
 
-    material_leaf = bpy.data.materials.new("material_leaf")
-    material_leaf.diffuse_color = (0.0, 102/255, 0.0)
+    if cylinder['material'] == 'Leaf':
+        mat = bpy.data.materials.new("material_leaf")
+        mat.diffuse_color = (0.0, 102/255, 0.0)
+    else:
+        mat = bpy.data.materials.new("material_branch")
+        mat.diffuse_color = (51/255, 26/255, 0.0)
 
-    material_branch = bpy.data.materials.new("material_branch")
-    material_branch.diffuse_color = (51/255, 26/255, 0.0)
-
-    bpy.context.active_object.active_material = material_leaf if cylinder['material'] == 'Leaf' else material_branch
+    bpy.context.active_object.active_material = mat
     bpy.ops.object.shade_smooth()
     bpy.context.active_object.rotation_mode = "QUATERNION"
     bpy.context.active_object.rotation_quaternion = (q.w, q.x, q.y, q.z)
