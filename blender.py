@@ -9,15 +9,18 @@ from fractals.graphics import Graphics
 from mathutils import Vector
 
 
-def draw_all(cylinders):
-    """https://blender.stackexchange.com/questions/7358/python-performance-with-blender-operators"""
+def draw_all(cylinders, c_count):
+    """Inspiration: 
+       https://blender.stackexchange.com/questions/7358/python-performance-with-blender-operators
+    """
     sce = bpy.context.scene
     obs = []
+    count = 1
 
     # cylinders are in the form [{"length": [cylinders]}]
     for clist in cylinders:
         # Generate ONE cylinder
-        clist = next(iter(clist.values()))
+        length, clist = next(iter(clist.items()))
         template = clist[0]
 
         v = Vector(tuple(c1 - c2 for c1, c2 in zip(template["from"], template["to"])))
@@ -36,6 +39,8 @@ def draw_all(cylinders):
             mat.diffuse_color = (51 / 255, 26 / 255, 0.0)
 
         ob = bpy.context.active_object
+        ob.name = "template_" + length
+        # print("Template name: ", ob.name)
         ob.active_material = mat
         ob.rotation_mode = "QUATERNION"
         ob.rotation_quaternion = (1, 0, 0, 0)
@@ -49,64 +54,38 @@ def draw_all(cylinders):
             v = Vector(tuple(c1 - c2 for c1, c2 in zip(cylinder["from"], cylinder["to"])))
             u = Vector((0, 0, v.magnitude))
             q = u.rotation_difference(v)
-            # rot = cylinder['rotation'].to_quaternion()
-            # print(rot)
-            # print('x, y, z: {}, {}, {}'.format(c[0], c[1], c[2]))
             duplicate.location = Vector((c[0], c[1], c[2]))
-            # duplicate.rotation_quaternion = rot
             duplicate.rotation_quaternion = (q.w, q.x, q.y, q.z)
             obs.append(duplicate)
 
-        
+            print("\rprogress: {}% : {}     ".format(100 * count // c_count, count), end="")
+            count += 1
+
+            # Perform join 
+            if count % 200 == 0:
+                bpy.ops.object.select_all(action='DESELECT')
+                for thing in obs:
+                    sce.objects.link(thing)
+                    thing.select = True
+                bpy.context.scene.objects.active = obs[0]
+                bpy.ops.object.join()
+                bpy.ops.object.select_all(action='DESELECT')
+                obs.clear()
 
         # Cleanup
         bpy.ops.object.delete()
-        # Assign data to 
 
     # Link and update
-    for ob in obs:
-        sce.objects.link(ob)
+    for thing in obs:
+        sce.objects.link(thing)
     sce.update()
 
-
-def draw(cylinder):
-    """Add the given cylinder to the scene.
-
-    Cylinder should be a dictionary with keys
-    'from' & 'to' - The 3D coordinates to draw the cylinder from -> to.
-    'radius' - The cylinder radius.
-    'material' - The blender material to set the cylinder as.
-    """
-    center = tuple((c1 + c2) / 2 for c1, c2 in zip(cylinder["from"], cylinder["to"]))
-    v = Vector(tuple(c1 - c2 for c1, c2 in zip(cylinder["from"], cylinder["to"])))
-    u = Vector((0, 0, v.magnitude))
-    q = u.rotation_difference(v)
-
-    bpy.ops.mesh.primitive_cylinder_add(
-        radius=cylinder["radius"], depth=v.magnitude, location=center
-    )
-
-    # Blender 2.80 expects an alpha channel...
-    if cylinder["material"] == "Leaf":
-        mat = bpy.data.materials.new("material_leaf")
-        if bpy.app.version < (2, 80, 0):
-            mat.diffuse_color = (0.0, 102 / 255, 0.0)
-        else:
-            mat.diffuse_color = (0.0, 102 / 255, 0.0, 1.0)
-    else:
-        mat = bpy.data.materials.new("material_branch")
-        if bpy.app.version < (2, 80, 0):
-            mat.diffuse_color = (51 / 255, 26 / 255, 0.0)
-        else:
-            mat.diffuse_color = (51 / 255, 26 / 255, 0.0, 1.0)
-
-    bpy.context.active_object.active_material = mat
-    bpy.context.active_object.rotation_mode = "QUATERNION"
-    bpy.context.active_object.rotation_quaternion = (q.w, q.x, q.y, q.z)
-
-    # TODO: Set cylinder material.
-    # TODO: Join cylinder to existing cylinders?
-
+    # Join remainder
+    bpy.context.scene.objects.active = obs[0]
+    bpy.ops.object.select_all(action='SELECT')
+    bpy.ops.object.join()
+    bpy.ops.object.shade_smooth()
+    bpy.ops.object.select_all(action='DESELECT')
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(description="Draw a collection of cylinders on Blender.")
@@ -161,7 +140,7 @@ def main(args):
     # TODO: It's possible to combine objects from multiple blender files. Split up cylinders on large fractals.
     bpy.ops.wm.read_factory_settings(use_empty=True)
 
-    draw_all(cylinders)
+    draw_all(cylinders, cylinder_count)
 
     # for i, cylinder in enumerate(cylinders, start=1):
     #     print("\rprogress: {}%".format(100 * i // len(cylinders)), end="")
