@@ -13,7 +13,7 @@ Creating 3D fractals in Blender using Lindenmayer Systems.
 Run
 
 ```shell
-PYTHONPATH=$(pwd) time blender --background --python blender.py -- --config data/b3d.json
+PYTHONPATH=$(pwd) time blender --background --python blender.py -- data/b3d.json
 ```
 
 to generate the scene for the given L string. Then open the generated scene with
