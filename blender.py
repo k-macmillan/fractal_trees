@@ -47,7 +47,7 @@ def main(args):
         radius=config["radius"],
         proportion=config["proportion"],
     )
-    print("Drawing the cylinders.")
+    print("Computing all the cylinders.")
     clist = graphics.compute(lstring)
     cylinders = {}
     for c in clist:
@@ -55,17 +55,14 @@ def main(args):
             cylinders[c["length"]] = [c]
         else:
             cylinders[c["length"]].append(c)
-    c_count = sum(len(clist) for clist in cylinders.values())
 
     print(
-        "Saving",
-        c_count,
-        "cylinders with",
-        len(cylinders),
-        "different lengths to '" + basename + "-cylinders.json'",
+        "Saving {} cylinders with {} different lengths to {}-cylinders.json".format(
+            len(clist), len(cylinders), basename
+        )
     )
     graphics.dump(cylinders, basename + "-cylinders")
-    print("Adding {} cylinders to Blender scene.".format(c_count))
+    print("Adding {} cylinders to Blender scene.".format(len(clist)))
 
     # TODO: It's possible to combine objects from multiple blender files. Split up cylinders on large fractals.
     graphics.draw(cylinders, basename + ".blend")
