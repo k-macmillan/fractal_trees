@@ -109,7 +109,7 @@ def main(args):
     bpy.ops.object.join()
     bpy.ops.object.shade_smooth()
 
-    print("Saving scene to '" + basename + ".blend'")
+    print("\nSaving scene to '" + basename + ".blend'")
     bpy.ops.wm.save_mainfile(filepath=basename + ".blend")
 
 
