@@ -97,7 +97,8 @@ def main(args):
 
     print("Adding cylinders to Blender scene.")
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    for cylinder in cylinders:
+    for i, cylinder in enumerate(cylinders, start=1):
+        print("\rprogress: {}%".format(100 * i // len(cylinders)), end="")
         draw(cylinder)
 
     print("Saving scene to '" + basename + ".blend'")
