@@ -3,8 +3,6 @@ import itertools
 import json
 import sys
 
-import numpy as np
-
 import bpy
 from fractals.grammar import Grammar
 from fractals.graphics import Graphics
@@ -43,7 +41,6 @@ def draw(cylinder):
             mat.diffuse_color = (51 / 255, 26 / 255, 0.0, 1.0)
 
     bpy.context.active_object.active_material = mat
-    bpy.ops.object.shade_smooth()
     bpy.context.active_object.rotation_mode = "QUATERNION"
     bpy.context.active_object.rotation_quaternion = (q.w, q.x, q.y, q.z)
 
@@ -100,6 +97,16 @@ def main(args):
     for i, cylinder in enumerate(cylinders, start=1):
         print("\rprogress: {}%".format(100 * i // len(cylinders)), end="")
         draw(cylinder)
+
+        if i % 20 == 0:
+            bpy.ops.object.select_all(action='DESELECT')
+            bpy.ops.object.select_by_type(type='MESH')
+            bpy.ops.object.join()
+
+    bpy.ops.object.select_all(action='DESELECT')
+    bpy.ops.object.select_by_type(type='MESH')
+    bpy.ops.object.join()
+    bpy.ops.object.shade_smooth()
 
     print("Saving scene to '" + basename + ".blend'")
     bpy.ops.wm.save_mainfile(filepath=basename + ".blend")
