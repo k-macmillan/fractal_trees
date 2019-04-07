@@ -93,6 +93,7 @@ def main(args):
     graphics.dump(cylinders, basename + "-cylinders")
 
     print("Adding cylinders to Blender scene.")
+    # TODO: It's possible to combine objects from multiple blender files. Split up cylinders on large fractals.
     bpy.ops.wm.read_factory_settings(use_empty=True)
     for i, cylinder in enumerate(cylinders, start=1):
         print("\rprogress: {}%".format(100 * i // len(cylinders)), end="")
