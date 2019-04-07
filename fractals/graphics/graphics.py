@@ -61,6 +61,8 @@ class Graphics:
             # Bind the distance and angle parameters to the turtle methods.
             "F": partial(self.turtle.move, unit),
             "G": partial(self.turtle.move, unit),
+            "f": partial(self.turtle.move, unit),
+            "g": partial(self.turtle.move, unit),
             "-": partial(self.turtle.yaw, -angle),
             "+": partial(self.turtle.yaw, +angle),
             "v": partial(self.turtle.pitch, -angle),

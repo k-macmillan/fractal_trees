@@ -4,7 +4,7 @@ import itertools
 class Grammar:
     """Apply production rules to strings."""
 
-    symbols = frozenset("FG-+<>^vcCrR[]")
+    symbols = frozenset("FGfg-+<>^vcCrR[]")
 
     def __init__(self, productions):
         """Initialize a Grammar with the given production rules.

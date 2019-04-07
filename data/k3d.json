@@ -3,9 +3,10 @@
     "angle": 1.5707963267948966,
     "radius": null,
     "proportion": null,
-    "axiom": "F+F+F+F",
-    "iterations": 3,
+    "axiom": "F",
+    "iterations": 4,
     "rules": {
-        "F": "F+F+F-FFF-F"
+        "F": "GF[vF][-F][^F][+F]",
+        "G": "GG"
     }
 }

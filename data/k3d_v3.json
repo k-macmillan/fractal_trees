@@ -1,11 +1,12 @@
 {
     "unit": 1,
-    "angle": 1.5707963267948966,
+    "angle": 0.733038273,
     "radius": null,
     "proportion": null,
-    "axiom": "F+F+F+F",
+    "axiom": "F",
     "iterations": 3,
     "rules": {
-        "F": "F+F+F-FFF-F"
+        "F": "GF[vF-F][^F+F][<F-F][>F+F]",
+        "G": "GG"
     }
 }
