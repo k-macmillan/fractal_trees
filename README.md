@@ -1,5 +1,7 @@
 # Fractals
 
+[![3D Fractal](https://i.imgur.com/oARGCvv.png)](https://sketchfab.com/3d-models/b3d-2317c1f611e14369b7a3b83e29be676b)
+
 ## Unit Tests
 
 Because some of the 3D graphics is enough over my head to get wrong and not even notice, there are
