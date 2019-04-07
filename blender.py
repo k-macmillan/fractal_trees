@@ -48,7 +48,13 @@ def main(args):
         proportion=config["proportion"],
     )
     print("Drawing the cylinders.")
-    cylinders = graphics.compute(lstring)
+    clist = graphics.compute(lstring)
+    cylinders = {}
+    for c in clist:
+        if c["length"] not in cylinders:
+            cylinders[c["length"]] = [c]
+        else:
+            cylinders[c["length"]].append(c)
     c_count = sum(len(clist) for clist in cylinders.values())
 
     print(
