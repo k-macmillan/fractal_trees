@@ -1,4 +1,5 @@
 import json
+from collections import defaultdict
 from functools import partial
 
 import bpy
@@ -80,6 +81,7 @@ class Graphics:
         :return: A list of cylinder dictionaries.
         """
         cylinders = []
+        lengths = []
         commands = iter(commands)
         for command in commands:
             length = 0
@@ -99,12 +101,20 @@ class Graphics:
                 if self.proportion is not None:
                     self.radius = self.proportion * length
 
-                cylinders.append(
+                # If we haven't found this length yet append the list/dict
+                if length not in lengths:
+                    lengths.append(length)
+                    cylinders.append({})
+                    cylinders[lengths.index(length)] = { str(length) : [] }
+
+                cylinders[lengths.index(length)][str(length)].append(
                     {
                         "from": start,
                         "to": end,
                         "radius": self.radius,
                         "material": "Branch" if length > 1 else "Leaf",
+                        "length": length,
+                        "rotation": self.turtle.mat
                     }
                 )
 
