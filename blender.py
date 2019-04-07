@@ -15,6 +15,8 @@ def draw_all(cylinders):
     Use a template cylinder for each length to avoid a scene update for each cylinder.
 
     c.f. https://blender.stackexchange.com/questions/7358/python-performance-with-blender-operators
+
+    :param cylinders: A dict of (length, [{cyl}, ...]) pairs.
     """
     objs = []
     count = 1
