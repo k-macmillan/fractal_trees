@@ -4,7 +4,7 @@
     "radius": null,
     "proportion": null,
     "axiom": "G",
-    "iterations": 3,
+    "iterations": 2,
     "rules": {
         "G": "FG[-F[G]-G][G+G][+F[G]+G]",
         "F": "FF"
