@@ -2,7 +2,11 @@
 
 Creating 3D fractals in Blender using Lindenmayer Systems.
 
-[![3D Fractal](https://i.imgur.com/oARGCvv.png)](https://sketchfab.com/3d-models/b3d-2317c1f611e14369b7a3b83e29be676b)
+
+![3D Fractal](https://i.imgur.com/gQPLXAE.jpg)
+
+
+[![3D Fractal SketchFab](https://i.imgur.com/oARGCvv.png)](https://sketchfab.com/3d-models/b3d-2317c1f611e14369b7a3b83e29be676b)
 
 ## Creating a Blender File
 
