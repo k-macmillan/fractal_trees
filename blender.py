@@ -133,28 +133,14 @@ def main(args):
     for c in cylinders:
         cylinder_count += len(next(iter(c.values())))
 
-    # print("Saving", len(cylinders), "cylinders to '" + basename + "-cylinders.json'")
-    # graphics.dump(cylinders, basename + "-cylinders")
+    print("Saving", len(cylinders), "cylinders to '" + basename + "-cylinders.json'")
+    graphics.dump(cylinders, basename + "-cylinders")
     print("Adding {} cylinders to Blender scene.".format(cylinder_count))
 
     # TODO: It's possible to combine objects from multiple blender files. Split up cylinders on large fractals.
     bpy.ops.wm.read_factory_settings(use_empty=True)
 
     draw_all(cylinders, cylinder_count)
-
-    # for i, cylinder in enumerate(cylinders, start=1):
-    #     print("\rprogress: {}%".format(100 * i // len(cylinders)), end="")
-    #     draw(cylinder)
-
-    #     if i % 20 == 0:
-    #         bpy.ops.object.select_all(action='DESELECT')
-    #         bpy.ops.object.select_by_type(type='MESH')
-    #         bpy.ops.object.join()
-
-    # bpy.ops.object.select_all(action='DESELECT')
-    # bpy.ops.object.select_by_type(type='MESH')
-    # bpy.ops.object.join()
-    # bpy.ops.object.shade_smooth()
 
     print("\nSaving scene to '" + basename + ".blend'")
     bpy.ops.wm.save_mainfile(filepath=basename + ".blend")
