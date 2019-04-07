@@ -9,83 +9,90 @@ from fractals.graphics import Graphics
 from mathutils import Vector
 
 
-def draw_all(cylinders, c_count):
-    """Inspiration: 
-       https://blender.stackexchange.com/questions/7358/python-performance-with-blender-operators
+def draw_all(cylinders):
+    """Draw the given cylinders.
+
+    Use a template cylinder for each length to avoid a scene update for each cylinder.
+
+    c.f. https://blender.stackexchange.com/questions/7358/python-performance-with-blender-operators
     """
-    sce = bpy.context.scene
-    obs = []
+    objs = []
     count = 1
 
-    # cylinders are in the form [{"length": [cylinders]}]
-    for clist in cylinders:
-        # Generate ONE cylinder
-        length, clist = next(iter(clist.items()))
-        template = clist[0]
+    c_count = sum(len(clist) for clist in cylinders.values())
 
-        v = Vector(tuple(c1 - c2 for c1, c2 in zip(template["from"], template["to"])))
-        u = Vector((0, 0, v.magnitude))
-        q = u.rotation_difference(v)
-        
+    # The cylinders dict has form {length: [cylinders]}
+    for length, cylinder_list in cylinders.items():
+        # Generate ONE cylinder to duplicate in the appropriate position.
+        template_dict = cylinder_list[0]
+
+        v = Vector(tuple(c1 - c2 for c1, c2 in zip(template_dict["from"], template_dict["to"])))
+
+        # The primitive_cylinder_add forces a scene update.
         bpy.ops.mesh.primitive_cylinder_add(
-            radius=template["radius"],
-            depth=v.magnitude,
-            location=(0.0, 0.0, 0.0))
-        if template["material"] == "Leaf":
+            radius=template_dict["radius"], depth=v.magnitude, location=(10.0, 10.0, 10.0)
+        )
+        if template_dict["material"] == "Leaf":
             mat = bpy.data.materials.new("material_leaf")
             mat.diffuse_color = (0.0, 102 / 255, 0.0)
-        elif template["material"] == "Branch":
-            mat = bpy.data.materials.new("material_leaf")
+        elif template_dict["material"] == "Branch":
+            mat = bpy.data.materials.new("material_branch")
             mat.diffuse_color = (51 / 255, 26 / 255, 0.0)
 
-        ob = bpy.context.active_object
-        ob.name = "template_" + length
-        # print("Template name: ", ob.name)
-        ob.active_material = mat
-        ob.rotation_mode = "QUATERNION"
-        ob.rotation_quaternion = (1, 0, 0, 0)
+        template = bpy.context.active_object
+        template.name = "template_" + str(length)
+        # print("Template name: ", template.name)
+        template.active_material = mat
+        template.rotation_mode = "QUATERNION"
+        template.rotation_quaternion = (1, 0, 0, 0)
 
         # Copy it for the number of items in the dictionary list
-        for cylinder in clist:
-            duplicate = ob.copy()
-            duplicate.data = duplicate.data.copy() # also duplicate mesh, remove for linked duplicate
+        for cylinder in cylinder_list:
+            duplicate = template.copy()
+            # also duplicate mesh, remove for linked duplicate
+            duplicate.data = duplicate.data.copy()
 
-            c = tuple((c1 + c2) / 2 for c1, c2 in zip(cylinder["from"], cylinder["to"]))
+            center = Vector(
+                tuple((c1 + c2) / 2 for c1, c2 in zip(cylinder["from"], cylinder["to"]))
+            )
             v = Vector(tuple(c1 - c2 for c1, c2 in zip(cylinder["from"], cylinder["to"])))
             u = Vector((0, 0, v.magnitude))
             q = u.rotation_difference(v)
-            duplicate.location = Vector((c[0], c[1], c[2]))
+            duplicate.location = center
             duplicate.rotation_quaternion = (q.w, q.x, q.y, q.z)
-            obs.append(duplicate)
+            objs.append(duplicate)
 
-            print("\rprogress: {}% : {}     ".format(100 * count // c_count, count), end="")
+            print("\rprogress: {}% ({})".format(100 * count // c_count, count), end="")
             count += 1
 
-            # Perform join 
+            # Every so often, add the objects to the scene and join them together.
             if count % 200 == 0:
-                bpy.ops.object.select_all(action='DESELECT')
-                for thing in obs:
-                    sce.objects.link(thing)
-                    thing.select = True
-                bpy.context.scene.objects.active = obs[0]
+                bpy.ops.object.select_all(action="DESELECT")
+                # Add the objects to the scene and join them together.
+                for obj in objs:
+                    bpy.context.scene.objects.link(obj)
+                    obj.select = True
+                bpy.context.scene.objects.active = objs[0]
                 bpy.ops.object.join()
-                bpy.ops.object.select_all(action='DESELECT')
-                obs.clear()
+                bpy.ops.object.select_all(action="DESELECT")
+                objs.clear()
 
-        # Cleanup
+        # Delete the template cylinder.
         bpy.ops.object.delete()
 
-    # Link and update
-    for thing in obs:
-        sce.objects.link(thing)
-    sce.update()
+    print("\nLinking remaining objects.")
+    # Add any remaining objects to the scene.
+    for obj in objs:
+        bpy.context.scene.objects.link(obj)
 
-    # Join remainder
-    bpy.context.scene.objects.active = obs[0]
-    bpy.ops.object.select_all(action='SELECT')
+    # Join the objects together, update the scene, and smooth the cylinders.
+    bpy.context.scene.objects.active = objs[0]
+    bpy.ops.object.select_all(action="SELECT")
     bpy.ops.object.join()
+    bpy.context.scene.update()
     bpy.ops.object.shade_smooth()
-    bpy.ops.object.select_all(action='DESELECT')
+    bpy.ops.object.select_all(action="DESELECT")
+
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(description="Draw a collection of cylinders on Blender.")
@@ -115,6 +122,7 @@ def main(args):
     grammar = Grammar(config["rules"])
     print("Running", config["iterations"], "iterations on axiom:", config["axiom"])
     lstrings = grammar.iapply(config["axiom"])
+    # Get the nth iteration, skipping all the intermediate forms.
     lstring = next(itertools.islice(lstrings, config["iterations"], config["iterations"] + 1))
     # print("L-string:")
     # print(lstring)
@@ -128,19 +136,22 @@ def main(args):
     )
     print("Drawing the cylinders.")
     cylinders = graphics.draw(lstring)
+    c_count = sum(len(clist) for clist in cylinders.values())
 
-    cylinder_count = 0
-    for c in cylinders:
-        cylinder_count += len(next(iter(c.values())))
-
-    print("Saving", len(cylinders), "cylinders to '" + basename + "-cylinders.json'")
+    print(
+        "Saving",
+        c_count,
+        "cylinders with",
+        len(cylinders),
+        "different lengths to '" + basename + "-cylinders.json'",
+    )
     graphics.dump(cylinders, basename + "-cylinders")
-    print("Adding {} cylinders to Blender scene.".format(cylinder_count))
+    print("Adding {} cylinders to Blender scene.".format(c_count))
 
     # TODO: It's possible to combine objects from multiple blender files. Split up cylinders on large fractals.
     bpy.ops.wm.read_factory_settings(use_empty=True)
 
-    draw_all(cylinders, cylinder_count)
+    draw_all(cylinders)
 
     print("\nSaving scene to '" + basename + ".blend'")
     bpy.ops.wm.save_mainfile(filepath=basename + ".blend")

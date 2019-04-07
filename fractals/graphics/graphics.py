@@ -78,10 +78,9 @@ class Graphics:
         """Generate the 3D cylinders from the given graphics commands.
 
         :param commands: A string of successive graphics commands.
-        :return: A list of cylinder dictionaries.
+        :returns: A dictionary of (length, [{cyl 1}, {cyl 2}, ...]) pairs.
         """
-        cylinders = []
-        lengths = []
+        cylinders = {}
         commands = iter(commands)
         for command in commands:
             length = 0
@@ -102,12 +101,10 @@ class Graphics:
                     self.radius = self.proportion * length
 
                 # If we haven't found this length yet append the list/dict
-                if length not in lengths:
-                    lengths.append(length)
-                    cylinders.append({})
-                    cylinders[lengths.index(length)] = { str(length) : [] }
+                if length not in cylinders:
+                    cylinders[length] = []
 
-                cylinders[lengths.index(length)][str(length)].append(
+                cylinders[length].append(
                     {
                         "from": start,
                         "to": end,
