@@ -10,12 +10,7 @@ from fractals.graphics import Graphics
 def parse_args(argv):
     parser = argparse.ArgumentParser(description="Draw a collection of cylinders on Blender.")
 
-    parser.add_argument(
-        "--config",
-        type=str,
-        default="data/default.json",
-        help="The config JSON file to use. If not provided, draw the default tree.",
-    )
+    parser.add_argument("config", type=str, help="The configuration JSON file to use.")
 
     return parser.parse_args(argv)
 
