@@ -113,8 +113,6 @@ class Graphics:
                         "to": end,
                         "radius": self.radius,
                         "material": "Branch" if length > 1 else "Leaf",
-                        "length": length,
-                        "rotation": self.turtle.mat
                     }
                 )
 
