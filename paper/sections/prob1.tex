@@ -1,18 +1,18 @@
 % !TeX root = ../hw4.tex
-\part{Fractals}
+\section{Generating a Simple Fractal Tree}
 
-\section{Statement}
+\subsection{Statement}
 \todoinline[caption=Give Problem Statement]{Give problem statement including specification of scaling and intent to play with different angles.}
 
-\section{Method}
+\subsection{Method}
 
-\subsection{Lindenmayer Systems}
+\subsubsection{Lindenmayer Systems}
 \todoinline[caption=Define an L-System]{Define an L-System, production rules, and specify the meaning of the different commands.}
 
-\subsection{The Lindenmayer System for the Given Problem}
+\subsubsection{The Lindenmayer System for the Given Problem}
 \todoinline[caption=Give l-system for given problem]{Give the L-System for given problem and discuss how it might be improved or modified.}
 
-\subsection{Extending the Lindenmayer Systems to 3D}
+\subsubsection{Extending the Lindenmayer Systems to 3D}
 \todoinline[caption=Defined new 3D commands]{
     Show how to add more commands to extend the L-Systems into 3D.
 
@@ -21,7 +21,7 @@
     Give minimal examples of each command.
 }
 
-\subsection{Further Extensions of the Lindenmayer Systems}
+\subsubsection{Further Extensions of the Lindenmayer Systems}
 \todoinline[caption=Further extending the L-System]{Discuss how to add color, radii proportionality, and randomness}
 \todoinline[caption=Add randomness]{
     Implement randomness.
@@ -32,13 +32,13 @@
     Second, add a randomness parameter to the constructor, so that if it's set, apply perturbations at random.
 }
 
-\section{Implementation}
+\subsection{Implementation}
 \todoinline{
     McGough has seemed to like my (brief) discussion of my previous implementations.
     We should not give the whole thing, just the interesting bits and pieces.
 }
 
-\subsection{Existing Implementations}
+\subsubsection{Existing Implementations}
 \todoinline[caption=Existing impelemtations]{
     Mention all of the existing implementations we found of L-Systems, both 2D and 3D.
     Give links to the easiest to use implementations.
@@ -46,10 +46,10 @@
     Show how to use \LaTeX{} to generate them, because he'd like that, and might even find it useful.
 }
 
-\subsection{Applying the Production Rules}
+\subsubsection{Applying the Production Rules}
 \todoinline[caption=Implementation of the production rules]{Show how to apply the production rules.}
 
-\subsection{A 3D Turtle}
+\subsubsection{A 3D Turtle}
 \todoinline[caption=Implementation of the 3D turtle]{
     Show how the 3D turtle was implemented.
     Be very clear how painful quaternions were and the difficulty of performing the transformations in the local reference frame.
@@ -57,7 +57,7 @@
     Cite the Lindenmaker Blender addon \url{https://github.com/lemurni/lpy-lsystems-blender-addon} and thesis, but mention that the only thing we ripped off was the Turtle.
 }
 
-\subsection{Computing the Vertices}
+\subsubsection{Computing the Vertices}
 \todoinline[caption=Implementation of the vertex computation]{
     Discuss the \mintinline{python}{Graphics.compute(lstring)} method and its implementation.
     Be sure to include the data structure it returns and how the material is set.
@@ -65,28 +65,28 @@
     Also include the proportional radii, and randomness (once it's implemented).
 }
 
-\subsection{Adding Cylinders to the 3D Scene}
+\subsubsection{Adding Cylinders to the 3D Scene}
 \todoinline[caption=Implementation of adding objects to the scene]{
     Show how to add a single cylinder to the scene, and mention that it slowed down Blender substantially.
 
     Show how to fix this by duplicating cylinders, but mention that there was still a substantial slowdown for large fractals.
 }
 
-\subsection{Parallel Scene Creation}
+\subsubsection{Parallel Scene Creation}
 \todoinline[caption=Implementation of batch processing]{
     Discuss the general idea of the batch mode, but there's no need to give actual code --- other than how to join two files.
 }
 
-\subsection{Usage}
+\subsubsection{Usage}
 \todoinline[caption=Script usage]{
     Discuss how to use each of the scripts we created, spending the most time on \texttt{blender.py} and \texttt{batch.sh}.
 
     Make sure to point out that the \mintinline{python}{bpy} and \mintinline{python}{mathutils} libraries are provided by Blender, and that to use them we need to run our scripts in funky ways.
 }
 
-\section{Results}
+\subsection{Results}
 
-\subsection{The Lindenmayer System for the Given Problem}
+\subsubsection{The Lindenmayer System for the Given Problem}
 \todoinline[caption=results for given problem]{
     Show our results for the given problem.
 
@@ -94,19 +94,11 @@
     Play with the scale and the yaw angle.
 }
 
-\subsubsection{Scale}
-
-\subsubsection{Angle}
-
-\subsection{Expanding the Lindenmayer Systems to 3D}
+\subsubsection{Expanding the Lindenmayer Systems to 3D}
 \todoinline[caption=3d results]{
     Discuss how to create more interesting 3D fractals, including Koch curves, the dragon curve, and 3D trees/bushes.
 
     Show the results from \texttt{data/a.json} with the book's parameters.
 }
 
-\subsubsection{Interesting L-System 1}
-
-\subsubsection{Interesting L-System 2}
-
-\section{Conclusion}
+\subsection{Conclusion}
