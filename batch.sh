@@ -56,18 +56,18 @@ PYTHONPATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 echo "Setting PYTHONPATH=${PYTHONPATH}..."
 export PYTHONPATH
 
-blender --background --python generate.py -- "${CONFIG_FILE}"
+blender --background --python "${PYTHONPATH}/scripts/generate.py" -- "${CONFIG_FILE}"
 
 for ((job = 0; job < JOBS; job++)); do
     echo "Starting job $job..."
-    blender --background --python render.py -- "${CONFIG_FILE/.json/-cylinders.json}" --job "$job" --jobs "$JOBS" "${CONFIG_FILE/.json/-job-$job.blend}" >/dev/null &
+    blender --background --python "${PYTHONPATH}/scripts/render.py" -- "${CONFIG_FILE/.json/-cylinders.json}" --job "$job" --jobs "$JOBS" "${CONFIG_FILE/.json/-job-$job.blend}" >/dev/null &
 done
 
 echo -n "Waiting for jobs..."
-wait "$(jobs -rp)"
+wait $(jobs -rp)
 echo " done."
 
 CHUNKED_FILES=("${CONFIG_FILE/.json/-job-}"*".blend")
 echo "Joining" "${CHUNKED_FILES[@]}" "..."
 
-blender --background --python join.py -- "${CHUNKED_FILES[@]}" "${CONFIG_FILE/.json/.blend}"
+blender --background --python "${PYTHONPATH}/scripts/join.py" -- "${CHUNKED_FILES[@]}" "${CONFIG_FILE/.json/.blend}"
