@@ -5,8 +5,32 @@
 \author{Austin Gill \\ Kyle MacMillan}
 \date{April 26, 2019}
 
+\pgfdeclarelindenmayersystem{Fractal plant}{
+  \rule{X -> F-[[X]+X]+F[+FX]-X}
+  \rule{F -> FF}
+}
+
 \begin{document}
-\maketitle
+
+\begin{titlingpage}
+    \begin{center}
+        \huge\thetitle{}\\
+        \vspace{1cm}
+        \large\theauthor{}\\
+        \vspace{1cm}
+        \large\thedate{}\\
+        \vfill
+        \begin{figure}[H]
+            \centering
+            \begin{tikzpicture}
+                \draw [green!50!black, rotate=90]
+                [l-system={Fractal plant, axiom=X, order=6, step=2.5pt, angle=25}]
+                lindenmayer system;
+            \end{tikzpicture}
+        \end{figure}
+    \end{center}
+\end{titlingpage}
+
 \begingroup
 \hypersetup{linkcolor=black}
 \tableofcontents
