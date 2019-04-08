@@ -8,7 +8,7 @@ import bpy
 def parse_args(argv):
     parser = argparse.ArgumentParser(description="Draw a collection of cylinders on Blender.")
 
-    parser.add_argument("blend-files", type=str, nargs="+", help="The Blender files to join.")
+    parser.add_argument("blendfiles", type=str, nargs="+", help="The Blender files to join.")
 
     return parser.parse_args(argv)
 
@@ -20,7 +20,7 @@ def parse_json(filename):
 
 def main(args):
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    for file in args.blend_files:
+    for file in args.blendfiles:
         with bpy.data.libraries.load(file) as (data_from, data_to):
             data_to.objects = [name for name in data_from.objects if name.startswith("template")]
 
