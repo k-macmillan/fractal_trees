@@ -30,6 +30,7 @@ def main(args):
     # TODO: Validate the JSON file.
     clist = parse_json(args.cylinders)
 
+    # TODO: If start and/or stop are given, modify the filename.
     if args.start is not None or args.stop is not None:
         clist = clist[args.start : args.stop]
 
