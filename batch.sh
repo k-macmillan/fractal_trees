@@ -70,4 +70,6 @@ echo " done."
 CHUNKED_FILES=("${CONFIG_FILE/.json/-job-}"*".blend")
 echo "Joining" "${CHUNKED_FILES[@]}" "..."
 
-blender --background --python "${PYTHONPATH}/scripts/join.py" -- "${CHUNKED_FILES[@]}" "${CONFIG_FILE/.json/.blend}"
+blender --background --python "${PYTHONPATH}/scripts/join.py" -- "${CHUNKED_FILES[@]}" "${CONFIG_FILE/.json/.blend}" >/dev/null
+
+echo "Saving result to ${CONFIG_FILE/.json/.blend}..."
