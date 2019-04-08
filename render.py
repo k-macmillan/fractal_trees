@@ -35,7 +35,6 @@ def main(args):
         start = args.job * chunksize
         stop = start + chunksize
 
-    # TODO: If start and/or stop are given, modify the filename.
     if start is not None or stop is not None:
         clist = clist[start:stop]
 
