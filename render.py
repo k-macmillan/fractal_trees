@@ -10,13 +10,10 @@ def parse_args(argv):
 
     parser.add_argument("cylinders", type=str, help="The cylinders JSON file to use.")
 
-    # If start, stop are given, only render a portion of the file.
-    parser.add_argument(
-        "--start", type=int, default=None, help="The starting index of the JSON array."
-    )
-    parser.add_argument(
-        "--stop", type=int, default=None, help="The ending index of the JSON array."
-    )
+    parser.add_argument("--job", type=int, default=None, help="This script's job number.")
+    parser.add_argument("--jobs", type=int, default=None, help="The total number of jobs.")
+
+    parser.add_argument("output", type=str, help="The the output filename.")
 
     return parser.parse_args(argv)
 
@@ -30,12 +27,17 @@ def main(args):
     # TODO: Validate the JSON file.
     clist = parse_json(args.cylinders)
 
-    # TODO: If start and/or stop are given, modify the filename.
-    if args.start is not None or args.stop is not None:
-        clist = clist[args.start : args.stop]
+    start = None
+    stop = None
 
-    # Extensionless filename to save everything as.
-    basename = args.cylinders.replace(".json", "")
+    if args.job is not None and args.jobs is not None:
+        chunksize = len(clist) // args.jobs
+        start = args.job * chunksize
+        stop = start + chunksize
+
+    # TODO: If start and/or stop are given, modify the filename.
+    if start is not None or stop is not None:
+        clist = clist[start:stop]
 
     cylinders = {}
     for c in clist:
@@ -43,7 +45,7 @@ def main(args):
             cylinders[c["length"]] = [c]
         else:
             cylinders[c["length"]].append(c)
-    Graphics.draw(cylinders, basename + ".blend")
+    Graphics.draw(cylinders, args.output)
 
 
 if __name__ == "__main__":
