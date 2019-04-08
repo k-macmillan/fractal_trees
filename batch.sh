@@ -60,12 +60,14 @@ blender --background --python generate.py -- "${CONFIG_FILE}"
 
 for ((job = 0; job < JOBS; job++)); do
     echo "Starting job $job..."
-    # TODO: Capture output?
-    blender --background --python render.py -- "${CONFIG_FILE/.json/-cylinders.json}" --job "$job" --jobs "$JOBS" "${CONFIG_FILE/.json/-job-$job.blend}" &
+    blender --background --python render.py -- "${CONFIG_FILE/.json/-cylinders.json}" --job "$job" --jobs "$JOBS" "${CONFIG_FILE/.json/-job-$job.blend}" >/dev/null &
 done
 
-# TODO: Find a way to wait until the above generation is done.
-# CHUNKED_FILES=("${CONFIG_FILE/.json/-job-}"*".blend")
-# echo "Joining" "${CHUNKED_FILES[@]}" "..."
+echo -n "Waiting for jobs..."
+wait "$(jobs -rp)"
+echo " done."
 
-# blender --background --python join.py -- "${CHUNKED_FILES[@]}"
+CHUNKED_FILES=("${CONFIG_FILE/.json/-job-}"*".blend")
+echo "Joining" "${CHUNKED_FILES[@]}" "..."
+
+blender --background --python join.py -- "${CHUNKED_FILES[@]}" "${CONFIG_FILE/.json/.blend}"
