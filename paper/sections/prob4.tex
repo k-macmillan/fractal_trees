@@ -2,6 +2,14 @@
 \section{Heatflow Simulation}
 
 \subsection{Statement}
+Implement a CA simulation of 2D heat flow.
+Assume the domain is $0 < x < 10$, $0 < y < 10$, with insulated conditions on the top and bottom boundary.
+Also assume that the right side is held at a constant zero degrees and the left side has a temperature profile of $y(10-y)$.
+Use a $100 \times 100$ grid.
+Insulation means zero flux. This implies that instead of fixed valued ghost points on the top and bottom, you modify the CA rules accordingly.
+
+Generate several plots of the temperature profile at fixed values of time.
+
 \subsection{Method}
 \subsection{Implementation}
 \subsection{Results}
