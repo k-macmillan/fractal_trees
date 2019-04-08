@@ -9,6 +9,7 @@ def parse_args(argv):
     parser = argparse.ArgumentParser(description="Draw a collection of cylinders on Blender.")
 
     parser.add_argument("blendfiles", type=str, nargs="+", help="The Blender files to join.")
+    parser.add_argument("output", type=str, help="The output filename.")
 
     return parser.parse_args(argv)
 
@@ -28,7 +29,7 @@ def main(args):
             if obj is not None:
                 bpy.context.scene.objects.link(obj)
 
-    bpy.ops.wm.save_mainfile(filepath="joined.blend")
+    bpy.ops.wm.save_mainfile(filepath=args.output)
 
 
 if __name__ == "__main__":
