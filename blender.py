@@ -11,6 +11,13 @@ def parse_args(argv):
     parser = argparse.ArgumentParser(description="Draw a collection of cylinders on Blender.")
 
     parser.add_argument("config", type=str, help="The configuration JSON file to use.")
+    parser.add_argument(
+        "--no-blend",
+        "-n",
+        action="store_true",
+        default=False,
+        help="Disable creation of the blender file.",
+    )
 
     return parser.parse_args(argv)
 
@@ -59,8 +66,9 @@ def main(args):
     graphics.dump(cylinders, basename + "-cylinders")
     print("Adding {} cylinders to Blender scene.".format(len(clist)))
 
-    # TODO: It's possible to combine objects from multiple blender files. Split up cylinders on large fractals.
-    graphics.draw(cylinders, basename + ".blend")
+    if not args.no_blend:
+        # TODO: It's possible to combine objects from multiple blender files. Split up cylinders on large fractals.
+        graphics.draw(cylinders, basename + ".blend")
 
 
 if __name__ == "__main__":
