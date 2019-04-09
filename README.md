@@ -2,9 +2,7 @@
 
 Creating 3D fractals in Blender using Lindenmayer Systems.
 
-
 ![3D Fractal](https://i.imgur.com/gQPLXAE.jpg)
-
 
 [![3D Fractal SketchFab](https://i.imgur.com/oARGCvv.png)](https://sketchfab.com/3d-models/b3d-2317c1f611e14369b7a3b83e29be676b)
 
@@ -56,23 +54,19 @@ to view the wonderful results.
 
 ## TODO
 
-* Improve rendering speed on large fractals.
-  * It is possible to combine objects from multiple files. So generate the JSON file of cylinders,
-    and render chunks of it, then combine all the chunks.
-
-    This will likely work best/easiest from a Bash script.
-* Improve colors/materials
-  * Make color/material configurable from L-string?
-  * Make color/material configurable from JSON/commandline?
-* Play with more 3d fractals after runtime issues are fixed.
+* Play with more 3d fractals.
   * Generate the classic 2D fractals
   * Try to find 3D analogs of each
   * Create own fancy 3D fractals
   * See what other kinds of shapes we can create other than trees.
-* Play with proportional radii and other radius sizes.
+* Play with random perturbations.
 * Start working on the paper
   * Outline how the different commands work in 3D with simple examples.
   * Be sure to do the actual problem he assigned.
   * Discuss 3D trees
   * Discuss 3D koch island-like fractals
-* Figure out what the second problem is (probably something with CAs).
+* Start on the other 4 problems.
+  1. Use L-Systems to reproduce the book pictures (done)
+  2. Do fractal landscapes (maybe in Blender, if we can figure out gradient colors when rendering)
+  3. Be less extra on the CAs --- they'll be very easy in numpy, and matplotlib can do nice colors.
+  4. It might be necessary to use Numba on the Gray-Scott model.
