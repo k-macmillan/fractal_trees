@@ -29,12 +29,13 @@ def main(args):
             if obj is not None:
                 bpy.context.scene.objects.link(obj)
 
-        bpy.context.scene.objects.active = data_to.objects[0]
-        bpy.ops.object.select_all(action="SELECT")
-        bpy.ops.object.join()
-        bpy.context.scene.update()
-        bpy.ops.object.shade_smooth()
-        bpy.ops.object.select_all(action="DESELECT")
+    bpy.context.scene.update()
+    bpy.context.scene.objects.active = data_to.objects[0]
+    bpy.ops.object.select_all(action="SELECT")
+    bpy.ops.object.join()
+    bpy.context.scene.update()
+    bpy.ops.object.shade_smooth()
+    bpy.ops.object.select_all(action="DESELECT")
 
     bpy.ops.wm.save_mainfile(filepath=args.output)
 
