@@ -1,5 +1,6 @@
 import json
-from functools import partial
+
+import numpy as np
 
 import bpy
 from mathutils import Vector
@@ -25,7 +26,7 @@ class Graphics:
         if radius is not None and proportion is not None:
             raise ValueError("`radius` and `proportion` are mutually exclusive.")
 
-    def __init__(self, unit, angle, material=None, radius=None, proportion=None):
+    def __init__(self, unit, angle, material=None, radius=None, proportion=None, randomness=None):
         """Initialize a Graphics object to draw command strings for fractals.
 
         If neither a radius or a proportionality constant is given, default to a constant radius
@@ -37,12 +38,15 @@ class Graphics:
         :param radius: The radius of each cylinder. Mutually exclusive with `proportion`.
         :param proportion: Make each cylinder's radius proportional to its length. Mutually
         exclusive with `radius`.
+        :param randomness: If not None, the std deviation to randomly apply to each turtle move.
         """
         self.__check_args(radius, proportion)
 
         self.material = material
         self.radius = radius if radius is not None else 0.2
         self.proportion = proportion
+        # TODO: Should the same amount of randomness be applied to the angles as the linear steps?
+        self.randomness = randomness
         self.unit = unit
         self.angle = angle
 
@@ -50,16 +54,16 @@ class Graphics:
 
         self.mappings = {
             # Bind the distance and angle parameters to the turtle methods.
-            "F": partial(self.turtle.move, unit),
-            "G": partial(self.turtle.move, unit),
-            "f": partial(self.turtle.move, unit),
-            "g": partial(self.turtle.move, unit),
-            "-": partial(self.turtle.yaw, -angle),
-            "+": partial(self.turtle.yaw, +angle),
-            "v": partial(self.turtle.pitch, -angle),
-            "^": partial(self.turtle.pitch, +angle),
-            "<": partial(self.turtle.roll, -angle),
-            ">": partial(self.turtle.roll, +angle),
+            "F": self.turtle.move,
+            "G": self.turtle.move,
+            "f": self.turtle.move,
+            "g": self.turtle.move,
+            "-": self.turtle.yaw,
+            "+": self.turtle.yaw,
+            "v": self.turtle.pitch,
+            "^": self.turtle.pitch,
+            "<": self.turtle.roll,
+            ">": self.turtle.roll,
             "[": self.turtle.push,
             "]": self.turtle.pop,
         }
@@ -73,11 +77,15 @@ class Graphics:
         cylinders = []
         commands = iter(commands)
         for command in commands:
+            perturbation = (
+                np.random.normal(scale=self.randomness) if self.randomness is not None else 0
+            )
+
             length = 0
             start = self.turtle.position
             # Consume consecutive forward commands.
             while command in ("G", "F"):
-                self.mappings[command]()
+                self.mappings[command](self.unit + perturbation)
                 length += self.unit
                 try:
                     command = next(commands)
@@ -101,7 +109,12 @@ class Graphics:
                 )
 
             if command in self.mappings and command not in ("G", "F"):
-                self.mappings[command]()
+                if command in ("+", "^", ">"):
+                    self.mappings[command](+self.angle + perturbation)
+                elif command in ("-", "v", "<"):
+                    self.mappings[command](-self.angle + perturbation)
+                else:
+                    self.mappings[command]()
 
         return cylinders
 
