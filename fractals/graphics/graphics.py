@@ -86,7 +86,7 @@ class Graphics:
             # Consume consecutive forward commands.
             while command in ("G", "F"):
                 self.mappings[command](self.unit + perturbation)
-                length += self.unit
+                length += self.unit + perturbation
                 try:
                     command = next(commands)
                 except StopIteration:
