@@ -54,6 +54,10 @@ to view the wonderful results.
 
 ## TODO
 
+* Automate camera placement using the object(s) bounding box:
+
+  [option 1](https://docs.blender.org/api/blender_python_api_current/bpy.types.Object.html#bpy.types.Object.bound_box),
+  [option 2](https://blender.stackexchange.com/questions/8459/get-blender-x-y-z-and-bounding-box-with-script)
 * Play with more 3d fractals.
   * Generate the classic 2D fractals
   * Try to find 3D analogs of each
