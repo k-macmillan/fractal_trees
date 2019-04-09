@@ -85,8 +85,9 @@ class Graphics:
             start = self.turtle.position
             # Consume consecutive forward commands.
             while command in ("G", "F"):
-                self.mappings[command](self.unit + perturbation)
-                length += self.unit + perturbation
+                # Perturb only the angle. The drawing assumes many cylinders of the same length.
+                self.mappings[command](self.unit)
+                length += self.unit
                 try:
                     command = next(commands)
                 except StopIteration:
