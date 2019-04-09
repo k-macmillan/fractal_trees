@@ -1,5 +1,4 @@
 import json
-from collections import defaultdict
 from functools import partial
 
 import bpy
@@ -17,16 +16,6 @@ class Graphics:
     <,> - Roll CCW or CW, respectively, by one unit.
     ^,v - Pitch up or down, respectively, by one unit.
     -,+ - Yaw left or right, respectively, by one unit.
-    c,C - Decrement or increment, respectively, the current color by one unit.
-
-    TODO: I'm not sure how to do this with Blender. I know we can set the cylinder's material
-    (Provided the material exists before the cylinders are drawn). And I know we can set the
-    cylinder's color, but when I tried, the colors did not display. I think I'd prefer setting a
-    material over the color, but then we'd need a material map (similar to a matplotlib colormap).
-    The choice of color vs. material will also be influenced by whether or not we render the scene
-    after generating it (something I don't know much about).
-
-    r,R - Decrement or increment, respectively, the current cylinder radius.
     [,] - Save or restore, respectively, the current state on the stack. Note that the saved state
           includes the color (or material), direction, pen up/down state, and cylinder radius.
     """
