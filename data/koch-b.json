@@ -5,6 +5,7 @@
     "proportion": null,
     "axiom": "F+F+F+F",
     "iterations": 2,
+    "randomness": null,
     "rules": {
         "F": "FF+F+F+F+FF"
     }

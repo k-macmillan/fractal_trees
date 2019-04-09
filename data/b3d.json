@@ -5,6 +5,7 @@
     "proportion": null,
     "axiom": "F",
     "iterations": 2,
+    "randomness": null,
     "rules": {
         "F": "FF+[+F-F-F]-[-F+F+F]^+[+F-F-F]v-[-F+F+F]"
     }

@@ -38,6 +38,7 @@ def main(args):
         angle=config["angle"],
         radius=config["radius"],
         proportion=config["proportion"],
+        randomness=config["randomness"],
     )
 
     print("Computing all the cylinders.")

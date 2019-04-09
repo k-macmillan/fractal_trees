@@ -5,6 +5,7 @@
     "proportion": null,
     "axiom": "F",
     "iterations": 3,
+    "randomness": null,
     "rules": {
         "F": "GGG[-F][F][+F][vF][^F][<F][>F]",
         "G": "GG"
