@@ -2,7 +2,7 @@ import argparse
 import json
 import sys
 
-from fractals.graphics import Graphics
+from natural.lindenmayer import Graphics
 
 
 def parse_args(argv):

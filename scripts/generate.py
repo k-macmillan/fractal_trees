@@ -3,8 +3,7 @@ import itertools
 import json
 import sys
 
-from fractals.grammar import Grammar
-from fractals.graphics import Graphics
+from natural.lindenmayer import Grammar, Graphics
 
 
 def parse_args(argv):
