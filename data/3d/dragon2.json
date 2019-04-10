@@ -9,5 +9,9 @@
     "rules": {
         "F": "F^G+F",
         "G": "GvF-G"
-    }
+    },
+    "comments": [
+        "Flipping which rule gets which RPY changes the axis, as well as the orderings.",
+        "Lots of loops, but no real pattern when rules are switched."
+    ]
 }
