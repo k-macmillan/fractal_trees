@@ -5,12 +5,6 @@
 Implement the random midpoint displacement algorithm in two dimensions to generate some fractal landscapes.
 Examine the influence of $H$ on the generated landscapes.
 
-\todoinline[caption=Maybe do this in Blender too]{
-    Maybe do this in Blender too, because we can create objects from meshes, which is what the heightmap would give us.
-
-    The only trick would be to figure out how to color \textit{one} mesh with a height-based gradient.
-}
-
 \subsection{Method}
 Algorithm~\ref{prob3:alg:rmd1d}\todo{For some reason the autorefs for algorithms are broken now?}{} gives the random midpoint displacement algorithm for generating a random 1-dimensional vector.
 Note that the dimensions of this vector are determined by the number of recursive subdivisions of the domain.
@@ -22,7 +16,7 @@ Note that the dimensions of this vector are determined by the number of recursiv
             \State{Seed the RNG with $seed$}
             \State{$N \gets 2^{nrc}$}\IComment{$N+1$ is the length of the generated vector}
             \State{$x_0 \gets 0$}\IComment{Initialize the height of both ends of the vector}
-            \State{$x_N \gets \sigma \cdot \mathrm{rand()}$}
+            \State{$x_N \gets \sigma \cdot \mathrm{randn()}$}
             \For{$i \in \{1, \dots, nrc\}$}
                 \State{$\vec \Delta_i \gets \sigma \cdot 0.5^{(i + 1) / 2}$}\IComment{Compute the variances for each point}
             \EndFor{}
@@ -31,7 +25,7 @@ Note that the dimensions of this vector are determined by the number of recursiv
         \EndFunction{}
         \Function{Recurse}{$\vec x$, $t_0$, $t_2$, $t$, $nrc$}
             \State{$t_1 \gets (t_0 + t_2) / 2$}
-            \State{$x_{t_1} \gets \frac{1}{2}\cdot(x_{t_0} + x_{t_2}) + \Delta_t \cdot \mathrm{rand()}$}
+            \State{$x_{t_1} \gets \frac{1}{2}\cdot(x_{t_0} + x_{t_2}) + \Delta_t \cdot \mathrm{randn()}$}
             \If{$t < nrc$}\IComment{Recursively fill the rest of the vector $\vec x$}
                 \State\Call{Recurse}{$\vec x$, $t_0$, $t_1$, $t+1$, $nrc$}
                 \State\Call{Recurse}{$\vec x$, $t_1$, $t_2$, $t+1$, $nrc$}
@@ -54,25 +48,21 @@ This is shown in Algorithm~\ref{prob3:alg:rmd2d}.
         \Function{RandomMidpoint2D}{$nrc$, $\sigma$, $seed$}
             \State{Seed the RNG with $seed$}
             \State{$N \gets 2^{nrc}$}\IComment{$N+1$ is the length of one side of the square matrix}
-            \State{$X_{0,0}, X_{0,N}, X_{N,0}, X_{N,N} \gets \sigma \cdot \mathrm{rand()}$}\IComment{Initialize each of the matrix corners}
+            \State{$X_{0,0}, X_{0,N}, X_{N,0}, X_{N,N} \gets \sigma \cdot \mathrm{randn()}$}\IComment{Initialize each of the matrix corners}
             \For{$i \in \{1, \dots, nrc\}$}
                 \State{$\Delta_i \gets \sigma \cdot \frac{1}{2}^{(i + 1) / 2}$}
             \EndFor{}
-            \State\Call{Recurse2D}{$X$, $(0, 0)$, $(N, 0)$, $(N, N)$, $(0, N)$, $t$, $nrc$}\IComment{Corners in CW order}
+            \State\Call{Recurse2D}{$X$, $(0, 0)$, $(N, 0)$, $(N, N)$, $(0, N)$, $1$, $nrc$}\IComment{Corners in CW order}
         \EndFunction{}
         \Function{Recurse2D}{$X$, $(x_0, y_0)$, $(x_2, y_0)$, $(x_2, y_2)$, $(x_0, y_2)$, $t$, $nrc$}
             \State{$x_1 \gets (x_0 + x_2) / 2$}
             \State{$y_1 \gets (y_0 + y_2) / 2$}
-            \Statex\todoinline[caption=Question for McGough]{
-                Ask McGough about this. Perturbing only the center adds an edge case, but eliminates repeated perturbation of the same indices. You don't want to perturb the same location four times\dots
-
-                I guess we could try both and see what kind of results we get.
-            }
-            \State{$X_{x_0, y_1} \gets \frac{1}{2}\big(X_{x_0, y_0} + X_{x_0, y_2}\big) + \Delta_t \cdot \mathrm{rand()}$}\IComment{Potential race condition if parallelized.}
-            \State{$X_{x_1, y_0} \gets \frac{1}{2}\big(X_{x_0, y_0} + X_{x_2, y_0}\big) + \Delta_t \cdot \mathrm{rand()}$}
-            \State{$X_{x_2, y_1} \gets \frac{1}{2}\big(X_{x_2, y_0} + X_{x_2, y_2}\big) + \Delta_t \cdot \mathrm{rand()}$}
-            \State{$X_{x_1, y_2} \gets \frac{1}{2}\big(X_{x_0, y_2} + X_{x_2, y_2}\big) + \Delta_t \cdot \mathrm{rand()}$}
-            \State{$X_{x_1, y_1} \gets \frac{1}{4}\big(X_{x_0, y_1} + X_{x_1, y_0} + X_{x_2, y_1} + X_{x_1, y_2}\big) + \Delta_t \cdot \mathrm{rand()}$}\IComment{Perturb the center of the square}
+            \Statex\IComment{Avoid updating $X_{x, y}$ if it is nonzero. This allows custom initialization.}
+            \State{$X_{x_0, y_1} \gets \frac{1}{2}\big(X_{x_0, y_0} + X_{x_0, y_2}\big) + \Delta_t \cdot \mathrm{randn()}$}\IComment{Potential race condition if parallelized.}
+            \State{$X_{x_1, y_0} \gets \frac{1}{2}\big(X_{x_0, y_0} + X_{x_2, y_0}\big) + \Delta_t \cdot \mathrm{randn()}$}
+            \State{$X_{x_2, y_1} \gets \frac{1}{2}\big(X_{x_2, y_0} + X_{x_2, y_2}\big) + \Delta_t \cdot \mathrm{randn()}$}
+            \State{$X_{x_1, y_2} \gets \frac{1}{2}\big(X_{x_0, y_2} + X_{x_2, y_2}\big) + \Delta_t \cdot \mathrm{randn()}$}
+            \State{$X_{x_1, y_1} \gets \frac{1}{4}\big(X_{x_0, y_1} + X_{x_1, y_0} + X_{x_2, y_1} + X_{x_1, y_2}\big) + \Delta_t \cdot \mathrm{randn()}$}\IComment{Perturb the center of the square}
             \If{ $t < nrc$}
                 \State\Call{Recurse2D}{$X$, $(x_0, y_0)$, $(x_1, y_0)$, $(x_1, y_1)$, $(x_0, y_1)$, $t+1$, $nrc$}
                 \State\Call{Recurse2D}{$X$, $(x_1, y_0)$, $(x_2, y_0)$, $(x_2, y_1)$, $(x_1, y_1)$, $t+1$, $nrc$}
