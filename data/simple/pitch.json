@@ -1,0 +1,12 @@
+{
+    "unit": 1.1,
+    "angle": 1,
+    "radius": null,
+    "proportion": null,
+    "axiom": "G",
+    "iterations": 0,
+    "randomness": null,
+    "rules": {
+        "G": "G^G"
+    }
+}
