@@ -1,0 +1,12 @@
+{
+    "unit": 1.1,
+    "angle": 0.5235987755982988,
+    "radius": null,
+    "proportion": null,
+    "axiom": "F",
+    "iterations": 4,
+    "randomness": null,
+    "rules": {
+        "F": "F[-<<<<F][+>>>>F]"
+    }
+}
