@@ -108,8 +108,10 @@ class Graphics:
                         "length": length,
                     }
                 )
+            if command in ("f", "g"):
+                self.mappings[command](self.unit)
 
-            if command in self.mappings and command not in ("G", "F"):
+            if command in self.mappings and command not in ("G", "F", "f", "g"):
                 if command in ("+", "^", ">"):
                     self.mappings[command](+self.angle + perturbation)
                 elif command in ("-", "v", "<"):
