@@ -2,7 +2,7 @@
 \section{Generating a Fractal Landscape}
 
 \subsection{Statement}
-Implement the random midpoint displacement algorithm\todo{This is from section 7.6 in the book.}{} in 3D and generate some fractal landscapes.
+Implement the random midpoint displacement algorithm in two dimensions to generate some fractal landscapes.
 Examine the influence of $H$ on the generated landscapes.
 
 \todoinline[caption=Maybe do this in Blender too]{
@@ -12,6 +12,102 @@ Examine the influence of $H$ on the generated landscapes.
 }
 
 \subsection{Method}
+Algorithm~\ref{prob3:alg:rmd1d}\todo{For some reason the autorefs for algorithms are broken now?}{} gives the random midpoint displacement algorithm for generating a random 1-dimensional vector.
+Note that the dimensions of this vector are determined by the number of recursive subdivisions of the domain.
+
+\begin{algorithm}
+    % \begin{noindent}
+    \begin{algorithmic}
+        \Function{RandomMidpoint1D}{$nrc$, $\sigma$, $seed$}
+            \State{Seed the RNG with $seed$}
+            \State{$N \gets 2^{nrc}$}\IComment{$N+1$ is the length of the generated vector}
+            \State{$x_0 \gets 0$}\IComment{Initialize the height of both ends of the vector}
+            \State{$x_N \gets \sigma \cdot \mathrm{rand()}$}
+            \For{$i \in \{1, \dots, nrc\}$}
+                \State{$\vec \Delta_i \gets \sigma \cdot 0.5^{(i + 1) / 2}$}\IComment{Compute the variances for each point}
+            \EndFor{}
+            \State\Call{Recurse}{$\vec x$, $0$, $N$, $1$, $nrc$}
+            \State\Return{$\vec x$}
+        \EndFunction{}
+        \Function{Recurse}{$\vec x$, $t_0$, $t_2$, $t$, $nrc$}
+            \State{$t_1 \gets (t_0 + t_2) / 2$}
+            \State{$x_{t_1} \gets \frac{1}{2}\cdot(x_{t_0} + x_{t_2}) + \Delta_t \cdot \mathrm{rand()}$}
+            \If{$t < nrc$}\IComment{Recursively fill the rest of the vector $\vec x$}
+                \State\Call{Recurse}{$\vec x$, $t_0$, $t_1$, $t+1$, $nrc$}
+                \State\Call{Recurse}{$\vec x$, $t_1$, $t_2$, $t+1$, $nrc$}
+            \EndIf{}
+        \EndFunction{}
+    \end{algorithmic}
+    % \end{noindent}
+    \caption{The random midpoint displacement algorithm in one dimension}\label{prob3:alg:rmd1d}
+\end{algorithm}
+
+This algorithm effectively generates a random heightmap above a regularly spaced segment of the real number line.
+The extension of the algorithm to two dimensions would generate a heighmap above a square 2D grid --- effectively generating a landscape heightmap.
+
+To do so, we must modify Algorithm~\ref{prob3:alg:rmd1d} to generate a square matrix of random values, and recursively quadsect this matrix until we have reached the recursion limit $nrc$.
+This is shown in Algorithm~\ref{prob3:alg:rmd2d}.
+
+\begin{algorithm}
+    % \begin{noindent}
+    \begin{algorithmic}
+        \Function{RandomMidpoint2D}{$nrc$, $\sigma$, $seed$}
+            \State{Seed the RNG with $seed$}
+            \State{$N \gets 2^{nrc}$}\IComment{$N+1$ is the length of one side of the square matrix}
+            \State{$X_{0,0}, X_{0,N}, X_{N,0}, X_{N,N} \gets \sigma \cdot \mathrm{rand()}$}\IComment{Initialize each of the matrix corners}
+            \For{$i \in \{1, \dots, nrc\}$}
+                \State{$\Delta_i \gets \sigma \cdot \frac{1}{2}^{(i + 1) / 2}$}
+            \EndFor{}
+            \State\Call{Recurse2D}{$X$, $(0, 0)$, $(N, 0)$, $(N, N)$, $(0, N)$, $t$, $nrc$}\IComment{Corners in CW order}
+        \EndFunction{}
+        \Function{Recurse2D}{$X$, $(x_0, y_0)$, $(x_2, y_0)$, $(x_2, y_2)$, $(x_0, y_2)$, $t$, $nrc$}
+            \State{$x_1 \gets (x_0 + x_2) / 2$}
+            \State{$y_1 \gets (y_0 + y_2) / 2$}
+            \Statex\todoinline[caption=Question for McGough]{
+                Ask McGough about this. Perturbing only the center adds an edge case, but eliminates repeated perturbation of the same indices. You don't want to perturb the same location four times\dots
+
+                I guess we could try both and see what kind of results we get.
+            }
+            \State{$X_{x_0, y_1} \gets \frac{1}{2}\big(X_{x_0, y_0} + X_{x_0, y_2}\big) + \Delta_t \cdot \mathrm{rand()}$}\IComment{Potential race condition if parallelized.}
+            \State{$X_{x_1, y_0} \gets \frac{1}{2}\big(X_{x_0, y_0} + X_{x_2, y_0}\big) + \Delta_t \cdot \mathrm{rand()}$}
+            \State{$X_{x_2, y_1} \gets \frac{1}{2}\big(X_{x_2, y_0} + X_{x_2, y_2}\big) + \Delta_t \cdot \mathrm{rand()}$}
+            \State{$X_{x_1, y_2} \gets \frac{1}{2}\big(X_{x_0, y_2} + X_{x_2, y_2}\big) + \Delta_t \cdot \mathrm{rand()}$}
+            \State{$X_{x_1, y_1} \gets \frac{1}{4}\big(X_{x_0, y_1} + X_{x_1, y_0} + X_{x_2, y_1} + X_{x_1, y_2}\big) + \Delta_t \cdot \mathrm{rand()}$}\IComment{Perturb the center of the square}
+            \If{ $t < nrc$}
+                \State\Call{Recurse2D}{$X$, $(x_0, y_0)$, $(x_1, y_0)$, $(x_1, y_1)$, $(x_0, y_1)$, $t+1$, $nrc$}
+                \State\Call{Recurse2D}{$X$, $(x_1, y_0)$, $(x_2, y_0)$, $(x_2, y_1)$, $(x_1, y_1)$, $t+1$, $nrc$}
+                \State\Call{Recurse2D}{$X$, $(x_1, y_1)$, $(x_2, y_1)$, $(x_2, y_2)$, $(x_1, y_2)$, $t+1$, $nrc$}
+                \State\Call{Recurse2D}{$X$, $(x_0, y_1)$, $(x_1, y_1)$, $(x_1, y_2)$, $(x_0, y_2)$, $t+1$, $nrc$}
+            \EndIf{}
+        \EndFunction{}
+    \end{algorithmic}
+    % \end{noindent}
+    \caption{The 2D extension of Algorithm~\ref{prob3:alg:rmd1d}}\label{prob3:alg:rmd2d}
+\end{algorithm}
+
+Modifying both algorithms to work with fractional Brownian motion involves changing the $\Delta_t$ update step for each recursive level from
+\begin{equation}
+    \Delta_t = \sigma \cdot \frac{1}{2}^{(t + 1) / 2}\label{prob3:eqn:rmd-Delta}
+\end{equation}
+to
+\begin{equation}
+    \Delta_t = \sqrt{\frac{\sigma^2}{2^{2tH}} \big(1 - 2 ^ {2 H - 2}\big)}\label{prob3:eqn:fBm-Delta}
+\end{equation}
+
+Then the parameter $H$, called the Hurst exponent, describes the roughness of the fractal.
+The book indicates lower values of $H$ should \textit{increase} the fractal roughness, while higher values will decrease the roughness.
+
+Also note that the fractal's dimension can be recovered from $H$
+\begin{equation}
+    d = 2 - H\label{prob3:eqn:fractal-dimension-1d}
+\end{equation}
+for the 1D random midpoint algorithm, and
+\begin{equation}
+    d = 3 - H\label{prob3:eqn:fractal-dimension-2d}
+\end{equation}
+for the 2D version.
+Thus smaller $H$ values \textit{increase} the fractal dimension, while larger values decrease the fractal dimension.
+
 \subsection{Implementation}
 \subsection{Results}
 \subsection{Conclusion}
