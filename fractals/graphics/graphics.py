@@ -117,7 +117,7 @@ class Graphics:
                 else:
                     self.mappings[command]()
 
-        return cylinders
+        return [dict(t) for t in {tuple(d.items()) for d in cylinders}]
 
     @staticmethod
     def dump(data, path):
