@@ -1,7 +1,12 @@
 """Reproducibly plot the landscape figures for the paper."""
 import argparse
 
-from natural.landscape import rand_displacement_1d, plot_displacement_1d
+from natural.landscape import (
+    plot_displacement_1d,
+    plot_displacement_2d,
+    rand_displacement_1d,
+    rand_displacement_2d,
+)
 
 
 def parse_args():
@@ -48,11 +53,27 @@ def gen_1d_samples(basepath):
     plot_displacement_1d(xs, labels, filename=basepath + "1d-5-2-hurst-420.eps")
 
 
+def gen_2d_figures(basepath):
+    Z = rand_displacement_2d(recursions=4, scale=1, hurst=0.5, seed=3)
+    plot_displacement_2d(Z, filename=basepath + "2d-4-1-0_5-3.eps")
+
+    Z = rand_displacement_2d(recursions=4, scale=1, hurst=0.7, seed=9)
+    plot_displacement_2d(Z, filename=basepath + "2d-4-1-0_7-9.eps")
+    Z[Z <= -0.8] = -0.8
+    plot_displacement_2d(Z, filename=basepath + "2d-4-1-0_7-9-sea.eps")
+
+    Z = rand_displacement_2d(recursions=6, scale=1, hurst=0.7, seed=5)
+    plot_displacement_2d(Z, filename=basepath + "2d-6-1-0_7-5.eps")
+    Z[Z <= 0] = 0
+    plot_displacement_2d(Z, filename=basepath + "2d-6-1-0_7-5-sea.eps")
+
+
 def main(args):
     if not args.basepath.endswith("/"):
         args.basepath += "/"
 
     gen_1d_samples(args.basepath)
+    gen_2d_figures(args.basepath)
 
 
 if __name__ == "__main__":
