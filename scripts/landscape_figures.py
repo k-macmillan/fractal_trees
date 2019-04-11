@@ -1,6 +1,5 @@
 """Reproducibly plot the landscape figures for the paper."""
 import argparse
-import os
 
 from natural.landscape import rand_displacement_1d, plot_displacement_1d
 
