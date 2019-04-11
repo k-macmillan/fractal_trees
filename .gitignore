@@ -6,6 +6,12 @@
 *.blend*
 *.json
 
+# Makefile trigger files
+*.trigger
+
+# Generated figures
+paper/figures/landscapes/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
