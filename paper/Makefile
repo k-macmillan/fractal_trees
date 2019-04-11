@@ -23,7 +23,7 @@ view:
 	1>/dev/null 2>/dev/null xdg-open $(PROJECT_NAME).pdf &
 
 warn-todos:
-	@BOLD=$(tput bold)
-	@RED=$(tput setaf 1)
-	@RESET=$(tput sgr0)
-	@grep -irn --include "*.tex" --include "*.sty" "% TODO:" && echo "${BOLD}${RED}Warning:${RESET}${RED} TODO comment(s) found.${RESET}"
+	@BOLD=$$(tput bold);                                                                           \
+	RED=$$(tput setaf 1);                                                                          \
+	RESET=$$(tput sgr0);                                                                           \
+	grep -irn --include "*.tex" --include "*.sty" "% TODO:" && echo "$${BOLD}$${RED}Warning:$${RESET}$${RED} TODO comment(s) found.$${RESET}"
