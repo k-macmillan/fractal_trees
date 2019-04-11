@@ -39,6 +39,9 @@ def parse_args():
         "--seed", type=int, default=np.random.randint(2 ** 32 - 1), help="The random seed."
     )
     parser.add_argument(
+        "--sealevel", "-l", type=float, default=None, help="The landscape sealevel."
+    )
+    parser.add_argument(
         "--title",
         "-t",
         type=str,
@@ -61,6 +64,9 @@ def plot_1d(args):
         heightmap = rand_displacement_1d(
             recursions=recursions, scale=scale, hurst=hurst, seed=args.seed
         )
+        if args.sealevel is not None:
+            heightmap[heightmap < args.sealevel] = args.sealevel
+
         if width is None:
             width = len(heightmap)
 
@@ -102,6 +108,9 @@ def plot_2d(args):
             recursions=recursions, scale=scale, hurst=hurst, seed=args.seed
         )
 
+        if args.sealevel is not None:
+            heightmap[heightmap < args.sealevel] = args.sealevel
+
         if width is None or height is None:
             width, height = heightmap.shape
 
@@ -141,8 +150,6 @@ def plot_2d(args):
 
 
 def main(args):
-    print(args)
-
     if args.one:
         plot_1d(args)
     else:
