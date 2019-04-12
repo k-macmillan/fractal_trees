@@ -150,6 +150,7 @@ def plot_2d(args):
 
 
 def main(args):
+    print("seed:", args.seed)
     if args.one:
         plot_1d(args)
     else:
