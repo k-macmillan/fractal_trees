@@ -39,7 +39,7 @@ def parse_args():
 
 def main(args):
     _, axes = plt.subplots(args.prows, args.pcols)
-    axes = iter(axes.flatten())
+    axes = iter(axes.flatten()) if args.prows * args.pcols != 1 else iter([axes])
     for i, domain in zip(
         range(1, args.timestep * args.prows * args.pcols + 1),
         istep(args.rows, args.cols, args.xmin, args.xmax, args.ymin, args.ymax),
