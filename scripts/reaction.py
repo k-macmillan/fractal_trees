@@ -93,7 +93,7 @@ def main(args):
         plt.tight_layout()
 
         if args.title is not None:
-            plt.title(args.title)
+            plt.suptitle(args.title)
 
         if args.output is not None:
             plt.savefig(args.output)
