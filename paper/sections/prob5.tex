@@ -2,11 +2,64 @@
 \section{Reproducing the Gray-Scott Model Results}
 
 \subsection{Statement}
-Reproduce patterns $\theta$, $\lambda$, $\mu$, and $\alpha$ in the Gray-Scott Model.
+Reproduce patterns $\alpha$, $\lambda$, $\mu$, and $\theta$ in the Gray-Scott Model.
 
 \todoinline{Find a high quality image with the different patterns.}
 
 \subsection{Method}
+
+The Gray-Scott Model models reaction diffusion of two chemicals $U$ and $V$ in an unstirred planar chemical reactor.
+Further, we assume the reaction $U \to V$ is autocatalyzed by the presence of $V$.
+More specifically, the Gray-Scott model assumes the cubic autocatalysis
+\begin{equation}
+    U + 2V \to 3V
+\end{equation}
+with reaction rate $kuv^2$.
+This reaction can be modeled according to the following system of differential equations.
+\begin{equation}
+    \begin{cases}
+        \displaystyle{\frac{\partial u}{\partial t} = r_u \nabla^2 u - uv^2 + f(1 - u)} \\[20pt]
+        \displaystyle{\frac{\partial v}{\partial t} = r_v \nabla^2 v + uv^2 - (f + k)v}
+    \end{cases}\label{prob5:eqn:gray-scott}
+\end{equation}
+where $u$ and $v$ are the concentrations, and $r_u$ and $r_v$ are the diffusion rates, of $U$ and $V$ respectively.
+The chemical $U$ is added to the reactor at the feed rate $f$ which is scaled by the concentration of $U$.
+Simultaneously, $U$ and $V$ are drained from the reactor at the kill rate $k$, which is scaled by $f$ and the concentration of $V$.
+
+The system \autoref{prob5:eqn:gray-scott} can be discretized as\footnote{These are legitimately the most painful \LaTeX{} equations I've typeset in the last decade.}
+\begin{equation}
+    \begin{cases}
+        \displaystyle{\frac{u(x, y, t + \Delta t) - u(x, y, t)}{\Delta t}} = r_u \bigg( & \displaystyle{\frac{u(x + \Delta x, y, t) - 2u(x, y, t) + u(x - \Delta x, y, t)}{\Delta x^2} +}         \\
+                                                                                        & \displaystyle{\frac{u(x, y + \Delta y, t) - 2u(x, y, t) + u(x, y - \Delta y, t)}{\Delta y^2}\bigg)u - } \\
+                                                                                        & \displaystyle{uv^2 + f(1 - u)}                                                                          \\[20pt]
+        \displaystyle{\frac{v(x, y, t + \Delta t) - v(x, y, t)}{\Delta t}} = r_v \bigg( & \displaystyle{\frac{v(x + \Delta x, y, t) - 2v(x, y, t) + v(x - \Delta x, y, t)}{\Delta x^2} +}         \\
+                                                                                        & \displaystyle{\frac{v(x, y + \Delta y, t) - 2v(x, y, t) + v(x, y - \Delta y, t)}{\Delta y^2}\bigg)v - } \\
+                                                                                        & \displaystyle{uv^2 + (f + k)v}
+    \end{cases}\label{prob5:eqn:discretized-dogshit}
+\end{equation}
+
+and ``simplified'' into
+\begin{equation}
+    \begin{cases}
+        u(x, y, t + \Delta t) = u(x, y, t) + \Delta t \Bigg( r_u \bigg( & \displaystyle{\frac{u(x + \Delta x, y, t) - 2u(x, y, t) + u(x - \Delta x, y, t)}{\Delta x^2} +}         \\
+                                                                        & \displaystyle{\frac{u(x, y + \Delta y, t) - 2u(x, y, t) + u(x, y - \Delta y, t)}{\Delta y^2}\bigg)u - } \\
+                                                                        & \displaystyle{uv^2 + f(1 - u) \Bigg)}                                                                   \\[20pt]
+        v(x, y, t + \Delta t) = v(x, y, t) + \Delta t \Bigg( r_v \bigg( & \displaystyle{\frac{v(x + \Delta x, y, t) - 2v(x, y, t) + v(x - \Delta x, y, t)}{\Delta x^2} +}         \\
+                                                                        & \displaystyle{\frac{v(x, y + \Delta y, t) - 2v(x, y, t) + v(x, y - \Delta y, t)}{\Delta y^2}\bigg)v - } \\
+                                                                        & \displaystyle{uv^2 + (f + k)v \Bigg)}
+    \end{cases}\label{prob5:eqn:discretized-dogshit}
+\end{equation}
+
+\todoinline{
+    Nuke the above discretization (but still mention it) in favor of the discrete Laplacian with periodic boundary conditions as discussed in \textit{Computational Methods for Inverse Problems}.
+
+    Show the difference between the original Dirichlet boundaries, and the new periodic ones.
+
+    If time allows, run McGough's code to figure out any speed difference.
+
+    Refer to \url{https://en.wikipedia.org/wiki/Discrete\_Laplace\_operator\#Finite\_differences}
+}
+
 \subsection{Implementation}
 \subsection{Results}
 \subsection{Conclusion}
