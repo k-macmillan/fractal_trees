@@ -28,7 +28,7 @@ def laplacian(N):
     )
 
 
-def init(N, scale=0.02, r=16, u0=0.5, v0=0.25):
+def init(N, scale, r, u0, v0):
     """Initialize the U, V concentrations."""
     u, v = np.ones((N, N)), np.zeros((N, N))
     u += scale * np.random.random((N, N))
