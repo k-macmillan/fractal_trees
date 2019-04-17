@@ -28,31 +28,34 @@ def laplacian(N):
     )
 
 
-def init(N):
+def init(N, scale=0.02, r=16, u0=0.5, v0=0.25):
     """Initialize the U, V concentrations."""
     u, v = np.ones((N, N)), np.zeros((N, N))
-    u += 0.2 * np.random.random((N, N))
-    v += 0.2 * np.random.random((N, N))
+    u += scale * np.random.random((N, N))
+    v += scale * np.random.random((N, N))
     c = N // 2
     # TODO: Play with this initialization.
-    r = 16
-    # u[c - r : c + r, c - r : c + r] = 0.0
-    # v[c - r : c + r, c - r : c + r] = 0.0
+    if r is not None:
+        u[c - r : c + r, c - r : c + r] = u0
+        v[c - r : c + r, c - r : c + r] = v0
     return u, v
 
 
-def gray_scott(N, ru, rv, f, k, iters):
+def gray_scott(N, iters, ru, rv, f, k, scale, r, u0, v0):
     """Run the Gray-Scott model with the given parameters.
 
     :param N: The domain size.
+    :param iters: The number of iterations to run the model for
     :param ru: The diffusion rate for u
     :param rv: The diffusion rate for v
     :param f: The feed rate
     :param k: The kill rate
-    :param iters: The number of iterations to run the model for
+    :param scale: The scale of the random initialization
+    :param r: The size of the center, high concentration, initialization, if not None
+    :param u0, v0: The center initial concentrations of U and V
     :returns: a tuple of (u, v) concentration matrices
     """
-    u, v = init(N)
+    u, v = init(N, scale=scale, r=r, u0=u0, v0=v0)
     L = laplacian(N)
     u = u.reshape(N * N)
     v = v.reshape(N * N)
