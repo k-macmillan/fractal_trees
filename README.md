@@ -52,25 +52,19 @@ blender data/b3d.blend
 
 to view the wonderful results.
 
-## TODO
+## Gray Scott Parameters
 
-* Automate camera placement using the object(s) bounding box:
+Here are the parameters to reproduce all but the three hardest patterns.
 
-  [option 1](https://docs.blender.org/api/blender_python_api_current/bpy.types.Object.html#bpy.types.Object.bound_box),
-  [option 2](https://blender.stackexchange.com/questions/8459/get-blender-x-y-z-and-bounding-box-with-script)
-* Play with more 3d fractals.
-  * Generate the classic 2D fractals
-  * Try to find 3D analogs of each
-  * Create own fancy 3D fractals
-  * See what other kinds of shapes we can create other than trees.
-* Play with random perturbations.
-* Start working on the paper
-  * Outline how the different commands work in 3D with simple examples.
-  * Be sure to do the actual problem he assigned.
-  * Discuss 3D trees
-  * Discuss 3D koch island-like fractals
-* Start on the other 4 problems.
-  1. Use L-Systems to reproduce the book pictures (done)
-  2. Do fractal landscapes (maybe in Blender, if we can figure out gradient colors when rendering)
-  3. Be less extra on the CAs --- they'll be very easy in numpy, and matplotlib can do nice colors.
-  4. It might be necessary to use Numba on the Gray-Scott model.
+```shell
+PYTHONPATH=$(pwd) python3 scripts/reaction.py --gui -i 8000 -k 0.05 -f 0.017 -r 5 -n 256 --title "Pattern $\\alpha$"
+# The -r parameter has a big impact on beta
+PYTHONPATH=$(pwd) python3 scripts/reaction.py --gui -i 8000 -k 0.045 -f 0.019 -r 2 --title "Patten $\\beta$"
+PYTHONPATH=$(pwd) python3 scripts/reaction.py --gui -i 8000 -k 0.052 -f 0.021 -r 10 --title "Pattern $\\gamma$"
+PYTHONPATH=$(pwd) python3 scripts/reaction.py --gui -i 5000 -k 0.052 -f 0.026 -r 5 --title "Pattern $\\delta$"
+PYTHONPATH=$(pwd) python3 scripts/reaction.py --gui -i 5000 -k 0.052 -f 0.017 -r 2 --title "Pattern $\\epsilon$"
+PYTHONPATH=$(pwd) python3 scripts/reaction.py --gui -i 5000 -k 0.06 -f 0.039 -r 2 --scale 0.2 --title "Pattern $\\theta$"
+PYTHONPATH=$(pwd) python3 scripts/reaction.py --gui -i 5000 -k 0.064 -f 0.05 -r 5 --scale 0.2 --title "Pattern $\\kappa$"
+PYTHONPATH=$(pwd) python3 scripts/reaction.py --gui -i 8000 -k 0.066 -f 0.04 -r 5 --title "Pattern $\\lambda$"
+PYTHONPATH=$(pwd) python3 scripts/reaction.py --gui -i 15000 -k 0.0655 -f 0.0565 -r 2 --scale 0.1 --title "Pattern $\\mu$"
+```
