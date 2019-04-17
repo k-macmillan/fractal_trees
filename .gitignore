@@ -11,6 +11,7 @@
 
 # Generated figures
 paper/figures/landscapes/
+paper/figures/reactions/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
