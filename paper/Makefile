@@ -10,8 +10,11 @@ LANDSCAPE_TRIGGER := $(LANDSCAPE_DIR)/.landscape-figures.trigger
 REACTION_DIR := figures/reactions
 REACTION_DEPS := $(REPO_ROOT)/natural/automata/reaction_diffusion.py $(REPO_ROOT)/scripts/reaction.py
 REACTION_TRIGGER := $(REACTION_DIR)/.reaction-figures.trigger
+# TODO: Increase size and iterations after testing.
+REACTION_SIZE := 128
+REACTION_ITERS := 5000
 
-.PHONY: all error view warn-todos clean clean-figures figures
+.PHONY: all error view warn-todos clean clean-figures cleanall figures _pre-reaction
 
 all: $(PROJECT_NAME).pdf $(SRC)
 
@@ -124,85 +127,132 @@ $(LANDSCAPE_TRIGGER): $(LANDSCAPE_DEPS)
 		--output $(LANDSCAPE_DIR)/2d-6-1-0_7-5-sealevel.eps                                      & \
 	wait
 
-# TODO: Increase number of iterations, and fix mu and lambda.
-$(REACTION_TRIGGER): $(REACTION_DEPS)
+_pre-reaction:
 	mkdir -p $(REACTION_DIR)
-	touch $(REACTION_TRIGGER)
 	$(eval REACTION_DIR := $(shell readlink -f $(REACTION_DIR)))
-	@# Start all the jobs in parallel the poor man's way, fully aware there's a better way (tm).
+
+$(REACTION_TRIGGER): $(REACTION_DEPS)
+$(REACTION_TRIGGER): alpha
+$(REACTION_TRIGGER): beta
+$(REACTION_TRIGGER): gamma
+$(REACTION_TRIGGER): delta
+$(REACTION_TRIGGER): epsilon
+$(REACTION_TRIGGER): theta
+$(REACTION_TRIGGER): kappa
+$(REACTION_TRIGGER): lambda
+$(REACTION_TRIGGER): mu
+	touch $(REACTION_TRIGGER)
+
+alpha: _pre-reaction
+alpha: $(REACTION_DIR)/alpha.eps
+beta: _pre-reaction
+beta: $(REACTION_DIR)/beta.eps
+gamma: _pre-reaction
+gamma: $(REACTION_DIR)/gamma.eps
+delta: _pre-reaction
+delta: $(REACTION_DIR)/delta.eps
+epsilon: _pre-reaction
+epsilon: $(REACTION_DIR)/epsilon.eps
+theta: _pre-reaction
+theta: $(REACTION_DIR)/theta.eps
+kappa: _pre-reaction
+kappa: $(REACTION_DIR)/kappa.eps
+lambda: _pre-reaction
+lambda: $(REACTION_DIR)/lambda.eps
+mu: _pre-reaction
+mu: $(REACTION_DIR)/mu.eps
+
+$(REACTION_DIR)/alpha.eps:
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
-		--iterations 8000                                                                          \
+		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.05                                                                                \
 		--feed 0.017                                                                               \
 		--radius 5                                                                                 \
-		--size 256                                                                                 \
+		--size $(REACTION_SIZE)                                                                    \
 		--title "Pattern $$\\alpha$$"                                                              \
-		--output $(REACTION_DIR)/alpha.eps                                                       & \
+		--output $(REACTION_DIR)/alpha.eps
+
+$(REACTION_DIR)/beta.eps:
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
-		--iterations 8000                                                                          \
+		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.045                                                                               \
 		--feed 0.019                                                                               \
 		--radius 2                                                                                 \
-		--size 256                                                                                 \
+		--size $(REACTION_SIZE)                                                                    \
 		--title "Pattern $$\\beta$$"                                                               \
-		--output $(REACTION_DIR)/beta.eps                                                        & \
+		--output $(REACTION_DIR)/beta.eps
+
+$(REACTION_DIR)/gamma.eps:
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
-		--iterations 8000                                                                          \
+		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.052                                                                               \
 		--feed 0.021                                                                               \
 		--radius 5                                                                                 \
-		--size 256                                                                                 \
+		--size $(REACTION_SIZE)                                                                    \
 		--title "Pattern $$\\gamma$$"                                                              \
-		--output $(REACTION_DIR)/gamma.eps                                                       & \
+		--output $(REACTION_DIR)/gamma.eps
+
+$(REACTION_DIR)/delta.eps:
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
-		--iterations 8000                                                                          \
+		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.052                                                                               \
 		--feed 0.026                                                                               \
 		--radius 5                                                                                 \
-		--size 256                                                                                 \
+		--size $(REACTION_SIZE)                                                                    \
 		--title "Pattern $$\\delta$$"                                                              \
-		--output $(REACTION_DIR)/delta.eps                                                       & \
+		--output $(REACTION_DIR)/delta.eps
+
+$(REACTION_DIR)/epsilon.eps:
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
-		--iterations 8000                                                                          \
+		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.052                                                                               \
 		--feed 0.017                                                                               \
 		--radius 2                                                                                 \
-		--size 256                                                                                 \
+		--size $(REACTION_SIZE)                                                                    \
 		--title "Pattern $$\\epsilon$$"                                                            \
-		--output $(REACTION_DIR)/epsilon.eps                                                     & \
+		--output $(REACTION_DIR)/epsilon.eps
+
+$(REACTION_DIR)/theta.eps:
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
-		--iterations 8000                                                                          \
+		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.06                                                                                \
 		--feed 0.04                                                                                \
 		--radius 2                                                                                 \
 		--scale 0.2                                                                                \
-		--size 256                                                                                 \
+		--size $(REACTION_SIZE)                                                                    \
 		--title "Pattern $$\\theta$$"                                                              \
-		--output $(REACTION_DIR)/theta.eps                                                       & \
+		--output $(REACTION_DIR)/theta.eps
+
+$(REACTION_DIR)/kappa.eps:
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
-		--iterations 8000                                                                          \
+		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.064                                                                               \
 		--feed 0.05                                                                                \
 		--radius 5                                                                                 \
 		--scale 0.2                                                                                \
-		--size 256                                                                                 \
+		--size $(REACTION_SIZE)                                                                    \
 		--title "Pattern $$\\kappa$$"                                                              \
-		--output $(REACTION_DIR)/kappa.eps                                                       & \
+		--output $(REACTION_DIR)/kappa.eps
+
+# TODO: Fix lambda
+$(REACTION_DIR)/lambda.eps:
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
-		--iterations 8000                                                                          \
+		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.066                                                                               \
 		--feed 0.04                                                                                \
 		--radius 5                                                                                 \
-		--size 256                                                                                 \
+		--size $(REACTION_SIZE)                                                                    \
 		--title "Pattern $$\\lambda$$"                                                             \
-		--output $(REACTION_DIR)/lambda.eps                                                      & \
+		--output $(REACTION_DIR)/lambda.eps
+
+# TODO: Fix mu
+$(REACTION_DIR)/mu.eps:
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
-		--iterations 8000                                                                          \
+		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.0655                                                                              \
 		--feed 0.0565                                                                              \
 		--radius 2                                                                                 \
 		--scale 0.2                                                                                \
-		--size 256                                                                                 \
+		--size $(REACTION_SIZE)                                                                    \
 		--title "Pattern $$\\mu$$"                                                                 \
-		--output $(REACTION_DIR)/mu.eps                                                          & \
-	wait
+		--output $(REACTION_DIR)/mu.eps
