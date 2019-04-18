@@ -52,7 +52,7 @@ cleanall: clean-figures
 clean-figures:
 	rm $(LANDSCAPE_TRIGGER) $(REACTION_TRIGGER)
 	rm $(LANDSCAPE_DIR)/*
-	rm $(REACTION_DIR)/*
+	rm $(REACTION_DIR)/*.eps
 
 figures: $(HEAT_TRIGGER)
 figures: $(LANDSCAPE_TRIGGER)
