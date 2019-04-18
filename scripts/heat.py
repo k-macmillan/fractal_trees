@@ -44,7 +44,7 @@ def main(args):
     ):
         if i % args.timestep == 0:
             axis = next(axes)
-            sns.heatmap(domain, square=True, xticklabels=False, yticklabels=False, ax=axis)
+            sns.heatmap(domain, linewidths=0, square=True, xticklabels=False, yticklabels=False, ax=axis)
             axis.set_title(r"$t = {}$".format(i))
 
     if args.title is not None:
