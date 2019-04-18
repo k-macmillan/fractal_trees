@@ -14,6 +14,10 @@ REACTION_TRIGGER := $(REACTION_DIR)/.reaction-figures.trigger
 REACTION_SIZE := 128
 REACTION_ITERS := 5000
 
+HEAT_DIR := figures/heat
+HEAT_DEPS := $(REPO_ROOT)/natural/automata/heat.py $(REPO_ROOT)/scripts/heat.py
+HEAT_TRIGGER := $(HEAT_DIR)/.heat-figures.trigger
+
 .PHONY: all error view warn-todos clean clean-figures cleanall figures _pre-reaction
 
 all: $(PROJECT_NAME).pdf $(SRC)
@@ -50,8 +54,40 @@ clean-figures:
 	rm $(LANDSCAPE_DIR)/*
 	rm $(REACTION_DIR)/*
 
+figures: $(HEAT_TRIGGER)
 figures: $(LANDSCAPE_TRIGGER)
 figures: $(REACTION_TRIGGER)
+
+$(HEAT_TRIGGER): diffusion-simple
+$(HEAT_TRIGGER): diffusion-time
+	touch $(HEAT_TRIGGER)
+
+_pre-heat:
+	mkdir -p $(HEAT_DIR)
+	$(eval HEAT_DIR := $(shell readlink -f $(HEAT_DIR)))
+
+diffusion-simple: _pre-heat
+diffusion-simple: $(HEAT_DIR)/diffusion-simple.eps
+diffusion-time: _pre-heat
+diffusion-time: $(HEAT_DIR)/diffusion-time.eps
+
+$(HEAT_DIR)/diffusion-simple.eps: $(HEAT_DEPS)
+	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/heat.py                                   \
+		--prows 1                                                                                  \
+		--pcols 1                                                                                  \
+		--rows 100                                                                                 \
+		--cols 100                                                                                 \
+		--timestep 2000                                                                            \
+		--output $(HEAT_DIR)/diffusion-simple.eps
+
+$(HEAT_DIR)/diffusion-time.eps: $(HEAT_DEPS)
+	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/heat.py                                   \
+		--prows 3                                                                                  \
+		--pcols 3                                                                                  \
+		--rows 100                                                                                 \
+		--cols 100                                                                                 \
+		--timestep 200                                                                             \
+		--output $(HEAT_DIR)/diffusion-time.eps
 
 $(LANDSCAPE_TRIGGER): $(LANDSCAPE_DEPS)
 	mkdir -p $(LANDSCAPE_DIR)
@@ -131,7 +167,6 @@ _pre-reaction:
 	mkdir -p $(REACTION_DIR)
 	$(eval REACTION_DIR := $(shell readlink -f $(REACTION_DIR)))
 
-$(REACTION_TRIGGER): $(REACTION_DEPS)
 $(REACTION_TRIGGER): alpha
 $(REACTION_TRIGGER): beta
 $(REACTION_TRIGGER): gamma
@@ -162,7 +197,7 @@ lambda: $(REACTION_DIR)/lambda.eps
 mu: _pre-reaction
 mu: $(REACTION_DIR)/mu.eps
 
-$(REACTION_DIR)/alpha.eps:
+$(REACTION_DIR)/alpha.eps: $(REACTION_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
 		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.05                                                                                \
@@ -172,7 +207,7 @@ $(REACTION_DIR)/alpha.eps:
 		--title "Pattern $$\\alpha$$"                                                              \
 		--output $(REACTION_DIR)/alpha.eps
 
-$(REACTION_DIR)/beta.eps:
+$(REACTION_DIR)/beta.eps: $(REACTION_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
 		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.045                                                                               \
@@ -182,7 +217,7 @@ $(REACTION_DIR)/beta.eps:
 		--title "Pattern $$\\beta$$"                                                               \
 		--output $(REACTION_DIR)/beta.eps
 
-$(REACTION_DIR)/gamma.eps:
+$(REACTION_DIR)/gamma.eps: $(REACTION_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
 		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.052                                                                               \
@@ -192,7 +227,7 @@ $(REACTION_DIR)/gamma.eps:
 		--title "Pattern $$\\gamma$$"                                                              \
 		--output $(REACTION_DIR)/gamma.eps
 
-$(REACTION_DIR)/delta.eps:
+$(REACTION_DIR)/delta.eps: $(REACTION_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
 		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.052                                                                               \
@@ -202,7 +237,7 @@ $(REACTION_DIR)/delta.eps:
 		--title "Pattern $$\\delta$$"                                                              \
 		--output $(REACTION_DIR)/delta.eps
 
-$(REACTION_DIR)/epsilon.eps:
+$(REACTION_DIR)/epsilon.eps: $(REACTION_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
 		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.052                                                                               \
@@ -212,7 +247,7 @@ $(REACTION_DIR)/epsilon.eps:
 		--title "Pattern $$\\epsilon$$"                                                            \
 		--output $(REACTION_DIR)/epsilon.eps
 
-$(REACTION_DIR)/theta.eps:
+$(REACTION_DIR)/theta.eps: $(REACTION_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
 		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.06                                                                                \
@@ -223,7 +258,7 @@ $(REACTION_DIR)/theta.eps:
 		--title "Pattern $$\\theta$$"                                                              \
 		--output $(REACTION_DIR)/theta.eps
 
-$(REACTION_DIR)/kappa.eps:
+$(REACTION_DIR)/kappa.eps: $(REACTION_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
 		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.064                                                                               \
@@ -235,7 +270,7 @@ $(REACTION_DIR)/kappa.eps:
 		--output $(REACTION_DIR)/kappa.eps
 
 # TODO: Fix lambda
-$(REACTION_DIR)/lambda.eps:
+$(REACTION_DIR)/lambda.eps: $(REACTION_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
 		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.066                                                                               \
@@ -246,7 +281,7 @@ $(REACTION_DIR)/lambda.eps:
 		--output $(REACTION_DIR)/lambda.eps
 
 # TODO: Fix mu
-$(REACTION_DIR)/mu.eps:
+$(REACTION_DIR)/mu.eps: $(REACTION_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
 		--iterations $(REACTION_ITERS)                                                             \
 		--kill 0.0655                                                                              \

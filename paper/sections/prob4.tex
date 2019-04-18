@@ -10,6 +10,65 @@ Use a $100 \times 100$ grid.
 Generate several plots of the temperature profile at fixed values of time.
 
 \subsection{Method}
+We used a classic cellular automata system, with rules
+\begin{align*}
+    U_{i, j} & = \frac{1}{4}\big( U_{i + 1, j} + U_{i - 1, j} + U_{i, j + 1} + U_{i, j - 1} \big) & \text{(4-neighbor average)} \\
+    U_{0, j} & = U_{1, j}                                                                         & \text{(top no-flux)}        \\
+    U_{n, j} & = U_{n - 1, j}                                                                     & \text{(bottom no-flux)}     \\
+\end{align*}
+because diffusion without advection can be modeled by a simple 4-neighbor average.
+The no-flux boundary conditions on the top and bottom boundaries are handled by updating only the interior cells per iteration, and then updating the top and bottom rows of cells at the end of the iteration according to the rules above.
+The constant temperature profiles on the left and right boundaries are handled by the CA initialization only, because we will not iterate over the boundary cells.
+
 \subsection{Implementation}
+A single time step for the CA can be implemented as
+\begin{minted}{python}
+    @numba.njit(cache=True)
+    def step(grid, temp):
+        """Perform one time step of a 2D diffusion CA."""
+        rows, cols = grid.shape
+        # Do not update any of the four boundaries.
+        for row in range(1, rows - 1):
+            for col in range(1, cols - 1):
+                left, right = col - 1, col + 1
+                top, bottom = row - 1, row + 1
+                # Perform a four neighbor average.
+                temp[row, col] = (
+                    grid[top, right] + grid[top, left] + grid[bottom, right] + grid[bottom, left]
+                ) / 4
+        # Update the values of the top and bottom rows to have no flux boundary conditions.
+        temp[0, :] = temp[1, :]
+        temp[-1, :] = temp[-2, :]
+        grid[:, :] = temp[:, :]
+\end{minted}
+Notice that the loop variables \mintinline{python}{row} and \mintinline{python}{col} do not loop over the four boundaries of the grid.
+
+The grid initialization and repeated timestepping can be implemented as
+\begin{minted}{python}
+    def istep(rows, cols, ymin, ymax):
+        domain = np.zeros((rows, cols))
+        domain[:, 0] = np.linspace(ymin, ymax, cols) * (10 - np.linspace(ymin, ymax, rows))
+        temporary = domain.copy()
+        while True:
+            step(domain, temporary)
+            yield domain
+\end{minted}
+Notice that this is implemented as an infinite iterator.
+This allows for the caller to compose this iterator with their own consumer iterator that could possibly modify the values in the grid to simulate more complicated behavior.\footnote{This behavior has been observed by the dynamical systems gremlins that haunt the McLaury building.}
+
 \subsection{Results}
-\subsection{Conclusion}
+Our results were as expected.
+\autoref{prob4:fig:diffusion-simple} shows the domain after 2000 timesteps.\footnote{I don't know where the weird grid patterns are coming from. They are not present in the generated EPS image --- the only show up after the \LaTeX{} document has been compiled\dots}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/heat/diffusion-simple.eps}
+    \caption{The domain after 2000 timesteps}\label{prob4:fig:diffusion-simple}
+\end{figure}
+
+\autoref{prob4:fig:diffusion-time} shows the domain at 9 different time slices spaced 200 timesteps apart.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/heat/diffusion-time.eps}
+    \caption{The domain after 1800 timesteps}\label{prob4:fig:diffusion-time}
+\end{figure}
