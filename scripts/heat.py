@@ -11,8 +11,6 @@ def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
 
     ca_args = parser.add_argument_group()
-    ca_args.add_argument("--xmin", type=float, default=0, help="The lower domain x boundary.")
-    ca_args.add_argument("--xmax", type=float, default=10, help="The upper domain x boundary.")
     ca_args.add_argument("--ymin", type=float, default=0, help="The lower domain y boundary.")
     ca_args.add_argument("--ymax", type=float, default=10, help="The upper domain y boundary.")
     ca_args.add_argument(
@@ -42,7 +40,7 @@ def main(args):
     axes = iter(axes.flatten()) if args.prows * args.pcols != 1 else iter([axes])
     for i, domain in zip(
         range(1, args.timestep * args.prows * args.pcols + 1),
-        istep(args.rows, args.cols, args.xmin, args.xmax, args.ymin, args.ymax),
+        istep(args.rows, args.cols, args.ymin, args.ymax),
     ):
         if i % args.timestep == 0:
             axis = next(axes)
