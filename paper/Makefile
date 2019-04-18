@@ -291,3 +291,5 @@ $(REACTION_DIR)/mu.eps: $(REACTION_DEPS)
 		--size $(REACTION_SIZE)                                                                    \
 		--title "Pattern $$\\mu$$"                                                                 \
 		--output $(REACTION_DIR)/mu.eps
+
+# TODO: Add zeta, eta, and iota
