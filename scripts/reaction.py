@@ -8,10 +8,7 @@ from natural.automata.reaction_diffusion import gray_scott
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        epilog="""If multiple values are given for some parameters, every combination of the given parameters will be plotted in the same window.""",
-    )
+    parser = argparse.ArgumentParser(description=__doc__)
     plot = parser.add_argument_group()
 
     plot.add_argument(
@@ -29,7 +26,7 @@ def parse_args():
     runtime.add_argument("--size", "-n", type=int, default=128, help="The grid size.")
     runtime.add_argument("--ru", type=float, default=0.14, help="The U diffusion rate.")
     runtime.add_argument("--rv", type=float, default=0.06, help="The V diffusion rate.")
-    runtime.add_argument("--feed", "-f", type=float, default=0.035, help="The U feedrate.")
+    runtime.add_argument("--feed", "-f", type=float, default=0.035, help="The U feed rate.")
     runtime.add_argument("--kill", "-k", type=float, default=0.065, help="The U,V kill rate.")
     runtime.add_argument(
         "--iterations", "-i", type=int, default=1000, help="The number of iterations."
