@@ -2,9 +2,13 @@
 \section{Reproducing the Gray-Scott Model Results}
 
 \subsection{Statement}
-Reproduce patterns $\alpha$, $\lambda$, $\mu$, and $\theta$ in the Gray-Scott Model.
+Reproduce the Gray-Scott patterns $\alpha$, $\lambda$, $\mu$, and $\theta$ shown in \autoref{prob5:fig:patterns}.
 
-\todoinline{Find a high quality image with the different patterns.}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/reactions/patterns.jpg}
+    \caption{The labeled Gray-Scott patterns}\label{prob5:fig:patterns}
+\end{figure}
 
 \subsection{Method}
 
@@ -15,7 +19,7 @@ More specifically, the Gray-Scott model assumes the cubic autocatalysis
     U + 2V \to 3V
 \end{equation}
 with reaction rate $kuv^2$.
-This reaction can be modeled according to the following system of differential equations.
+This reaction can be modeled according to the following system of differential equations.\footnote{I'm smashing my giant red ``I Believe'' button on this one. My chemistry is a little rusty, and PDEs give me heart palpitations.}
 \begin{equation}
     \begin{cases}
         \displaystyle{\frac{\partial u}{\partial t} = r_u \Delta u - uv^2 + f(1 - u)} \\[10pt]
@@ -105,4 +109,11 @@ If homogeneous Neumann boundary conditions are desired, further modifications mu
 
 \subsection{Implementation}
 \subsection{Results}
+The $f$ and $k$ parameters largely decide the pattern displayed at the end of a large number of iterations.
+The mappings for the patterns shown in \autoref{prob5:fig:patterns} are shown in \autoref{prob5:fig:pattern-mappings}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figures/reactions/pattern-mappings.png}
+    \caption{The parameter mappings to the patterns shown in \autoref{prob5:fig:patterns}}\label{prob5:fig:pattern-mappings}
+\end{figure}
 \subsection{Conclusion}
