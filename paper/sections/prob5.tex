@@ -18,46 +18,89 @@ with reaction rate $kuv^2$.
 This reaction can be modeled according to the following system of differential equations.
 \begin{equation}
     \begin{cases}
-        \displaystyle{\frac{\partial u}{\partial t} = r_u \nabla^2 u - uv^2 + f(1 - u)} \\[20pt]
-        \displaystyle{\frac{\partial v}{\partial t} = r_v \nabla^2 v + uv^2 - (f + k)v}
+        \displaystyle{\frac{\partial u}{\partial t} = r_u \Delta u - uv^2 + f(1 - u)} \\[10pt]
+        \displaystyle{\frac{\partial v}{\partial t} = r_v \Delta v + uv^2 - (f + k)v}
     \end{cases}\label{prob5:eqn:gray-scott}
 \end{equation}
 where $u$ and $v$ are the concentrations, and $r_u$ and $r_v$ are the diffusion rates, of $U$ and $V$ respectively.
 The chemical $U$ is added to the reactor at the feed rate $f$ which is scaled by the concentration of $U$.
 Simultaneously, $U$ and $V$ are drained from the reactor at the kill rate $k$, which is scaled by $f$ and the concentration of $V$.
 
-The system \autoref{prob5:eqn:gray-scott} can be discretized as\footnote{These are legitimately the most painful \LaTeX{} equations I've typeset in the last decade.}
-\begin{equation}
+Recall that the Laplacian operator $\displaystyle\Delta f(x, y, t) = \nabla^2 f(x, y, t) = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2}$ can be discretized as
+\begin{align}
+    \Delta f(x, y, t) \approx \frac{f(x - h, y, t) + f(x + h, y, t) + f(x, y - h, t) + f(x, y + h, t) - 4f(x, y)}{h^2}\label{prob5:eqn:discrete-laplacian-operator}
+\end{align}
+for fixed step size $h$, uniform in both spatial dimensions --- allowing us to collect more of the terms together.
+In this problem, we have $\Delta x = \Delta y = \Delta t = h = 1$.
+
+However, note that the numerical computation of $\Delta f$ over a large spatial domain is computationally intensive, despite being relatively simple.
+Therefore, we desire a a method where the Laplacian can be applied to $f$ over each element of the spatial domain at once.
+
+Let $\mathbf U$ be a square $n \times n$ matrix of concentrations.
+We then unravel $\mathbf U$ into a column vector $\vec u$ and left-multiply by an $n^2 \times n^2$ matrix $\mathbf L$ to numerically compute the discrete Laplacian over the entire spatial domain.
+
+That is, the discretized version of \autoref{prob5:eqn:gray-scott} becomes
+\begin{eqnarray}
     \begin{cases}
-        \displaystyle{\frac{u(x, y, t + \Delta t) - u(x, y, t)}{\Delta t}} = r_u \bigg( & \displaystyle{\frac{u(x + \Delta x, y, t) - 2u(x, y, t) + u(x - \Delta x, y, t)}{\Delta x^2} +}         \\
-                                                                                        & \displaystyle{\frac{u(x, y + \Delta y, t) - 2u(x, y, t) + u(x, y - \Delta y, t)}{\Delta y^2}\bigg)u - } \\
-                                                                                        & \displaystyle{uv^2 + f(1 - u)}                                                                          \\[20pt]
-        \displaystyle{\frac{v(x, y, t + \Delta t) - v(x, y, t)}{\Delta t}} = r_v \bigg( & \displaystyle{\frac{v(x + \Delta x, y, t) - 2v(x, y, t) + v(x - \Delta x, y, t)}{\Delta x^2} +}         \\
-                                                                                        & \displaystyle{\frac{v(x, y + \Delta y, t) - 2v(x, y, t) + v(x, y - \Delta y, t)}{\Delta y^2}\bigg)v - } \\
-                                                                                        & \displaystyle{uv^2 + (f + k)v}
-    \end{cases}\label{prob5:eqn:discretized-dogshit}
+        \vec u_{t + 1} & = \vec u_t + r_u \mathbf L \cdot \vec u_t - \vec u_t \cdot \vec {v_t}^2 + f(1 - \vec u_t) \\
+        \vec v_{t + 1} & = \vec v_t + r_v \mathbf L \cdot \vec v_t + \vec u_t \cdot \vec {v_t}^2 - (f + k)\vec v_t
+    \end{cases}\label{prob5:eqn:discretized-gray-scott}
+\end{eqnarray}
+where the vector product $\vec u_t \cdot \vec {v_t}^2$ is computed component-wise.
+
+Then the $n ^2 \times n^2$ matrix $\mathbf L$ is the block diagonal matrix
+\begin{equation}
+    \mathbf L = \begin{bmatrix}
+        L_n    & I_n    & 0_n    & \cdots & 0_n    & I_n    \\
+        I_n    & L_n    & I_n    & 0_n    & \cdots & 0_n    \\
+        0_n    & I_n    & L_n    & I_n    & \ddots & \vdots \\
+        \vdots & \ddots & \ddots & \ddots & \ddots & 0_n    \\
+        0_n    & \cdots & 0_n    & I_n    & L_n    & I_n    \\
+        I_n    & 0_n    & \cdots & 0_n    & I_n    & L_n
+    \end{bmatrix}\label{prob5:eqn:laplacian}
+\end{equation}
+where the $0_n$ blocks are the $n \times n$ zero matrix, and the $I_n$ blocks are the $n \times n$ identity matrix.
+The $L_n$ blocks are the $n \times n$ diagonal matrix
+\begin{equation}
+    L_n = \begin{bmatrix}
+        -4     & 1      & 0      & \cdots & 0      & 1      \\
+        1      & -4     & 1      & 0      & \cdots & 0      \\
+        0      & 1      & -4     & 1      & \ddots & \vdots \\
+        \vdots & \ddots & \ddots & \ddots & \ddots & 0      \\
+        0      & \cdots & 0      & 1      & -4     & 1      \\
+        1      & 0      & \cdots & 0      & 1      & -4
+    \end{bmatrix}\label{prob5:eqn:laplacian-L-block}
 \end{equation}
 
-and ``simplified'' into
+Now, $\mathbf L$ is appropriate for periodic boundary conditions.
+If homogeneous Dirichlet boundary conditions are desired, we use the matrix
 \begin{equation}
-    \begin{cases}
-        u(x, y, t + \Delta t) = u(x, y, t) + \Delta t \Bigg( r_u \bigg( & \displaystyle{\frac{u(x + \Delta x, y, t) - 2u(x, y, t) + u(x - \Delta x, y, t)}{\Delta x^2} +}         \\
-                                                                        & \displaystyle{\frac{u(x, y + \Delta y, t) - 2u(x, y, t) + u(x, y - \Delta y, t)}{\Delta y^2}\bigg)u - } \\
-                                                                        & \displaystyle{uv^2 + f(1 - u) \Bigg)}                                                                   \\[20pt]
-        v(x, y, t + \Delta t) = v(x, y, t) + \Delta t \Bigg( r_v \bigg( & \displaystyle{\frac{v(x + \Delta x, y, t) - 2v(x, y, t) + v(x - \Delta x, y, t)}{\Delta x^2} +}         \\
-                                                                        & \displaystyle{\frac{v(x, y + \Delta y, t) - 2v(x, y, t) + v(x, y - \Delta y, t)}{\Delta y^2}\bigg)v - } \\
-                                                                        & \displaystyle{uv^2 + (f + k)v \Bigg)}
-    \end{cases}\label{prob5:eqn:discretized-dogshit}
+    \mathbf L_d = \begin{bmatrix}
+        L_n              & I_n    & 0_n    & \cdots & 0_n    & \color{red}{0_n} \\
+        I_n              & L_n    & I_n    & 0_n    & \cdots & 0_n              \\
+        0_n              & I_n    & L_n    & I_n    & \ddots & \vdots           \\
+        \vdots           & \ddots & \ddots & \ddots & \ddots & 0_n              \\
+        0_n              & \cdots & 0_n    & I_n    & L_n    & I_n              \\
+        \color{red}{0_n} & 0_n    & \cdots & 0_n    & I_n    & L_n
+    \end{bmatrix}
 \end{equation}
+and the modified $L_n$ block
+\begin{equation}
+    L_n = \begin{bmatrix}
+        -4             & 1      & 0      & \cdots & 0      & \color{red}{0} \\
+        1              & -4     & 1      & 0      & \cdots & 0              \\
+        0              & 1      & -4     & 1      & \ddots & \vdots         \\
+        \vdots         & \ddots & \ddots & \ddots & \ddots & 0              \\
+        0              & \cdots & 0      & 1      & -4     & 1              \\
+        \color{red}{0} & 0      & \cdots & 0      & 1      & -4
+    \end{bmatrix}
+\end{equation}
+If homogeneous Neumann boundary conditions are desired, further modifications must be made to the main diagonal of $\mathbf L_d$ to maintain 0-sum rows.\footnote{
+    Online material on the discretized Laplacian is lacking in general, and much more so related to periodic boundary conditions.
+    I found exactly one source that discussed the discretized Laplacian with periodic boundary conditions in more than one sentence.
 
-\todoinline{
-    Nuke the above discretization (but still mention it) in favor of the discrete Laplacian with periodic boundary conditions as discussed in \textit{Computational Methods for Inverse Problems}.
-
-    Show the difference between the original Dirichlet boundaries, and the new periodic ones.
-
-    If time allows, run McGough's code to figure out any speed difference.
-
-    Refer to \url{https://en.wikipedia.org/wiki/Discrete\_Laplace\_operator\#Finite\_differences}
+    A PDF of \textit{Computational Methods for Inverse Problems} may be found on \href{http://booksdescr.org/item/index.php?md5=6DF2AA596DDBE34BCF9354A5626B75DA}{Library Genesis}.
+    The relevant pages are 74--75.
 }
 
 \subsection{Implementation}
