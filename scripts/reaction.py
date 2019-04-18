@@ -82,10 +82,28 @@ def main(args):
         axes = iter(axes.flatten())
 
         axis = next(axes)
-        sns.heatmap(u, square=True, xticklabels=False, yticklabels=False, ax=axis)
+        sns.heatmap(
+            u,
+            square=True,
+            xticklabels=False,
+            yticklabels=False,
+            ax=axis,
+            vmin=0,
+            vmax=1,
+            cmap="jet",
+        )
         axis.set_title("$U$ concentration")
         axis = next(axes)
-        sns.heatmap(v, square=True, xticklabels=False, yticklabels=False, ax=axis)
+        sns.heatmap(
+            v,
+            square=True,
+            xticklabels=False,
+            yticklabels=False,
+            ax=axis,
+            vmin=0,
+            vmax=1,
+            cmap="jet",
+        )
         axis.set_title("$V$ concentration")
         plt.tight_layout()
 
@@ -98,7 +116,9 @@ def main(args):
         if args.gui:
             plt.show()
     else:
-        sns.heatmap(u, square=True, xticklabels=False, yticklabels=False)
+        sns.heatmap(
+            u, square=True, xticklabels=False, yticklabels=False, vmin=0, vmax=1, cmap="jet"
+        )
         if args.title is not None:
             plt.title(args.title)
 
