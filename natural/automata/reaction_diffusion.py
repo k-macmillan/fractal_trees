@@ -34,7 +34,6 @@ def init(N, scale, r, u0, v0):
     u += scale * np.random.random((N, N))
     v += scale * np.random.random((N, N))
     c = N // 2
-    # TODO: Play with this initialization.
     if r is not None:
         u[c - r : c + r, c - r : c + r] = u0
         v[c - r : c + r, c - r : c + r] = v0
