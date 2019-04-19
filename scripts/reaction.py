@@ -117,7 +117,7 @@ def main(args):
             plt.show()
     else:
         sns.heatmap(
-            u, square=True, xticklabels=False, yticklabels=False, vmin=0, vmax=1, cmap="jet"
+            u, square=True, xticklabels=False, yticklabels=False, vmin=0, vmax=1, cmap="jet", cbar=False
         )
         if args.title is not None:
             plt.title(args.title)
