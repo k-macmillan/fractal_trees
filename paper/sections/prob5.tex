@@ -204,4 +204,123 @@ The mappings for the patterns shown in \autoref{prob5:fig:patterns} are shown in
     \includegraphics[width=0.6\textwidth]{figures/reactions/pattern-mappings.png}
     \caption{The parameter mappings to the patterns shown in \autoref{prob5:fig:patterns}}\label{prob5:fig:pattern-mappings}
 \end{figure}
-\subsection{Conclusion}
+
+Our results are shown in \autoref{prob5:fig:results}.
+
+% NOTE: These images will be created by the makefile if they are not present.
+% However, they take *quite* some time to generate, so it's advisable to set
+% $(REACTION_SIZE) and $(REACTION_ITERS) to small values in the Makefile first.
+\begin{figure}[H]
+    \captionsetup[subfigure]{labelformat=empty}
+    \centering
+    \begin{subfigure}[t]{0.25\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/reactions/alpha.eps}
+        \caption{$(\alpha)$}
+    \end{subfigure}%
+    \begin{subfigure}[t]{0.25\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/reactions/beta.eps}
+        \caption{$(\beta)$}
+    \end{subfigure}%
+    \begin{subfigure}[t]{0.25\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/reactions/gamma.eps}
+        \caption{$(\gamma)$}
+    \end{subfigure}%
+    \begin{subfigure}[t]{0.25\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/reactions/delta.eps}
+        \caption{$(\delta)$}
+    \end{subfigure}%
+
+    \begin{subfigure}[t]{0.25\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/reactions/epsilon.eps}
+        \caption{$(\varepsilon)$}
+    \end{subfigure}%
+    \begin{subfigure}[t]{0.25\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/reactions/zeta.eps}
+        \caption{$(\zeta)$}
+    \end{subfigure}%
+    \begin{subfigure}[t]{0.25\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/reactions/eta.eps}
+        \caption{$(\eta)$}
+    \end{subfigure}%
+    \begin{subfigure}[t]{0.25\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/reactions/theta.eps}
+        \caption{$(\theta)$}
+    \end{subfigure}%
+
+    \begin{subfigure}[t]{0.25\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/reactions/iota.eps}
+        \caption{$(\iota)$}
+    \end{subfigure}%
+    \begin{subfigure}[t]{0.25\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/reactions/kappa.eps}
+        \caption{$(\kappa)$}
+    \end{subfigure}%
+    \begin{subfigure}[t]{0.25\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/reactions/lambda.eps}
+        \caption{$(\lambda)$}
+    \end{subfigure}%
+    \begin{subfigure}[t]{0.25\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/reactions/mu.eps}
+        \caption{$(\mu)$}
+    \end{subfigure}%
+    \caption{Reproductions of the Gray-Scott patterns}\label{prob5:fig:results}
+\end{figure}
+
+Notice that we were even able to reproduce the color scheme --- as scarring as doing so was.\footnote{
+    The ``Jet'' colormap should \textit{not} be used.
+    Full stop.
+    It creates contrast where there is none; a slight perturbation of your data might push a small dimly-colored region of your plot into a bright attention-grabbing ``feature''.
+    That is, ``Jet'' produces features in your data that is not there.
+    In technical terms, ``Jet'' is not perceptually uniform; values in the range $[0.1, 0.3]$ will not produce colors with the same visual range as values in the range $[0.6, 0.8]$.
+
+    There are a great number of online resources demonstrating the inferiority of the ``Jet'' colormap:
+    \begin{itemize}
+        \item \url{https://jakevdp.github.io/blog/2014/10/16/how-bad-is-your-colormap/}
+        \item \url{https://bids.github.io/colormap/}
+        \item \url{http://medvis.org/2016/02/23/better-than-the-rainbow-the-matplotlib-alternative-colormaps/}
+        \item \url{http://medvis.org/2012/08/21/rainbow-colormaps-what-are-they-good-for-absolutely-nothing/}
+    \end{itemize}
+}
+
+The values used to generate the patterns in \autoref{prob5:fig:results} are summarized in \autoref{prob5:tab:parameters}.\todo{Update these values before turning in the final version of the paper.}
+The parameter $r$ is the radius of the initial center concentration of the $U$ and $V$ chemicals.
+The $s$ parameter is the scale of the random values uniformly added throughout the reactor.
+
+\begin{table}[H]
+    \centering
+    \caption{The parameters used to reproduce the Gray-Scott patterns}\label{prob5:tab:parameters}
+    \begin{tabular}{@{}llllll@{}}
+        \toprule
+        % TODO: Update these values from the Makefile once they're finalized.
+        pattern       & $k$    & $f$   & $r$ & $s$ & iterations \\ \midrule
+        $\alpha$      & 0.05   & 0.017 & 5   &     & 5000       \\
+        $\beta$       & 0.045  & 0.019 & 2   &     & 5000       \\
+        $\gamma$      & 0.052  & 0.021 & 5   &     & 5000       \\
+        $\delta$      & 0.052  & 0.026 & 5   &     & 5000       \\
+        $\varepsilon$ & 0.052  & 0.017 & 2   &     & 5000       \\
+        $\zeta$       & 0.06   & 0.023 & 2   & 0.1 & 5000       \\
+        $\eta$        & 0.06   & 0.028 & 2   & 0.1 & 5000       \\
+        $\theta$      & 0.06   & 0.04  & 2   & 0.1 & 5000       \\
+        $\iota$       & 0.06   & 0.054 & 2   & 0.2 & 5000       \\
+        $\kappa$      & 0.064  & 0.05  & 5   & 0.2 & 5000       \\
+        $\lambda$     & 0.066  & 0.04  & 5   &     & 10000      \\
+        $\mu$         & 0.0665 & 0.055 & 32  & 0.1 & 15000      \\ \bottomrule
+    \end{tabular}
+\end{table}
+
+Increasing the random scale seemed to have the effect of removing the regularity and symmetry in the generated patterns.
+However, if the scale was increased too high, the reaction would cross the tipping point and converge to a uniform concentration of the two chemicals.
+Increasing the radius of the initial high concentration area made the patterns spread faster --- requiring fewer iterations to display the desired patterns.
+Observe also that the $\lambda$ and $\mu$ patterns required more time to develop their desired structure than the rest of the patterns.
