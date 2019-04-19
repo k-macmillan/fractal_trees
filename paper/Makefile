@@ -284,7 +284,7 @@ $(REACTION_DIR)/theta.eps: $(REACTION_DEPS)
 		--kill 0.06                                                                                \
 		--feed 0.04                                                                                \
 		--radius 2                                                                                 \
-		--scale 0.2                                                                                \
+		--scale 0.1                                                                                \
 		--size $(REACTION_SIZE)                                                                    \
 		--title "Pattern $$\\theta$$"                                                              \
 		--output $(REACTION_DIR)/theta.eps
