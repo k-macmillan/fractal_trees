@@ -299,7 +299,7 @@ $(REACTION_DIR)/kappa.eps: $(REACTION_DEPS) _pre-reaction
 		--title "Pattern $$\\kappa$$"                                                              \
 		--output $(REACTION_DIR)/kappa.eps
 
-# TODO: Fix lambda
+# TODO: Lambda should be ran longer than the rest
 $(REACTION_DIR)/lambda.eps: $(REACTION_DEPS) _pre-reaction
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
 		--iterations $(REACTION_ITERS)                                                             \
@@ -310,14 +310,14 @@ $(REACTION_DIR)/lambda.eps: $(REACTION_DEPS) _pre-reaction
 		--title "Pattern $$\\lambda$$"                                                             \
 		--output $(REACTION_DIR)/lambda.eps
 
-# TODO: Fix mu
+# TODO: Mu should be ran for even longer than lambda
 $(REACTION_DIR)/mu.eps: $(REACTION_DEPS) _pre-reaction
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
 		--iterations $(REACTION_ITERS)                                                             \
-		--kill 0.0655                                                                              \
-		--feed 0.0565                                                                              \
-		--radius 2                                                                                 \
-		--scale 0.2                                                                                \
+		--kill 0.0665                                                                              \
+		--feed 0.06                                                                                \
+		--radius 32                                                                                \
+		--scale 0.1                                                                                \
 		--size $(REACTION_SIZE)                                                                    \
 		--title "Pattern $$\\mu$$"                                                                 \
 		--output $(REACTION_DIR)/mu.eps
