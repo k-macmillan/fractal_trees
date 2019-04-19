@@ -15,14 +15,14 @@ def laplacian(N):
 
     Note that this matrix will be N**2 x N**2, and operates on the *flattened* vectors u and v.
     """
-    e = np.ones(N ** 2)
+    e = np.ones(N ** 2, dtype=int)
     # The upper and lower corners of the L_0 blocks.
     # e2 = np.array(([1] + [0] * (N - 1)) * N)
     # e3 = np.array(([0] * (N - 1) + [1]) * N)
 
     return sp.sparse.spdiags(
         data=[-4 * e, e, e, e, e, e, e],
-        diags=[0, -1, 1, -N, N, -(N ** 2 + 1 - N), N ** 2 + 1 - N],
+        diags=[0, -1, 1, -N, N, -(N ** 2 - N), N ** 2 - N],
         m=N ** 2,
         n=N ** 2,
     )
