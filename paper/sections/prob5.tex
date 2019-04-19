@@ -112,10 +112,10 @@ The discrete Laplacian in \autoref{prob5:eqn:laplacian} can be generated with
 \begin{minted}{python}
     def laplacian(N):
         """Compute a matrix that performs the discretized Laplacian in 2D."""
-        e = np.ones(N ** 2)
+        e = np.ones(N ** 2, dtype=int)
         return sp.sparse.spdiags(
             data=[-4 * e, e, e, e, e, e, e],
-            diags=[0, -1, 1, -N, N, -(N ** 2 + 1 - N), N ** 2 + 1 - N],
+            diags=[0, -1, 1, -N, N, -(N ** 2 - N), N ** 2 - N],
             m=N ** 2,
             n=N ** 2,
         )
