@@ -173,7 +173,10 @@ $(REACTION_TRIGGER): beta
 $(REACTION_TRIGGER): gamma
 $(REACTION_TRIGGER): delta
 $(REACTION_TRIGGER): epsilon
+$(REACTION_TRIGGER): zeta
+$(REACTION_TRIGGER): eta
 $(REACTION_TRIGGER): theta
+$(REACTION_TRIGGER): iota
 $(REACTION_TRIGGER): kappa
 $(REACTION_TRIGGER): lambda
 $(REACTION_TRIGGER): mu
@@ -184,13 +187,13 @@ beta: $(REACTION_DIR)/beta.eps
 gamma: $(REACTION_DIR)/gamma.eps
 delta: $(REACTION_DIR)/delta.eps
 epsilon: $(REACTION_DIR)/epsilon.eps
+zeta: $(REACTION_DIR)/zeta.eps
+eta: $(REACTION_DIR)/eta.eps
 theta: $(REACTION_DIR)/theta.eps
+iota: $(REACTION_DIR)/iota.eps
 kappa: $(REACTION_DIR)/kappa.eps
 lambda: $(REACTION_DIR)/lambda.eps
 mu: $(REACTION_DIR)/mu.eps
-eta: $(REACTION_DIR)/eta.eps
-zeta: $(REACTION_DIR)/zeta.eps
-iota: $(REACTION_DIR)/iota.eps
 
 $(REACTION_DIR)/alpha.eps: $(REACTION_DEPS) _pre-reaction
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
@@ -242,6 +245,28 @@ $(REACTION_DIR)/epsilon.eps: $(REACTION_DEPS) _pre-reaction
 		--title "Pattern $$\\epsilon$$"                                                            \
 		--output $(REACTION_DIR)/epsilon.eps
 
+$(REACTION_DIR)/zeta.eps: $(REACTION_DEPS) _pre-reaction
+	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
+		--iterations $(REACTION_ITERS)                                                             \
+		--kill 0.06                                                                                \
+		--feed 0.023                                                                               \
+		--radius 2                                                                                 \
+		--scale 0.1                                                                                \
+		--size $(REACTION_SIZE)                                                                    \
+		--title "Pattern $$\\zeta$$"                                                               \
+		--output $(REACTION_DIR)/zeta.eps
+
+$(REACTION_DIR)/eta.eps: $(REACTION_DEPS) _pre-reaction
+	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
+		--iterations $(REACTION_ITERS)                                                             \
+		--kill 0.06                                                                                \
+		--feed 0.028                                                                               \
+		--radius 2                                                                                 \
+		--scale 0.1                                                                                \
+		--size $(REACTION_SIZE)                                                                    \
+		--title "Pattern $$\\eta$$"                                                                \
+		--output $(REACTION_DIR)/eta.eps
+
 $(REACTION_DIR)/theta.eps: $(REACTION_DEPS) _pre-reaction
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
 		--iterations $(REACTION_ITERS)                                                             \
@@ -252,6 +277,17 @@ $(REACTION_DIR)/theta.eps: $(REACTION_DEPS) _pre-reaction
 		--size $(REACTION_SIZE)                                                                    \
 		--title "Pattern $$\\theta$$"                                                              \
 		--output $(REACTION_DIR)/theta.eps
+
+$(REACTION_DIR)/iota.eps: $(REACTION_DEPS) _pre-reaction
+	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
+		--iterations $(REACTION_ITERS)                                                             \
+		--kill 0.06                                                                                \
+		--feed 0.054                                                                               \
+		--radius 2                                                                                 \
+		--scale 0.2                                                                                \
+		--size $(REACTION_SIZE)                                                                    \
+		--title "Pattern $$\\iota$$"                                                               \
+		--output $(REACTION_DIR)/iota.eps
 
 $(REACTION_DIR)/kappa.eps: $(REACTION_DEPS) _pre-reaction
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
@@ -286,37 +322,3 @@ $(REACTION_DIR)/mu.eps: $(REACTION_DEPS) _pre-reaction
 		--size $(REACTION_SIZE)                                                                    \
 		--title "Pattern $$\\mu$$"                                                                 \
 		--output $(REACTION_DIR)/mu.eps
-
-# TODO: Add iota
-$(REACTION_DIR)/eta.eps: $(REACTION_DEPS) _pre-reaction
-	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
-		--iterations $(REACTION_ITERS)                                                             \
-		--kill 0.06                                                                                \
-		--feed 0.028                                                                               \
-		--radius 2                                                                                 \
-		--scale 0.1                                                                                \
-		--size $(REACTION_SIZE)                                                                    \
-		--title "Pattern $$\\eta$$"                                                                \
-		--output $(REACTION_DIR)/eta.eps
-
-$(REACTION_DIR)/zeta.eps: $(REACTION_DEPS) _pre-reaction
-	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
-		--iterations $(REACTION_ITERS)                                                             \
-		--kill 0.06                                                                                \
-		--feed 0.023                                                                               \
-		--radius 2                                                                                 \
-		--scale 0.1                                                                                \
-		--size $(REACTION_SIZE)                                                                    \
-		--title "Pattern $$\\zeta$$"                                                               \
-		--output $(REACTION_DIR)/zeta.eps
-
-$(REACTION_DIR)/iota.eps: $(REACTION_DEPS) _pre-reaction
-	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
-		--iterations $(REACTION_ITERS)                                                             \
-		--kill 0.06                                                                                \
-		--feed 0.054                                                                               \
-		--radius 2                                                                                 \
-		--scale 0.2                                                                                \
-		--size $(REACTION_SIZE)                                                                    \
-		--title "Pattern $$\\iota$$"                                                               \
-		--output $(REACTION_DIR)/iota.eps
