@@ -98,5 +98,100 @@ for the 2D version.
 Thus smaller $H$ values \textit{increase} the fractal dimension, while larger values decrease the fractal dimension.
 
 \subsection{Implementation}
+After the modification of \autoref{prob3:alg:rmd1d} and \autoref{prob3:alg:rmd2d} to include the Hurst exponent, the implementations are straightforward.
+
+The implementation of \autoref{prob3:alg:rmd1d} is given below.
+
+\begin{minted}{python}
+    def rand_displacement_1d(recursions, scale, seed, hurst=0.5):
+        """Generate a 1D heightmap using the random midpoint displacement algorithm."""
+        np.random.seed(seed)
+        N = 2 ** recursions
+        x = np.zeros(N + 1)
+        x[0], x[N] = scale * np.random.randn(2)
+        # Calculate the diminishing variance.
+        var = [
+            np.sqrt((scale ** 2 / (2 ** (2 * l * hurst))) * (1 - 2 ** (2 * hurst - 2)))
+            for l in range(recursions)
+        ]
+
+        def _recurse(t0, t2, level):
+            """Recursively subdivide and perturb the midpoint with diminishing variance."""
+            # NOTE: t1 will always be an integer because N is a power of 2.
+            t1 = (t0 + t2) // 2
+            x[t1] = 0.5 * (x[t0] + x[t2]) + var[level - 1] * np.random.randn()
+
+            if level < recursions:
+                _recurse(t0, t1, level + 1)
+                _recurse(t1, t2, level + 1)
+
+        _recurse(0, N, 1)
+        return x
+\end{minted}
+
+The implementation of \autoref{prob3:alg:rmd2d} is given below.
+
+\begin{minted}{python}
+def rand_displacement_2d(recursions, scale, seed, hurst=0.5):
+    """Generate a 2D heightmap using the random midpoint displacement algorithm."""
+    np.random.seed(seed)
+    N = 2 ** recursions
+    X = np.zeros((N + 1, N + 1))
+    X[0, 0], X[0, -1], X[-1, 0], X[-1, -1] = scale * np.random.randn(4)
+    # Calculate the diminishing variance.
+    var = [
+        np.sqrt((scale ** 2 / (2 ** (2 * l * hurst))) * (1 - 2 ** (2 * hurst - 2)))
+        for l in range(recursions)
+    ]
+
+    def _recurse(x0, y0, x2, y2, level):
+        """Recursively quadsect and perturb the five midpoints with diminishing variance."""
+        x1 = (x0 + x2) // 2
+        y1 = (y0 + y2) // 2
+        var = np.sqrt((scale ** 2 / (2 ** (2 * level * hurst))) * (1 - 2 ** (2 * hurst - 2)))
+
+        X[x0, y1] = 0.5 * (X[x0, y0] + X[x0, y2]) + var[level - 1] * np.random.randn()
+        X[x1, y0] = 0.5 * (X[x0, y0] + X[x2, y0]) + var[level - 1] * np.random.randn()
+        X[x2, y1] = 0.5 * (X[x2, y0] + X[x2, y2]) + var[level - 1] * np.random.randn()
+        X[x1, y2] = 0.5 * (X[x0, y2] + X[x2, y2]) + var[level - 1] * np.random.randn()
+
+        X[x1, y1] = (
+            0.25 * (X[x0, y1] + X[x1, y0] + X[x2, y1] + X[x1, y2])
+            + var[level - 1] * np.random.randn()
+        )
+
+        if level < recursions:
+            _recurse(x0, y0, x1, y1, level + 1)
+            _recurse(x1, y0, x2, y1, level + 1)
+            _recurse(x1, y1, x2, y2, level + 1)
+            _recurse(x0, y1, x1, y2, level + 1)
+
+    _recurse(0, 0, N, N, 1)
+    return X
+\end{minted}
+
+Notice that in both of these implementations the calculation of $\Delta_t$ is done \textit{outside} the recursive function call.
+This is to avoid a massive amount of repeated computation that scales exponentially with the recursive depth.
+Also notice that an iterative implementation would be possible, but messy.
+
+Since the purpose here is to generate a realistic looking landscape, it is conceivable that a user might have a landscape in mind and might wish to kickstart the random displacement with an initial shape.
+We did not allow for this, but custom initializations for the four grid corners would be trivial.
+
+If the user has a rough landscape shape in mind, they might wish to initialize more points than just the corners.
+After all, while a random seed can generate any conceivable landscape, finding the right random seed for a particular landscape is nontrivial.\footnote{But left as an exercise for the motivated reader.}
+Thus is might be important to find a way to initialize more points than just the corners.
+However, doing so involves more book-keeping than is pleasant.
+
+However, a user might be able to pick corner points on a regularly spaced grid, and run \autoref{prob3:alg:rmd2d} on each subdivision before stitching together the final results.
+This is promising, but the process of ``stitching'' is less easy than it might at first seem.
+
+Doing such a stitching in the right manner would involve finding a way to match the first and second derivatives in both the $x$ and $y$ directions.
+Perhaps a kind of ``blur'' operation could produce believable results.
+
+In either case, we chose to stick with the algorithm as given and leave improvements for the landscape designers to figure out.
+
 \subsection{Results}
-\subsection{Conclusion}
+
+\subsubsection{One Dimension}
+
+\subsubsection{Two Dimensions}
