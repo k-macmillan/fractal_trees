@@ -89,102 +89,124 @@ $(HEAT_DIR)/diffusion-time.eps: $(HEAT_DEPS)
 		--timestep 200                                                                             \
 		--output $(HEAT_DIR)/diffusion-time.eps
 
-$(LANDSCAPE_TRIGGER): $(LANDSCAPE_DEPS)
-	mkdir -p $(LANDSCAPE_DIR)
+$(LANDSCAPE_TRIGGER): landscape-1d
+$(LANDSCAPE_TRIGGER): landscape-2d-hurst
+$(LANDSCAPE_TRIGGER): landscape-2d-sealevel
 	touch $(LANDSCAPE_TRIGGER)
+
+_pre-landscape:
+	mkdir -p $(LANDSCAPE_DIR)
 	$(eval LANDSCAPE_DIR := $(shell readlink -f $(LANDSCAPE_DIR)))
-	@# Start all the jobs in parallel the poor man's way, fully aware there's a better way (tm).
+
+landscape-1d: _pre-landscape
+landscape-1d: $(LANDSCAPE_DIR)/1d.eps
+landscape-1d: $(LANDSCAPE_DIR)/1d-num-recursions.eps
+landscape-1d: $(LANDSCAPE_DIR)/1d-scale.eps
+landscape-1d: $(LANDSCAPE_DIR)/1d-hurst-exponent.eps
+landscape-2d-hurst: _pre-landscape
+landscape-2d-hurst: $(LANDSCAPE_DIR)/2d-hurst-1.eps
+landscape-2d-hurst: $(LANDSCAPE_DIR)/2d-hurst-6.eps
+landscape-2d-hurst: $(LANDSCAPE_DIR)/2d-hurst-7.eps
+landscape-2d-hurst: $(LANDSCAPE_DIR)/2d-hurst-8.eps
+landscape-2d-hurst: $(LANDSCAPE_DIR)/2d-hurst-9.eps
+landscape-2d-sealevel: _pre-landscape
+landscape-2d-sealevel: $(LANDSCAPE_DIR)/2d-sealevel-1.eps
+landscape-2d-sealevel: $(LANDSCAPE_DIR)/2d-sealevel-2.eps
+
+$(LANDSCAPE_DIR)/1d.eps: $(LANDSCAPE_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
 		--one                                                                                      \
 		--recursions 10                                                                            \
 		--scale 2                                                                                  \
 		--hurst 0.5                                                                                \
 		--seed 37                                                                                  \
-		--output $(LANDSCAPE_DIR)/1d.eps                                                         & \
+		--output $(LANDSCAPE_DIR)/1d.eps
+
+$(LANDSCAPE_DIR)/1d-num-recursions.eps: $(LANDSCAPE_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
 		--one                                                                                      \
 		--recursions 4 6 8 10                                                                      \
 		--scale 2                                                                                  \
 		--hurst 0.5                                                                                \
 		--seed 420                                                                                 \
-		--output $(LANDSCAPE_DIR)/1d-num-recursions.eps                                          & \
+		--output $(LANDSCAPE_DIR)/1d-num-recursions.eps
+
+$(LANDSCAPE_DIR)/1d-scale.eps: $(LANDSCAPE_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
 		--one                                                                                      \
 		--recursions 5                                                                             \
 		--scale 0.5 1 2 4                                                                          \
 		--hurst 0.5                                                                                \
 		--seed 420                                                                                 \
-		--output $(LANDSCAPE_DIR)/1d-scale.eps                                                   & \
+		--output $(LANDSCAPE_DIR)/1d-scale.eps
+
+$(LANDSCAPE_DIR)/1d-hurst-exponent.eps: $(LANDSCAPE_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
 		--one                                                                                      \
 		--recursions 5                                                                             \
 		--scale 2                                                                                  \
 		--hurst 0.1 0.3 0.5 0.7 0.9                                                                \
 		--seed 420                                                                                 \
-		--output $(LANDSCAPE_DIR)/1d-hurst-exponent.eps                                          & \
-	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
-		--recursions 4                                                                             \
-		--scale 1                                                                                  \
-		--hurst 0.5                                                                                \
-		--seed 3                                                                                   \
-		--output $(LANDSCAPE_DIR)/2d-simple.eps                                                  & \
-	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
-		--recursions 4                                                                             \
-		--scale 1                                                                                  \
-		--hurst 0.7                                                                                \
-		--seed 9                                                                                   \
-		--output $(LANDSCAPE_DIR)/2d-simple-2.eps                                                & \
-	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
-		--recursions 4                                                                             \
-		--scale 1                                                                                  \
-		--hurst 0.7                                                                                \
-		--seed 9                                                                                   \
-		--sealevel -0.8                                                                            \
-		--output $(LANDSCAPE_DIR)/2d-simple-2-sealevel.eps                                       & \
-	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
-		--recursions 6                                                                             \
-		--scale 1                                                                                  \
-		--hurst 0.7                                                                                \
-		--seed 5                                                                                   \
-		--output $(LANDSCAPE_DIR)/2d-large.eps                                                   & \
-	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
-		--recursions 6                                                                             \
-		--scale 1                                                                                  \
-		--hurst 0.7                                                                                \
-		--seed 5                                                                                   \
-		--sealevel 0                                                                               \
-		--output $(LANDSCAPE_DIR)/2d-large-sealevel.eps                                          & \
-	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
-		--recursions 6                                                                             \
-		--scale 1                                                                                  \
-		--hurst 0.9                                                                                \
-		--seed 3188393957                                                                          \
-		--output $(LANDSCAPE_DIR)/2d-hurst-9.eps                                                 & \
-	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
-		--recursions 6                                                                             \
-		--scale 1                                                                                  \
-		--hurst 0.8                                                                                \
-		--seed 3188393957                                                                          \
-		--output $(LANDSCAPE_DIR)/2d-hurst-8.eps                                                 & \
-	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
-		--recursions 6                                                                             \
-		--scale 1                                                                                  \
-		--hurst 0.7                                                                                \
-		--seed 3188393957                                                                          \
-		--output $(LANDSCAPE_DIR)/2d-hurst-7.eps                                                 & \
-	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
-		--recursions 6                                                                             \
-		--scale 1                                                                                  \
-		--hurst 0.6                                                                                \
-		--seed 3188393957                                                                          \
-		--output $(LANDSCAPE_DIR)/2d-hurst-6.eps                                                 & \
+		--output $(LANDSCAPE_DIR)/1d-hurst-exponent.eps
+
+$(LANDSCAPE_DIR)/2d-hurst-1.eps: $(LANDSCAPE_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
 		--recursions 6                                                                             \
 		--scale 1                                                                                  \
 		--hurst 1                                                                                  \
 		--seed 3188393957                                                                          \
-		--output $(LANDSCAPE_DIR)/2d-hurst-1.eps                                                 & \
-	wait
+		--output $(LANDSCAPE_DIR)/2d-hurst-1.eps
+
+$(LANDSCAPE_DIR)/2d-hurst-6.eps: $(LANDSCAPE_DEPS)
+	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
+		--recursions 6                                                                             \
+		--scale 1                                                                                  \
+		--hurst 0.6                                                                                \
+		--seed 3188393957                                                                          \
+		--output $(LANDSCAPE_DIR)/2d-hurst-6.eps
+
+$(LANDSCAPE_DIR)/2d-hurst-7.eps: $(LANDSCAPE_DEPS)
+	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
+		--recursions 6                                                                             \
+		--scale 1                                                                                  \
+		--hurst 0.7                                                                                \
+		--seed 3188393957                                                                          \
+		--output $(LANDSCAPE_DIR)/2d-hurst-7.eps
+
+$(LANDSCAPE_DIR)/2d-hurst-8.eps: $(LANDSCAPE_DEPS)
+	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
+		--recursions 6                                                                             \
+		--scale 1                                                                                  \
+		--hurst 0.8                                                                                \
+		--seed 3188393957                                                                          \
+		--output $(LANDSCAPE_DIR)/2d-hurst-8.eps
+
+$(LANDSCAPE_DIR)/2d-hurst-9.eps: $(LANDSCAPE_DEPS)
+	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
+		--recursions 6                                                                             \
+		--scale 1                                                                                  \
+		--hurst 0.9                                                                                \
+		--seed 3188393957                                                                          \
+		--output $(LANDSCAPE_DIR)/2d-hurst-9.eps
+
+# 4212677775 is similar
+$(LANDSCAPE_DIR)/2d-sealevel-1.eps: $(LANDSCAPE_DEPS)
+	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
+		--recursions 6                                                                             \
+		--scale 1                                                                                  \
+		--hurst 0.9                                                                                \
+		--seed 68230869                                                                            \
+		--sealevel -1                                                                              \
+		--output $(LANDSCAPE_DIR)/2d-sealevel-1.eps
+
+$(LANDSCAPE_DIR)/2d-sealevel-2.eps: $(LANDSCAPE_DEPS)
+	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
+		--recursions 6                                                                             \
+		--scale 1                                                                                  \
+		--hurst 0.9                                                                                \
+		--seed 4175779808                                                                          \
+		--sealevel -0.7                                                                            \
+		--output $(LANDSCAPE_DIR)/2d-sealevel-2.eps
 
 _pre-reaction:
 	mkdir -p $(REACTION_DIR)
