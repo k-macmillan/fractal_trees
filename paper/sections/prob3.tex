@@ -174,6 +174,16 @@ Notice that in both of these implementations the calculation of $\Delta_t$ is do
 This is to avoid a massive amount of repeated computation that scales exponentially with the recursive depth.
 Also notice that an iterative implementation would be possible, but messy.
 
+Further notice that the \mintinline{python}{seed} parameter is \textit{required}.
+Even though an unseeded generation can (and does) produce reasonable results, it is not possible to reproduce them.
+Reducibility is important for two reasons.
+
+First, there's the standard ``experiments should be reproducible'' argument, which is reason enough on its own.
+Second, if a random landscape appeals to the authors in their experiments, they might want to produce different variations of that landscape --- possibly with different values for the Hurst roughness exponent, or possibly different sea level values.
+
+In either case, we produce a unseeded random number, then seed the random number generator with the generated value.
+We do this because it is not possible to retrieve the current seed of the Numpy random number generator.
+
 Since the purpose here is to generate a realistic looking landscape, it is conceivable that a user might have a landscape in mind and might wish to kickstart the random displacement with an initial shape.
 We did not allow for this, but custom initializations for the four grid corners would be trivial.
 
