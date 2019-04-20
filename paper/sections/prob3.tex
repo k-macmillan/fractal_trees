@@ -191,7 +191,42 @@ Perhaps a kind of ``blur'' operation could produce believable results.
 In either case, we chose to stick with the algorithm as given and leave improvements for the landscape designers to figure out.
 
 \subsection{Results}
+We chose to implement both the 1D and 2D versions of the Random Midpoint Displacement algorithm, because the 1D version is more obvious, and at the time the details of incorporation the Hurst exponent $H$ were unclear.
 
 \subsubsection{One Dimension}
+\autoref{prob3:fig:1d} shows the results of \autoref{prob3:alg:rmd1d} without the Hurst exponent incorporated.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/landscapes/1d.eps}
+    \caption{An example of \autoref{prob3:alg:rmd1d} (seed 37)}\label{prob3:fig:1d}
+\end{figure}
+
+We also wanted to examine the impact of the different tunable parameters on an easier to interpret plot.
+\autoref{prob3:fig:1d-num-recursions} shows the impact of the number of recursions used to generate the heightmap with the same seed.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/landscapes/1d-num-recursions.eps}
+    \caption{The impact of the number of recursions (seed 420)}\label{prob3:fig:1d-num-recursions}
+\end{figure}
+Notice that, while the level of fidelity increases, the recursive level alone does not produce a realistic heightmap.
+
+We implemented also played with the $\sigma$ parameter in \autoref{prob3:alg:rmd1d}. When the different heightmaps are shown on the same plot, the differences are apparent.
+However, when shown on different plots, each of the four heightmaps are indistinguishable for each other.
+This is expected, and is precisely the impact that a \textit{scale} should have.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/landscapes/1d-scale.eps}
+    \caption{The impact of the $\sigma$ parameter (seed 420)}\label{prob3:fig:1d-scale}
+\end{figure}
+
+Lastly, we experimented with the Hurst exponent $H$.
+\autoref{prob3:fig:1d-hurst-exponent} shows exactly what we would expect --- smaller values produce exceedingly rough landscapes, while large values produce more believable heightmaps.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/landscapes/1d-hurst-exponent.eps}
+    \caption{The impact of the $H$ roughness parameter (seed 420)}\label{prob3:fig:1d-hurst-exponent}
+\end{figure}
 
 \subsubsection{Two Dimensions}

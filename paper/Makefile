@@ -96,13 +96,6 @@ $(LANDSCAPE_TRIGGER): $(LANDSCAPE_DEPS)
 	@# Start all the jobs in parallel the poor man's way, fully aware there's a better way (tm).
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
 		--one                                                                                      \
-		--recursions 4                                                                             \
-		--scale 2                                                                                  \
-		--hurst 0.5                                                                                \
-		--seed 3                                                                                   \
-		--output $(LANDSCAPE_DIR)/1d-simple.eps                                                  & \
-	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/landscapes.py                             \
-		--one                                                                                      \
 		--recursions 10                                                                            \
 		--scale 2                                                                                  \
 		--hurst 0.5                                                                                \
