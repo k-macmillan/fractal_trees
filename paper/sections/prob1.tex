@@ -310,25 +310,83 @@ respectively.
 % }
 
 \subsubsection{Existing Implementations}
-\todoinline[caption=Existing impelemtations]{
-    Mention all of the existing implementations we found of L-Systems, both 2D and 3D.
-    Give links to the easiest to use implementations.
+There are a number of existing implementations for Lindenmayer Systems in Python --- at least one of which is even done in three dimensions.
 
-    Show how to use \LaTeX{} to generate them, because he'd like that, and might even find it useful.
-}
+The first implementation of L-Systems that we found was actually a \LaTeX{} Tikz implementation.
+It's quite easy to use.
+\autoref{fig:latex-lsystem} shows the result of the Tikz code shown in \autoref{code:latex-lsystem}.
 
-% \subsubsection{Applying the Production Rules}
-% Covered in Graphics subsubsection
-% \todoinline[caption=Implementation of the production rules]{Show how to apply the production rules.}
+\begin{figure}[H]
+    \centering
 
-% \subsubsection{A 3D Turtle}
-% Covered in the Turtle subsubsection
-% \todoinline[caption=Implementation of the 3D turtle]{
-%     Show how the 3D turtle was implemented.
-%     Be very clear how painful quaternions were and the difficulty of performing the transformations in the local reference frame.
+    \pgfdeclarelindenmayersystem{Fractal plant}{
+    \rule{X -> F-[[X]+X]+F[+FX]-X}
+    \rule{F -> FF}
+    }
 
-%     Cite the Lindenmaker Blender addon \url{https://github.com/lemurni/lpy-lsystems-blender-addon} and thesis, but mention that the only thing we ripped off was the Turtle.
-% }
+    \begin{tikzpicture}
+        \draw [green!50!black, rotate=90][
+            l-system={
+                    Fractal plant,
+                    axiom=X,
+                    order=5,
+                    step=2pt,
+                    angle=25
+                }
+        ] lindenmayer system;
+    \end{tikzpicture}
+    \caption{A fractal plant generated with \LaTeX}\label{fig:latex-lsystem}
+\end{figure}
+
+\begin{listing}[H]
+    \begin{minted}{latex}
+        \documentclass[tikz, border=1mm]{standalone}
+
+        \usetikzlibrary{lindenmayersystems}
+
+        \pgfdeclarelindenmayersystem{Fractal plant}{
+            \rule{X -> F-[[X]+X]+F[+FX]-X}
+            \rule{F -> FF}
+        }
+
+        \begin{document}
+        \begin{tikzpicture}
+            \draw [green!50!black, rotate=90][
+                l-system={
+                        Fractal plant,
+                        axiom=X,
+                        order=5,
+                        step=2pt,
+                        angle=25
+                    }
+            ] lindenmayer system;
+        \end{tikzpicture}
+        \end{document}
+    \end{minted}
+    \caption{A fractal plant with \LaTeX}\label{code:latex-lsystem}
+\end{listing}
+
+We also found numerous 2D Python implementations. Some of which are listed below, ranked by their usefulness.
+\begin{enumerate}
+    \item \href{http://www.4dsolutions.net/ocn/lsystems.html}{4dsolutions}
+    \item \href{https://hackaday.io/project/11721-python-l-system}{Hackaday project}
+    \item \href{https://interactivepython.org/courselib/static/thinkcspy/Strings/TurtlesandStringsandLSystems.html}{How To Think Like A Computer Scientist project}
+\end{enumerate}
+
+The original paper \textit{The Algorithmic Beauty of Plants} can be found online at \url{http://algorithmicbotany.org/papers/\#abop}.
+
+The original idea to make a variant of the Lindenmayer system in three dimensions came from \href{https://stackoverflow.com/questions/42257676/l-systems-and-the-stack-in-maya}{this Stack Overflow post}.
+However, in that post the author is using the Maya Python API, which has very little documentation and supporting material online.
+Further, Maya is quite expensive (\$3,000+) for non-educational use, so there was little practical advantage to learning it on the side.
+Thus we decided to use the free, open source modeling software \href{https://www.blender.org/}{Blender}.
+
+Blender has excellent mathematics libraries for performing 3D graphics manipulation, which was exactly what we wanted for this project.
+We spent roughly a week before another round of Googling produced the \href{https://github.com/lemurni/lpy-lsystems-blender-addon}{Lindenmaker Blender addon}.
+Lindenmaker is a Python library that adds a new panel to Blender for producing L-system trees.
+Lindenmaker is the result of the bachelor's thesis available \href{https://www.cg.tuwien.ac.at/research/publications/2017/LEOPOLD-2017-ALG/LEOPOLD-2017-ALG-thesis.pdf}{here}.
+
+Due to the spirit of the assignment we decided to avoid blindly using the Lindenmaker addon without implementing our own solution.
+However, we still took inspiration from Lindenmaker's implementation of the 3D turtle because we struggled getting quaternion transformations to apply to each object's \textit{local} reference frame.
 
 \subsubsection{Computing the Vertices}
 I have no clue what kind of voodoo mathamagic you used to do this.
