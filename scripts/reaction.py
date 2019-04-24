@@ -1,8 +1,10 @@
 """Run the Gray-Scott Model with configurable parameters."""
 import argparse
+import sys
+from datetime import datetime
 
-import seaborn as sns
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 from natural.automata.reaction_diffusion import gray_scott
 
@@ -130,4 +132,8 @@ def main(args):
 
 
 if __name__ == "__main__":
+    start = datetime.now()
     main(parse_args())
+    end = datetime.now()
+    print("reaction.py with args:", sys.argv)
+    print("took", end - start, "seconds to complete")
