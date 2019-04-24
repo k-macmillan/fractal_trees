@@ -1,10 +1,10 @@
 {
     "unit": 0.1,
     "angle": 0.392699082,
-    "radius": 0.02,
+    "radius": 0.002,
     "proportion": null,
     "axiom": "G",
-    "iterations": 5,
+    "iterations": 4,
     "randomness": null,
     "rules": {
         "G": "FG[-F[G]-G][G+G][+F[G]+G]",

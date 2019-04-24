@@ -1,10 +1,10 @@
 {
     "unit": 0.1,
-    "angle": 0.392699082,
-    "radius": 0.02,
+    "angle": 0.383972435,
+    "radius": 0.002,
     "proportion": null,
     "axiom": "F",
-    "iterations": 4,
+    "iterations": 3,
     "randomness": null,
     "rules": {
         "F": "FF+[+F-F-F]-[-F+F+F]"
