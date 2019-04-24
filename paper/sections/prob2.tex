@@ -4,22 +4,15 @@
 \subsection{Statement}
 Use bracketed OL-systems to reproduce each of the plant-like fractals in Figure 7.24 of the book.
 
-Experiment with the production rules and produce at least ten derivatives.\todo{We can put our 3D fractals under this category.}
+Experiment with the production rules and produce at least ten derivatives.
 
 \subsection{Method}
-\todoinline{Just refer back to problem 1}
+The methods here are no different than Section \ref{sec:l-system-method}.
 
 \subsection{Implementation}
-\todoinline{Just refer back to problem 1}
+The implementation is identical to Section \ref{sec:l-sys-implementation}.
 
-\subsection{Results}
-
-% \begin{figure}[H]
-% \centering
-% \noindent\includegraphics[width=0.90\textwidth]{figures/L-systems/e}
-% \caption{Problem 2e}
-% \label{fig:prob2e}
-% \end{figure}
+\subsection{Results}\label{sec:p2-results}
 
 \begin{figure}[H]
 \centering
@@ -33,13 +26,6 @@ Experiment with the production rules and produce at least ten derivatives.\todo{
 \noindent\includegraphics[width=0.90\textwidth]{figures/L-systems/b}
 \caption{Problem 2b}
 \label{fig:prob2b}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\noindent\includegraphics[width=0.90\textwidth]{figures/L-systems/b2}
-\caption{Problem 2b2}
-\label{fig:prob2b2}
 \end{figure}
 
 \begin{figure}[H]
@@ -71,10 +57,20 @@ Experiment with the production rules and produce at least ten derivatives.\todo{
 \end{figure}
 
 \subsubsection{Expanding the Lindenmayer Systems to 3D}
-\todoinline[caption=3d results]{
-    Discuss how to create more interesting 3D fractals, including Koch curves, the dragon curve, and 3D trees/bushes.
+We attempted to add an extra dimension to each of the items in Section 
+\ref{sec:p2-results}. We also experimented with classical systems such as 
+Sierpiński triangle, Cantor Set, Dragon, Koch, and variants of our own design.
 
-    Show the results from \texttt{data/a.json} with the book's parameters.
-}
+% \todoinline[caption=3d results]{
+%     Discuss how to create more interesting 3D fractals, including Koch curves, the dragon curve, and 3D trees/bushes.
+
+%     Show the results from \texttt{data/a.json} with the book's parameters.
+% }
 
 \subsection{Conclusion}
+Following the book examples were extremely simple to implement, we simply 
+created \texttt{JSON} files that matched the book description. To build the 3D 
+variants we experimented until they looked decent. The other variants were 
+through trial and error or online examples. It was fun to play with the 
+different rules and attempt to get structures that were uniform but didn't 
+entirely look uniform. 
