@@ -11,8 +11,8 @@ REACTION_DIR := figures/reactions
 REACTION_DEPS := $(REPO_ROOT)/natural/automata/reaction_diffusion.py $(REPO_ROOT)/scripts/reaction.py
 REACTION_TRIGGER := $(REACTION_DIR)/.reaction-figures.trigger
 # TODO: Increase size and iterations after testing.
-REACTION_SIZE := 128
-REACTION_ITERS := 5000
+REACTION_SIZE := 256
+REACTION_ITERS := 10000
 
 HEAT_DIR := figures/heat
 HEAT_DEPS := $(REPO_ROOT)/natural/automata/heat.py $(REPO_ROOT)/scripts/heat.py
@@ -50,13 +50,19 @@ cleanall: clean
 cleanall: clean-figures
 
 clean-figures:
-	rm $(LANDSCAPE_TRIGGER) $(REACTION_TRIGGER)
-	rm $(LANDSCAPE_DIR)/*
-	rm $(REACTION_DIR)/*.eps
+	rm -f $(LANDSCAPE_TRIGGER) $(REACTION_TRIGGER) $(HEAT_TRIGGER)
+	rm -f $(LANDSCAPE_DIR)/*
+	rm -f $(REACTION_DIR)/*.eps
+	rm -f $(REACTION_DIR)/*.pdf
+	rm -f $(HEAT_DIR)/*
 
-figures: $(HEAT_TRIGGER)
-figures: $(LANDSCAPE_TRIGGER)
-figures: $(REACTION_TRIGGER)
+figures: heat
+figures: landscapes
+figures: reactions
+
+heat: $(HEAT_TRIGGER)
+landscapes: $(LANDSCAPE_TRIGGER)
+reactions: $(REACTION_TRIGGER)
 
 $(HEAT_TRIGGER): diffusion-simple
 $(HEAT_TRIGGER): diffusion-time
@@ -370,7 +376,7 @@ $(REACTION_DIR)/lambda.eps: $(REACTION_DEPS)
 # TODO: Play with the additional number of iterations once testing phase is over
 $(REACTION_DIR)/mu.eps: $(REACTION_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
-		--iterations $(shell expr $(REACTION_ITERS) \* 3 )                                         \
+		--iterations $(shell expr $(REACTION_ITERS) \* 2 )                                         \
 		--kill 0.0665                                                                              \
 		--feed 0.055                                                                               \
 		--radius 32                                                                                \
