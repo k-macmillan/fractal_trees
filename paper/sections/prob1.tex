@@ -16,7 +16,7 @@ Lindenmayer Systems are commonly referred to as
 series of production rules and applies them to an
 \href{https://en.wikipedia.org/wiki/Axiom}{axiom}, or initial string for a
 defined number of iterations. To define these L-Systems our approach utilizes a
-\texttt{JSON} file to store the system's variables:
+JSON configuration file to store the system's variables:
 
 \begin{minted}{json}
 {
@@ -34,54 +34,56 @@ defined number of iterations. To define these L-Systems our approach utilizes a
 }
 \end{minted}
 
-\begin{table}
-    \begin{center}
-        \begin{tabular}{| c | l |}
-            \hline
-            \textbf{Name} & \textbf{Description}                              \\ \hline
-            unit          & Length of a segment                               \\ \hline
-            angle         & Angle (radians) applied to \verb|+-^v<>| \\ \hline
-            radius        & Radius for segments                               \\ \hline
-            proportion    & Changes radius to a proportion of length          \\ \hline
-            axiom         & Initial string                                    \\ \hline
-            iterations    & Number of times to iterate                        \\ \hline
-            randomness    & Perturbation applied to angle                     \\ \hline
-            rules         & Denotes what becomes of characters                \\ \hline
-        \end{tabular}
-        \caption{JSON Format of L-System}
-        \label{table:json_format}
-    \end{center}
+A description for each of the JSON parameters is given in \autoref{tab:json_format}.
+
+\begin{table}[H]
+    \centering
+    \caption{JSON config file parameters}\label{tab:json_format}
+    \begin{tabular}{@{}cl@{}}
+        \toprule
+        \textbf{Name} & \textbf{Description}                                 \\ \midrule
+        unit          & Length of a segment                                  \\
+        angle         & Angle (radians) applied to \mintinline{text}{+-^v<>} \\
+        radius        & Radius for segments                                  \\
+        proportion    & Changes radius to a proportion of length             \\
+        axiom         & Initial string                                       \\
+        iterations    & Number of times to iterate                           \\
+        randomness    & Perturbation applied to angle                        \\
+        rules         & Denotes what becomes of characters                   \\ \bottomrule
+    \end{tabular}
 \end{table}
 
 % \todoinline[caption=Define an L-System]{Define an L-System, production rules, and specify the meaning of the different commands.}
 
 \subsubsection{The Lindenmayer System for the Given Problem}
 The problem required us to ``shrink'' the original to 1/3 size and apply it to
-each angled protrusion. We accomplished that by coming up with an
-\hyperref[code:prob1_json]{L-System} that grew each previous iteration by a
-factor of 3 each time it went through a new iteration.
+each angled protrusion. We accomplished that by coming up with an L-System
+that grew each previous iteration by a factor of 3 each time it went through a
+new iteration. This system is given in \autoref{code:prob1_json}.
 
-\begin{minted}{json}
-{
-    "unit": 1,
-    "angle": 0.785398163,
-    "radius": null,
-    "proportion": null,
-    "axiom": "F",
-    "iterations": 7,
-    "randomness": null,
-    "rules": {
-        "F": "GGG[-F][F][+F]",
-        "G": "GG"
-    }
-}
-\end{minted}
-\label{code:prob1_json}
+\begin{listing}[H]
+    \begin{minted}{json}
+        {
+            "unit": 1,
+            "angle": 0.785398163,
+            "radius": null,
+            "proportion": null,
+            "axiom": "F",
+            "iterations": 7,
+            "randomness": null,
+            "rules": {
+                "F": "GGG[-F][F][+F]",
+                "G": "GG"
+            }
+        }
+    \end{minted}
+    \caption{The JSON configuration for the given problem}\label{code:prob1_json}
+\end{listing}
 
 We were tasked with changing the angle to 90° which resulted in a
 Christmas tree-like structure. We were also tasked with changing the angle to
 120° and it resulted in something similar to a
-\href{https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle}{Sierpiński triangle}.
+\href{https://en.wikipedia.org/wiki/Sierpi\%C5\%84ski\_triangle}{Sierpiński triangle}.
 All three versions are viewable via
 \href{https://sketchfab.com/macattackftw/collections/problem-1}{Sketchfab}.
 
@@ -96,57 +98,56 @@ All three versions are viewable via
 \subsubsection{Extending the Lindenmayer Systems to 3D}
 The book mentioned symbols to expand the generation into different dimensions.
 We borrowed some of those symbols to generate L-Systems that expanded in the
-$x$, $y$, and $z$ dimensions. We \hyperref[code:prob1_3D_json]{applied} this
+$x$, $y$, and $z$ dimensions. We applied this
 concept to the 45° version of problem 1 and it resulted in a very
 \href{https://sketchfab.com/3d-models/prob1-3d-236e501897a945d0a3eb5e4cba37fa3a}{symmetrical tree}.
+The JSON configuration for the given 3D rendering is shown in \autoref{code:prob1_3D_json}.
 
-\begin{figure}
+\begin{listing}[H]
     \begin{minted}{json}
-{
-    "unit": 1,
-    "angle": 0.785398163,
-    "radius": null,
-    "proportion": null,
-    "axiom": "F",
-    "iterations": 3,
-    "randomness": null,
-    "rules": {
-        "F": "GGG[-F][F][+F][vF][^F][<F][>F]",
-        "G": "GG"
-    }
-}
-\end{minted}
-    \caption*{Problem 1 3D JSON}
-    \label{code:prob1_3D_json}
-\end{figure}
+        {
+            "unit": 1,
+            "angle": 0.785398163,
+            "radius": null,
+            "proportion": null,
+            "axiom": "F",
+            "iterations": 3,
+            "randomness": null,
+            "rules": {
+                "F": "GGG[-F][F][+F][vF][^F][<F][>F]",
+                "G": "GG"
+            }
+        }
+    \end{minted}
+    \caption{Problem 1 3D JSON}\label{code:prob1_3D_json}
+\end{listing}
 
 Transitioning to 3D space was incredibly simple due to Blender's mathutils
 Matrix module as seen in the
-\hyperref[code:roll_pitch_yaw]{Roll, Pitch, Yaw Code Block}. We spent a lot of
+\autoref{code:roll_pitch_yaw}. We spent a lot of
 time attempting to manipulate Quaternions but found the mathutils module met
 all of our requirements and didn't give us a headache.
 
-\begin{figure}
+\begin{listing}[H]
     \begin{minted}{python}
-def yaw(self, angle):
-    """Yaw the Turtle around its local Z axis."""
-    self.mat = matmul(self.mat, Matrix.Rotation(angle, 4, "Z"))
+        def yaw(self, angle):
+            """Yaw the Turtle around its local Z axis."""
+            self.mat = matmul(self.mat, Matrix.Rotation(angle, 4, "Z"))
 
-def pitch(self, angle):
-    """Pitch the Turtle around its local Y axis."""
-    self.mat = matmul(self.mat, Matrix.Rotation(angle, 4, "Y"))
+        def pitch(self, angle):
+            """Pitch the Turtle around its local Y axis."""
+            self.mat = matmul(self.mat, Matrix.Rotation(angle, 4, "Y"))
 
-def roll(self, angle):
-    """Roll the Turtle around its local X axis."""
-    self.mat = matmul(self.mat, Matrix.Rotation(angle, 4, "X"))
-\end{minted}
-    \caption*{Roll, Pitch, Yaw code}
-    \label{code:roll_pitch_yaw}
-\end{figure}
+        def roll(self, angle):
+            """Roll the Turtle around its local X axis."""
+            self.mat = matmul(self.mat, Matrix.Rotation(angle, 4, "X"))
+    \end{minted}
+    \caption{Roll, Pitch, Yaw code}\label{code:roll_pitch_yaw}
+\end{listing}
 
-Angle commands such as \texttt{\^} were mapped to pitch function described in
-the \hyperref[code:roll_pitch_yaw]{Roll, Pitch, Yaw Code Block}. So the turtle
-would pitch $\theta$ and if the angle command was \texttt{v} it would pitch
+Angle commands such as \mintinline{text}{^} were mapped to pitch function described in
+the \autoref{code:roll_pitch_yaw}. So the turtle
+would pitch $\theta$ and if the angle command was \mintinline{text}{v} it would pitch
 $-\theta$.
 
 % \todoinline[caption=Defined new 3D commands]{
@@ -159,30 +160,28 @@ $-\theta$.
 
 \subsubsection{Further Extensions of the Lindenmayer Systems}
 Another concept the book mentioned was moving forward without drawing a line.
-This was accomplished with symbols \texttt{f} and \texttt{g}. Utilizing this
+This was accomplished with symbols \mintinline{text}{f} and \mintinline{text}{g}. Utilizing this
 concept we were able to reproduce the
 \href{https://sketchfab.com/3d-models/cantor-f645d6ae69a748a283a737f44660c5f6}{Cantor Set}.
 
 We were making plant-like structures so we decided that anything over length 1
 would be a ``branch'' and anything else was a ``leaf''. This led to much more
 plant-like visualization of the L-Systems. A good example of this can be seen
-in Figure \ref{fig:a_3d} and Figure \ref{fig:prob1_3d}. We did not have to stop
+in \autoref{fig:a_3d} and \autoref{fig:prob1_3d}. We did not have to stop
 at 2 colors. We could have added any number of colors and based it on the
 length or on the iteration. We chose 2 because it demonstrated the concept and
 made the resulting system look better.
 
 \begin{figure}[H]
     \centering
-    \noindent\includegraphics[width=0.75\textwidth]{figures/L-systems/a3d}
-    \caption[3D L-system Example]{A 3D representation of the book Figure 7.24a}
-    \label{fig:a_3d}
+    \includegraphics[width=0.75\textwidth]{figures/L-systems/a3d.png}
+    \caption[3D L-system Example]{A 3D representation of the book Figure 7.24a}\label{fig:a_3d}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \noindent\includegraphics[width=0.75\textwidth]{figures/L-systems/prob13d}
-    \caption[3D Representation of Problem 1]{A 3D representation of problem 1}
-    \label{fig:prob1_3d}
+    \includegraphics[width=0.75\textwidth]{figures/L-systems/prob13d.jpg}
+    \caption[3D Representation of Problem 1]{A 3D representation of problem 1}\label{fig:prob1_3d}
 \end{figure}
 
 We experimented further with radii proportionality and randomness but the
@@ -207,87 +206,85 @@ some simple L-System variations may have looked better but we did not find one.
 % }
 
 \subsection{Implementation}\label{sec:l-sys-implementation}
-Implementation of this problem was done in three parts: \texttt{grammar},
-\texttt{graphics}, and \texttt{turtle}.
+Implementation of this problem was done in three parts: \mintinline{text}{grammar},
+\mintinline{text}{graphics}, and \mintinline{text}{turtle}.
 
 \subsubsection{Grammar}
 This section identified which symbols we would utilize as well as how it would
 build the final string. Symbols were defined within a
 \href{https://docs.python.org/3/library/stdtypes.html#frozenset}{frozenset}:
 \mintinline{python}{symbols}. The function: \mintinline{python}{iapply} essentially
-utilizes a generator to apply production rules to the \texttt{axiom} of the
+utilizes a generator to apply production rules to the \mintinline{text}{axiom} of the
 given iteration.
 
 \subsubsection{Graphics}
-Graphics assigns the initial conditions specified in the \texttt{JSON} file.
+Graphics assigns the initial conditions specified in the JSON file.
 The various function mappings are assigned such as:
 
 \begin{minted}{python}
 self.mappings = {"F": self.turtle.move, "^": self.turtle.pitch}
 \end{minted}
 
-We then iterate through the string (\texttt{commands}), applying the
+We then iterate through the string (\mintinline{python}{commands}), applying the
 appropriate mappings. We keep track of consecutive move commands to determine
 segment length. This serves to reduce the number of cylinders we have to draw
 and it allows us to assign a color scheme based on length.
 
 Cylinders are saved in a dictionary format:
 \begin{minted}{python}
-cylinders.append(
-    {
-        "from": start,
-        "to": end,
-        "radius": self.radius,
-        "material": "Branch" if length > 1 else "Leaf",
-        "length": length,
-    }
-)
+    cylinders.append(
+        {
+            "from": start,
+            "to": end,
+            "radius": self.radius,
+            "material": "Branch" if length > 1 else "Leaf",
+            "length": length,
+        }
+    )
 \end{minted}
 
-\begin{table}
-    \begin{center}
-        \begin{tabular}{| c | l |}
-            \hline
-            \textbf{Name} & \textbf{Description}               \\ \hline
-            from          & Origin                             \\ \hline
-            to            & Destination                        \\ \hline
-            radius        & Radius for segment                 \\ \hline
-            material      & Branch or Leaf dependent on length \\ \hline
-            length        & Cylinder length                    \\ \hline
-        \end{tabular}
-        \caption{Dictionary of Cylinders}
-        \label{table:dict_cylinders}
-    \end{center}
+\begin{table}[H]
+    \centering
+    \caption{Dictionary of Cylinders}\label{table:dict_cylinders}
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \textbf{Name} & \textbf{Description}               \\ \midrule
+        from          & Origin                             \\
+        to            & Destination                        \\
+        radius        & Radius for segment                 \\
+        material      & Branch or Leaf dependent on length \\
+        length        & Cylinder length                    \\ \bottomrule
+    \end{tabular}
 \end{table}
 
-Table \ref{table:dict_cylinders} defines what each attribute in a cylinder
+\autoref{table:dict_cylinders} defines what each attribute in a cylinder
 means. Due to the quirks of Blender we determined it was better to create a
 single cylinder and then copy it, so for each length we generate a master. The
 master is copied for each cylinder of the same length, while the copy has the
-appropriate \texttt{from - to} applied. This application is done through the
-\mintinline{python}{draw} function. We started to have \texttt{axioms} that
+appropriate \mintinline{python}{from - to} applied. This application is done through the
+\mintinline{python}{draw} function. We started to have \mintinline{text}{axioms} that
 were hundreds of thousands of characters long. Speed became an issue with
 sufficient iterations so we developed a batch system.  We specify the number of
 jobs we want to run on via command line:
 
-\texttt{./batch.sh data/b3d.json --jobs 32}
+\mintinline{shell}{./batch.sh data/b3d.json --jobs 32}
 
-Essentially this chops up the \texttt{cylinders} list into 32 pieces and runs
+Essentially this chops up the \mintinline{text}{cylinders} list into 32 pieces and runs
 them concurrently. Runtimes went from 45 minutes to a few seconds. The
-batch process fires up \texttt{--jobs N} instances of Blender. This can
+batch process fires up \mintinline{text}{--jobs N} instances of Blender. This can
 quickly consume all RAM. We had to play around with the limits of our
 individual machines to find the maximums. This batch process allowed us to
 break 19,000 cylinders which was a hard threshold we were struggling to surpass.
 We were able to generate over 400,000 cylinders without issue utilizing the
 batch method.
 
-Individually generated \texttt{.blend} files are joined into a
+Individually generated \mintinline{text}{.blend} files are joined into a
 single entity which reduces the size of the stored 3D object. If the resulting
-\texttt{.fbx} file is under 50MB we were able to upload it to
+\mintinline{text}{.fbx} file is under 50MB we were able to upload it to
 \href{https://sketchfab.com/macattackftw/models}{Sketchfab}.
 
 \subsubsection{Turtle}
-The turtle is a very simple python class. Blender's mathutils makes turtles
+The turtle is a very simple python class. Blender's mintinline{python}{mathutils} library makes turtles
 very easy to implement. Prior to finding this we spent several days trying to
 get Quaternions working. The \mintinline{python}{turtle} class only has a few
 functions:
@@ -359,20 +356,20 @@ I have no clue what kind of voodoo mathamagic you used to do this.
 \subsubsection{Usage}
 We initially designed this to be ran in a single thread with no concurrent
 usage. This proved inadequate for sufficiently large L-Systems. The recommended
-mode of operation is batch and to do so simply generate a \texttt{JSON} file in
-the format shown in the \hyperref[code:prob1_json]{JSON Example}. Save the file
+mode of operation is batch and to do so simply generate a JSON file in
+the format shown in \autoref{code:prob1_json}. Save the file
 in whatever folder you wish, then run:
 
-\texttt{./batch.sh data/myJSON.json --jobs N}
+\mintinline{shell}{./batch.sh data/myJSON.json --jobs N}
 
-To keep things neat we recommend placing the \texttt{JSON} file in the data
-folder. Jobs (\texttt{N}) can be from 1 to as much RAM as your system can
+To keep things neat we recommend placing the JSON file in the data
+folder. Jobs (\mintinline{text}{N}) can be from 1 to as much RAM as your system can
 handle. It is not recommended to go beyond 32 jobs unless you have more than
 16GB of RAM.
 
-The final file will be \texttt{data/myJSON.blend}. All of the
-\texttt{myJSON-job-*-.blend} are from the \texttt{N} jobs scheduled and are the
-individual components of the final \texttt{.blend} file.
+The final file will be \mintinline{text}{data/myJSON.blend}. All of the
+\mintinline{text}{myJSON-job-*-.blend} are from the \mintinline{text}{N} jobs scheduled and are the
+individual components of the final \mintinline{text}{.blend} file.
 
 % \todoinline[caption=Script usage]{
 %     Discuss how to use each of the scripts we created, spending the most time on \texttt{blender.py} and \texttt{batch.sh}.
@@ -381,30 +378,27 @@ individual components of the final \texttt{.blend} file.
 % }
 
 \subsection{Results}
-Results of Problem one can be seen in Figure \ref{fig:prob1_45},
-\ref{fig:prob1_90}, and \ref{fig:prob1_120}. The \texttt{.fbx} files can be
+Results of Problem one can be seen in \autoref{fig:prob1_45},
+\autoref{fig:prob1_90}, and \autoref{fig:prob1_120}. The \mintinline{text}{.fbx} files can be
 found on
 \href{https://sketchfab.com/macattackftw/collections/problem-1}{Sketchfab}.
 
 \begin{figure}[H]
     \centering
-    \noindent\includegraphics[width=0.75\textwidth]{figures/L-systems/prob1-45}
-    \caption{Problem 1 where $\theta$ = 45°}
-    \label{fig:prob1_45}
+    \includegraphics[width=0.75\textwidth]{figures/L-systems/prob1-45}
+    \caption{Problem 1 where $\theta = 45^\circ$}\label{fig:prob1_45}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \noindent\includegraphics[width=0.75\textwidth]{figures/L-systems/prob1-90}
-    \caption{Problem 1 where $\theta$ = 90°}
-    \label{fig:prob1_90}
+    \includegraphics[width=0.75\textwidth]{figures/L-systems/prob1-90}
+    \caption{Problem 1 where $\theta = 90^\circ$}\label{fig:prob1_90}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \noindent\includegraphics[width=0.75\textwidth]{figures/L-systems/prob1-120}
-    \caption{Problem 1 where $\theta$ = 120°}
-    \label{fig:prob1_120}
+    \includegraphics[width=0.75\textwidth]{figures/L-systems/prob1-120}
+    \caption{Problem 1 where $\theta = 120^\circ$}\label{fig:prob1_120}
 \end{figure}
 
 % \subsubsection{The Lindenmayer System for the Given Problem}
