@@ -389,27 +389,77 @@ Due to the spirit of the assignment we decided to avoid blindly using the Linden
 However, we still took inspiration from Lindenmaker's implementation of the 3D turtle because we struggled getting quaternion transformations to apply to each object's \textit{local} reference frame.
 
 \subsubsection{Computing the Vertices}
-I have no clue what kind of voodoo mathamagic you used to do this.
-\todoinline[caption=Implementation of the vertex computation]{
-    Discuss the \mintinline{python}{Graphics.compute(lstring)} method and its implementation.
-    Be sure to include the data structure it returns and how the material is set.
+Our code for computing the cylinder vertices given the Lindenmayer graphics string (which we've chosen to call L-strings) is shown below.\footnote{We would normally not provide this much detail, but the discussion about optimizing the Blender scene creation later depends on understanding the nontrivial data structures it operates on.}
 
-    Also include the proportional radii, and randomness (once it's implemented).
-}
+\begin{minted}{python}
+    def compute(self, commands):
+        """Generate the 3D cylinders from the given graphics commands.
 
-% \subsubsection{Adding Cylinders to the 3D Scene}
-% Covered in Graphics subsubsection. I don't think he cares about the details that much in regards to Blender.
-% \todoinline[caption=Implementation of adding objects to the scene]{
-%     Show how to add a single cylinder to the scene, and mention that it slowed down Blender substantially.
+        :param commands: A string of successive graphics commands.
+        :returns: A dictionary of (length, [{cyl 1}, {cyl 2}, ...]) pairs.
+        """
+        cylinders = []
+        commands = iter(commands)
+        for command in commands:
+            perturbation = (
+                np.random.normal(scale=self.randomness) if self.randomness is not None else 0
+            )
 
-%     Show how to fix this by duplicating cylinders, but mention that there was still a substantial slowdown for large fractals.
-% }
+            length = 0
+            start = self.turtle.position
+            # Consume consecutive forward commands.
+            while command in ("G", "F"):
+                # Perturb only the angle. The drawing assumes many cylinders of the same length.
+                self.mappings[command](self.unit)
+                length += self.unit
+                try:
+                    command = next(commands)
+                except StopIteration:
+                    # We've consumed the last command.
+                    break
+            end = self.turtle.position
 
-% \subsubsection{Parallel Scene Creation}
-% He's not going to care about the code to join blender files, though the process is explained above.
-% \todoinline[caption=Implementation of batch processing]{
-%     Discuss the general idea of the batch mode, but there's no need to give actual code --- other than how to join two files.
-% }
+            if length > 0:
+                if self.proportion is not None:
+                    self.radius = self.proportion * length
+
+                cylinders.append(
+                    {
+                        "from": start,
+                        "to": end,
+                        "radius": self.radius,
+                        "material": "Branch" if length > 1 else "Leaf",
+                        "length": length,
+                    }
+                )
+            if command in ("f", "g"):
+                self.mappings[command](self.unit)
+
+            if command in self.mappings and command not in ("G", "F", "f", "g"):
+                if command in ("+", "^", ">"):
+                    self.mappings[command](+self.angle + perturbation)
+                elif command in ("-", "v", "<"):
+                    self.mappings[command](-self.angle + perturbation)
+                else:
+                    self.mappings[command]()
+
+        return [dict(t) for t in {tuple(d.items()) for d in cylinders}]
+\end{minted}
+
+Notice that subsequent \mintinline{text}{F} and \mintinline{text}{G} commands are consumed and only \textit{one} cylinder is produced.
+This was necessary because Blender struggles to cope with large numbers of objects, even though it can easily handle large objects.
+
+The particularly disgusting implementation is due to the fact that adding an object to the Blender scene forces an entire scene update.
+Once you get past a few thousand objects (and note we're dealing with hundreds of thousands) adding an object to the scene begins to take quite some time --- the time it takes to add a single cylinder scales linearly with the number of existing cylinders, so the time it takes to add \textit{all} the cylinders scales exponentially.
+
+We ended up implementing a multi-faceted approach to improving the scene creation time.
+The particular facet that impacts the disgustingness of the code above is the ability of Blender to duplicated and manipulated \textit{copies} of existing cylinders in the scene.
+
+In order to facilitate this copying, the \mintinline{python}{Graphics.compute()} function returns a \textit{dictionary} of
+\[L \to \{\text{all cylinders with length $L$}\} \]
+mappings for each cylinder length $L$ that is generated.
+
+This way, the correspondingly disgusting code to add the cylinders to the Blender scene can create a master cylinder of each size, then produce transformed copies of each master cylinder for each corresponding cylinder.
 
 \subsubsection{Usage}
 We initially designed this to be ran in a single thread with no concurrent
