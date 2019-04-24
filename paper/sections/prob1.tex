@@ -280,8 +280,8 @@ batch process fires up \texttt{--jobs N} instances of Blender. This can
 quickly consume all RAM. We had to play around with the limits of our 
 individual machines to find the maximums. This batch process allowed us to 
 break 19,000 cylinders which was a hard threshold we were struggling to surpass. 
-We were able to generate 137,000 cylinders without issue utilizing the batch 
-method. 
+We were able to generate over 400,000 cylinders without issue utilizing the 
+batch method. 
 
 Individually generated \texttt{.blend} files are joined into a 
 single entity which reduces the size of the stored 3D object. If the resulting 
@@ -361,7 +361,7 @@ I have no clue what kind of voodoo mathamagic you used to do this.
 \subsubsection{Usage}
 We initially designed this to be ran in a single thread with no concurrent 
 usage. This proved inadequate for sufficiently large L-Systems. The recommended 
-mode of operation is batch and to do so simple generate a \texttt{JSON} file in 
+mode of operation is batch and to do so simply generate a \texttt{JSON} file in 
 the format shown in the \hyperref[code:prob1_json]{JSON Example}. Save the file 
 in whatever folder you wish, then run:
 
@@ -383,17 +383,54 @@ individual components of the final \texttt{.blend} file.
 % }
 
 \subsection{Results}
+Results of Problem one can be seen in Figure \ref{fig:prob1_45}, 
+\ref{fig:prob1_90}, and \ref{fig:prob1_120}. The \texttt{.fbx} files can be 
+found on 
+\href{https://sketchfab.com/macattackftw/collections/problem-1}{Sketchfab}.
 
-\subsubsection{The Lindenmayer System for the Given Problem}
-\todoinline[caption=results for given problem]{
-    Show our results for the given problem.
+\begin{figure}[H]
+\centering
+\noindent\includegraphics[width=0.75\textwidth]{figures/L-systems/prob1-45}
+\caption{Problem 1 where $\theta$ = 45°}
+\label{fig:prob1_45}
+\end{figure}
 
-    Show the production rules, and generated graphics.
-    Play with the scale and the yaw angle.
-}
+\begin{figure}[H]
+\centering
+\noindent\includegraphics[width=0.75\textwidth]{figures/L-systems/prob1-90}
+\caption{Problem 1 where $\theta$ = 90°}
+\label{fig:prob1_90}
+\end{figure}
 
-\todoinline[caption=Move experimentation to problem 2]{
-    Leave the 3D and other experimentation to problem 2, because it asks you to experiment, and we can get more mileage out of it there.
-}
+\begin{figure}[H]
+\centering
+\noindent\includegraphics[width=0.75\textwidth]{figures/L-systems/prob1-120}
+\caption{Problem 1 where $\theta$ = 120°}
+\label{fig:prob1_120}
+\end{figure}
+
+% \subsubsection{The Lindenmayer System for the Given Problem}
+% \todoinline[caption=results for given problem]{
+%     Show our results for the given problem.
+
+%     Show the production rules, and generated graphics.
+%     Play with the scale and the yaw angle.
+% }
+
+% \todoinline[caption=Move experimentation to problem 2]{
+%     Leave the 3D and other experimentation to problem 2, because it asks you to experiment, and we can get more mileage out of it there.
+% }
 
 \subsection{Conclusion}
+L-Systems are great for generation of interesting fractal patterns. We 
+generated several additional variations which can be found 
+\href{https://sketchfab.com/macattackftw/models}{here}. We wanted a visually 
+appealing implementation and we accomplished that. The L-System itself is 
+rather straightforward. Storing cylinder start/stop locations was relatively 
+simple, the bulk of our work was spent on visualizing and optimizing to work 
+with Blender. While that was not the goal of the problem it was useful to 
+experiment with an unfamiliar API and integrate our product with it. 
+
+There could be future work in expanding color schemes, variable radii, and 
+further optimizing blender usage (such as chopping up the JSON file based on 
+batches). We thoroughly explored L-Systems and it was a fun project.
