@@ -359,11 +359,28 @@ I have no clue what kind of voodoo mathamagic you used to do this.
 % }
 
 \subsubsection{Usage}
-\todoinline[caption=Script usage]{
-    Discuss how to use each of the scripts we created, spending the most time on \texttt{blender.py} and \texttt{batch.sh}.
+We initially designed this to be ran in a single thread with no concurrent 
+usage. This proved inadequate for sufficiently large L-Systems. The recommended 
+mode of operation is batch and to do so simple generate a \texttt{JSON} file in 
+the format shown in the \hyperref[code:prob1_json]{JSON Example}. Save the file 
+in whatever folder you wish, then run:
 
-    Make sure to point out that the \mintinline{python}{bpy} and \mintinline{python}{mathutils} libraries are provided by Blender, and that to use them we need to run our scripts in funky ways.
-}
+\texttt{./batch.sh data/myJSON.json --jobs N}
+
+To keep things neat we recommend placing the \texttt{JSON} file in the data 
+folder. Jobs (\texttt{N}) can be from 1 to as much RAM as your system can 
+handle. It is not recommended to go beyond 32 jobs unless you have more than 
+16GB of RAM.
+
+The final file will be \texttt{data/myJSON.blend}. All of the 
+\texttt{myJSON-job-*-.blend} are from the \texttt{N} jobs scheduled and are the 
+individual components of the final \texttt{.blend} file.
+
+% \todoinline[caption=Script usage]{
+%     Discuss how to use each of the scripts we created, spending the most time on \texttt{blender.py} and \texttt{batch.sh}.
+
+%     Make sure to point out that the \mintinline{python}{bpy} and \mintinline{python}{mathutils} libraries are provided by Blender, and that to use them we need to run our scripts in funky ways.
+% }
 
 \subsection{Results}
 
