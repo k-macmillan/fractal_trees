@@ -10,7 +10,6 @@ LANDSCAPE_TRIGGER := $(LANDSCAPE_DIR)/.landscape-figures.trigger
 REACTION_DIR := figures/reactions
 REACTION_DEPS := $(REPO_ROOT)/natural/automata/reaction_diffusion.py $(REPO_ROOT)/scripts/reaction.py
 REACTION_TRIGGER := $(REACTION_DIR)/.reaction-figures.trigger
-# TODO: Increase size and iterations after testing.
 REACTION_SIZE := 256
 REACTION_ITERS := 10000
 
@@ -24,8 +23,8 @@ all: $(PROJECT_NAME).pdf $(SRC)
 
 $(PROJECT_NAME).pdf: figures
 $(PROJECT_NAME).pdf: $(PROJECT_NAME).tex
-	# latexmk -pdf --synctex=1 -file-line-error -interaction=nonstopmode -shell-escape $<
-	latexmk -pdf --synctex=1 -file-line-error -interaction=batchmode -shell-escape $<
+	# latexmk -pdf --synctex=1 -file-line-error -interaction=batchmode -shell-escape $<
+	latexmk -pdf --synctex=1 -file-line-error -interaction=nonstopmode -shell-escape $<
 	@$(MAKE) --no-print-directory warn-todos
 
 # A target to build with better error messages when latexmk craps itself.
@@ -375,7 +374,7 @@ $(REACTION_DIR)/lambda.eps: $(REACTION_DEPS)
 
 $(REACTION_DIR)/mu.eps: $(REACTION_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
-		--iterations $(shell expr $(REACTION_ITERS) \* 2 )                                         \
+		--iterations $(shell expr $(REACTION_ITERS) \* 3 )                                         \
 		--kill 0.0665                                                                              \
 		--feed 0.055                                                                               \
 		--radius 32                                                                                \
