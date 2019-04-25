@@ -40,7 +40,7 @@ warn-todos:
 	@BOLD=$$(tput bold);                                                                           \
 	RED=$$(tput setaf 1);                                                                          \
 	RESET=$$(tput sgr0);                                                                           \
-	grep -irn --include "*.tex" --include "*.sty" "% TODO:" && echo "$${BOLD}$${RED}Warning:$${RESET}$${RED} TODO comment(s) found.$${RESET}"
+	grep -irn --include "*.tex" --include "*.sty" "% TODO:" && echo "$${BOLD}$${RED}Warning:$${RESET}$${RED} TODO comment(s) found.$${RESET}" || true
 
 clean:
 	latexmk -C
