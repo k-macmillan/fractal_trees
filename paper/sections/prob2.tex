@@ -6,13 +6,10 @@ Use bracketed OL-systems to reproduce each of the plant-like fractals in Figure 
 
 Experiment with the production rules and produce at least ten derivatives.
 
-\subsection{Method}
-The methods here are no different than Section \ref{sec:l-system-method}.
-
-\subsection{Implementation}
-The implementation is identical to Section \ref{sec:l-sys-implementation}.
-
 \subsection{Results}\label{sec:p2-results}
+Our reproductions for each of the figures in the book are shown below.
+Due to the nature of the L-system, each tree is sized quite differently.
+This, and the difficulty of reproducibly rendering the scenes in Blender, have the unfortunate consequence of scaling each tree with different aspect ratios, and at different sizes.
 
 \begin{figure}[H]
     \centering
@@ -51,19 +48,61 @@ The implementation is identical to Section \ref{sec:l-sys-implementation}.
 \end{figure}
 
 \subsubsection{Expanding the Lindenmayer Systems to 3D}
-We attempted to add an extra dimension to each of the items in Section
-\ref{sec:p2-results}. We also experimented with classical systems such as
+We attempted to add an extra dimension to each of the items in \autoref{sec:p2-results}.
+We also experimented with classical systems such as
 Sierpiński triangle, Cantor Set, Dragon, Koch, and variants of our own design.
 
-% \todoinline[caption=3d results]{
-%     Discuss how to create more interesting 3D fractals, including Koch curves, the dragon curve, and 3D trees/bushes.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/L-systems/dragon.png}
+    \caption{The dragon curve}
+\end{figure}
 
-%     Show the results from \texttt{data/a.json} with the book's parameters.
-% }
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/L-systems/dragon-1_4rad.png}
+    \caption{The dragon curve with an angle of 1.4 radians}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/L-systems/dragon-1_6rad.png}
+    \caption{The dragon curve with an angle of 1.6 radians}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{figures/L-systems/tree1.png}
+    \caption{A nice 3D tree}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{figures/L-systems/dragon0-3d.png}
+    \caption{A 3d variant of the dragon curve}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{figures/L-systems/dragon1-3d.png}
+    \caption{A 3d variant of the dragon curve}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{figures/L-systems/dragon2-3d.png}
+    \caption{A 3d variant of the dragon curve}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{figures/L-systems/dragon3-3d.png}
+    \caption{A 3d variant of the dragon curve}
+\end{figure}
 
 \subsection{Conclusion}
-Following the book examples were extremely simple to implement, we simply
-created \texttt{JSON} files that matched the book description. To build the 3D
+The book examples were extremely simple to implement, we simply
+created JSON files that matched the book description. To build the 3D
 variants we experimented until they looked decent. The other variants were
 through trial and error or online examples. It was fun to play with the
 different rules and attempt to get structures that were uniform but didn't
