@@ -45,6 +45,7 @@ warn-todos:
 clean:
 	latexmk -C
 	rm -rf *.bbl *.tdo
+	rm -rf _minted-$(PROJECT_NAME)
 
 cleanall: clean
 cleanall: clean-figures
