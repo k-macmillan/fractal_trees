@@ -43,7 +43,7 @@ warn-todos:
 
 clean:
 	latexmk -C
-	rm -rf *.bbl *.tdo
+	rm -rf *.bbl *.tdo *.pyg
 	rm -rf _minted-$(PROJECT_NAME)
 
 cleanall: clean
