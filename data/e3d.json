@@ -4,7 +4,7 @@
     "radius": null,
     "proportion": null,
     "axiom": "G",
-    "iterations": 4,
+    "iterations": 6,
     "randomness": null,
     "rules": {
         "G": "F[-G][vG][+G][^G]FG",
