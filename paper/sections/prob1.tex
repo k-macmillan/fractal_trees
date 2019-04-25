@@ -35,6 +35,16 @@ JSON configuration file to store the system's variables:
 \end{minted}
 
 A description for each of the JSON parameters is given in \autoref{tab:json_format}.
+We implemented the following turtle commands\footnote{The book suggests other commands, but we though it best to use more intuitive symbols.}
+
+\begin{description}
+    \item[\mintinline{text}{F}, \mintinline{text}{G}] Make a unit step in the current direction
+    \item[\mintinline{text}{f}, \mintinline{text}{g}] Make a unit step in the current direction without drawing
+    \item[\mintinline{text}{-}, \mintinline{text}{+}] Yaw the turtle left and right, respectively, by the specified angle
+    \item[\mintinline{text}{^}, \mintinline{text}{v}] Pitch the turtle up and down, respectively, by the specified angle
+    \item[\mintinline{text}{<}, \mintinline{text}{>}] Roll the turtle CCW and CW, respectively, by the specified angle
+    \item[\mintinline{text}{[}, \mintinline{text}{]}] Save and restore, respectively, the turtle's orientation on a stack
+\end{description}
 
 \begin{table}[H]
     \centering
@@ -53,13 +63,11 @@ A description for each of the JSON parameters is given in \autoref{tab:json_form
     \end{tabular}
 \end{table}
 
-% \todoinline[caption=Define an L-System]{Define an L-System, production rules, and specify the meaning of the different commands.}
-
 \subsubsection{The Lindenmayer System for the Given Problem}
 The problem required us to ``shrink'' the original to 1/3 size and apply it to
 each angled protrusion. We accomplished that by coming up with an L-System
 that grew each previous iteration by a factor of 3 each time it went through a
-new iteration. This system is given in \autoref{code:prob1_json}.
+new iteration. The configuration for this system is given in \autoref{code:prob1_json}.
 
 \begin{listing}[H]
     \begin{minted}{json}
@@ -80,27 +88,25 @@ new iteration. This system is given in \autoref{code:prob1_json}.
     \caption{The JSON configuration for the given problem}\label{code:prob1_json}
 \end{listing}
 
-We were tasked with changing the angle to 90° which resulted in a
+We were tasked with changing the angle to $90^\circ$ which resulted in a
 Christmas tree-like structure. We were also tasked with changing the angle to
 120° and it resulted in something similar to a
 \href{https://en.wikipedia.org/wiki/Sierpi\%C5\%84ski\_triangle}{Sierpiński triangle}.
-All three versions are viewable via
+All three versions have interactive 3D renderings viewable on
 \href{https://sketchfab.com/macattackftw/collections/problem-1}{Sketchfab}.
 
 \begin{itemize}
-    \item \href{https://sketchfab.com/3d-models/prob1-45-a97f7475b6964b9c930796ba985ac255}{45 degrees}
-    \item \href{https://sketchfab.com/3d-models/8c7a25615cee4fb4a51ab3deeae154a0}{90 degrees}
-    \item \href{https://sketchfab.com/3d-models/b36c6e912ee548b9a549bd8e0bb273c8}{120 degrees}
+    \item \href{https://sketchfab.com/3d-models/prob1-45-a97f7475b6964b9c930796ba985ac255}{45 degrees (on SketchFab)}
+    \item \href{https://sketchfab.com/3d-models/8c7a25615cee4fb4a51ab3deeae154a0}{90 degrees (on SketchFab)}
+    \item \href{https://sketchfab.com/3d-models/b36c6e912ee548b9a549bd8e0bb273c8}{120 degrees (on SketchFab)}
 \end{itemize}
-
-% \todoinline[caption=Give l-system for given problem]{Give the L-System for given problem and discuss how it might be improved or modified.}
 
 \subsubsection{Extending the Lindenmayer Systems to 3D}
 The book mentioned symbols to expand the generation into different dimensions.
 We borrowed some of those symbols to generate L-Systems that expanded in the
 $x$, $y$, and $z$ dimensions. We applied this
-concept to the 45° version of problem 1 and it resulted in a very
-\href{https://sketchfab.com/3d-models/prob1-3d-236e501897a945d0a3eb5e4cba37fa3a}{symmetrical tree}.
+concept to the $45^\circ$ version of problem 1 and it resulted in a very
+\href{https://sketchfab.com/3d-models/prob1-3d-236e501897a945d0a3eb5e4cba37fa3a}{symmetrical tree (on SketchFab)}.
 The JSON configuration for the given 3D rendering is shown in \autoref{code:prob1_3D_json}.
 
 \begin{listing}[H]
@@ -122,55 +128,23 @@ The JSON configuration for the given 3D rendering is shown in \autoref{code:prob
     \caption{Problem 1 3D JSON}\label{code:prob1_3D_json}
 \end{listing}
 
-Transitioning to 3D space was incredibly simple due to Blender's mathutils
-Matrix module as seen in the
-\autoref{code:roll_pitch_yaw}. We spent a lot of
-time attempting to manipulate Quaternions but found the mathutils module met
-all of our requirements and didn't give us a headache.
-
-\begin{listing}[H]
-    \begin{minted}{python}
-        def yaw(self, angle):
-            """Yaw the Turtle around its local Z axis."""
-            self.mat = matmul(self.mat, Matrix.Rotation(angle, 4, "Z"))
-
-        def pitch(self, angle):
-            """Pitch the Turtle around its local Y axis."""
-            self.mat = matmul(self.mat, Matrix.Rotation(angle, 4, "Y"))
-
-        def roll(self, angle):
-            """Roll the Turtle around its local X axis."""
-            self.mat = matmul(self.mat, Matrix.Rotation(angle, 4, "X"))
-    \end{minted}
-    \caption{Roll, Pitch, Yaw code}\label{code:roll_pitch_yaw}
-\end{listing}
-
-Angle commands such as \mintinline{text}{^} were mapped to pitch function described in
-the \autoref{code:roll_pitch_yaw}. So the turtle
-would pitch $\theta$ and if the angle command was \mintinline{text}{v} it would pitch
-$-\theta$.
-
-% \todoinline[caption=Defined new 3D commands]{
-%     Show how to add more commands to extend the L-Systems into 3D.
-
-%     Mention that we implemented this as the book suggested --- by creating a 3D turtle that can yaw, pitch, and roll.
-
-%     Give minimal examples of each command.
-% }
-
 \subsubsection{Further Extensions of the Lindenmayer Systems}
 Another concept the book mentioned was moving forward without drawing a line.
-This was accomplished with symbols \mintinline{text}{f} and \mintinline{text}{g}. Utilizing this
-concept we were able to reproduce the
-\href{https://sketchfab.com/3d-models/cantor-f645d6ae69a748a283a737f44660c5f6}{Cantor Set}.
+This was accomplished with the symbols \mintinline{text}{f} and \mintinline{text}{g}.
+Utilizing this concept we were able to reproduce the
+\href{https://sketchfab.com/3d-models/cantor-f645d6ae69a748a283a737f44660c5f6}{Cantor Set (on SketchFab)}.
 
 We were making plant-like structures so we decided that anything over length 1
-would be a ``branch'' and anything else was a ``leaf''. This led to much more
+would be a ``branch'' and anything else was a ``leaf''.\footnote{In hindsight, this should have been some multiple of the forward step size instead of a constant 1.}
+This led to much more
 plant-like visualization of the L-Systems. A good example of this can be seen
 in \autoref{fig:a_3d} and \autoref{fig:prob1_3d}. We did not have to stop
 at 2 colors. We could have added any number of colors and based it on the
 length or on the iteration. We chose 2 because it demonstrated the concept and
 made the resulting system look better.
+
+Future work could examine color gradients and slight color perturbation.
+You could even incorporate new symbols to implement colormap manipulations.
 
 \begin{figure}[H]
     \centering
@@ -193,36 +167,47 @@ multiple identical cylinders. Applying the perturbation to angle or length
 resulted in a complete breakdown of the fractal symmetry. It is possible that
 some simple L-System variations may have looked better but we did not find one.
 
-% \todoinline[caption=Further extending the L-System]{Discuss how to add color, radii proportionality, and randomness}
-% \todoinline[caption=Add randomness]{
-%     Implement randomness.
-%     I can think of two ways to do so:
-%     First, add an \texttt{r} command that perturbs the immediately following command.
-%     This would introduce randomness, but at regular intervals.
-
-%     Second, add a randomness parameter to the constructor, so that if it's set, apply perturbations at random.
-
-%     Mention that adding randomness breaks fractals with backtracking.
-% }
-
 \subsection{Implementation}\label{sec:l-sys-implementation}
-Implementation of this problem was done in three parts: \mintinline{text}{grammar},
-\mintinline{text}{graphics}, and \mintinline{text}{turtle}.
+Implementation of this problem was done in three different Python submodules: \mintinline{python}{natural.lindenmayer.grammar},
+\mintinline{python}{natural.lindenmayer.graphics}, and \mintinline{python}{natural.lindenmayer.turtle}.
 
 \subsubsection{Grammar}
-This section identified which symbols we would utilize as well as how it would
-build the final string. Symbols were defined within a
-\href{https://docs.python.org/3/library/stdtypes.html#frozenset}{frozenset}:
-\mintinline{python}{symbols}. The function: \mintinline{python}{iapply} essentially
-utilizes a generator to apply production rules to the \mintinline{text}{axiom} of the
-given iteration.
-
-\subsubsection{Graphics}
-Graphics assigns the initial conditions specified in the JSON file.
-The various function mappings are assigned such as:
+This submodule identified which symbols we would utilize as well as how it would
+build the final string.
+The function: \mintinline{python}{iapply} uses an infinite generator
+to apply production rules to the \mintinline{text}{axiom} of the given iteration.
 
 \begin{minted}{python}
-self.mappings = {"F": self.turtle.move, "^": self.turtle.pitch}
+    @staticmethod
+    def _apply_symbol(args):
+        symbol, rules = args
+        return rules.get(symbol, symbol)
+
+    def apply(self, text):
+        """Apply the production rules to the given text."""
+        return "".join(
+            map(
+                self._apply_symbol, zip(text, itertools.repeat(self.productions))
+            )
+        )
+
+    def iapply(self, axiom):
+        """Return an infinite iterator to apply the production rules to the given axiom."""
+        while True:
+            axiom = self.apply(axiom)
+            yield axiom
+\end{minted}
+
+\subsubsection{Graphics}
+This submodule consumes the L-strings generated by the \mintinline{python}{natural.lindenmayer.grammar} module.
+We mapped each symbol to a different turtle function that would manipulate a ``turtle'' in 3D space.
+For example the mappings for the symbols \mintinline{text}{F} and \mintinline{text}{^} are shown below.
+
+\begin{minted}{python}
+self.mappings = {
+    "F": self.turtle.move,
+    "^": self.turtle.pitch,
+}
 \end{minted}
 
 We then iterate through the string (\mintinline{python}{commands}), applying the
@@ -230,7 +215,7 @@ appropriate mappings. We keep track of consecutive move commands to determine
 segment length. This serves to reduce the number of cylinders we have to draw
 and it allows us to assign a color scheme based on length.
 
-Cylinders are saved in a dictionary format:
+Cylinders are saved as dictionaries with the following format:
 \begin{minted}{python}
     cylinders.append(
         {
@@ -243,71 +228,173 @@ Cylinders are saved in a dictionary format:
     )
 \end{minted}
 
+\autoref{table:dict_cylinders} defines what each attribute in a cylinder means.
+
 \begin{table}[H]
     \centering
     \caption{Dictionary of Cylinders}\label{table:dict_cylinders}
     \begin{tabular}{@{}ll@{}}
         \toprule
-        \textbf{Name} & \textbf{Description}               \\ \midrule
-        from          & Origin                             \\
-        to            & Destination                        \\
-        radius        & Radius for segment                 \\
-        material      & Branch or Leaf dependent on length \\
-        length        & Cylinder length                    \\ \bottomrule
+        \textbf{Name}                   & \textbf{Description}               \\ \midrule
+        \mintinline{python}{"from"}     & Origin                             \\
+        \mintinline{python}{"to"}       & Destination                        \\
+        \mintinline{python}{"radius"}   & Radius for segment                 \\
+        \mintinline{python}{"material"} & Branch or Leaf dependent on length \\
+        \mintinline{python}{"length"}   & Cylinder length                    \\ \bottomrule
     \end{tabular}
 \end{table}
 
-\autoref{table:dict_cylinders} defines what each attribute in a cylinder
-means. Due to the quirks of Blender we determined it was better to create a
-single cylinder and then copy it, so for each length we generate a master. The
-master is copied for each cylinder of the same length, while the copy has the
-appropriate \mintinline{python}{from - to} applied. This application is done through the
-\mintinline{python}{draw} function. We started to have \mintinline{text}{axioms} that
-were hundreds of thousands of characters long. Speed became an issue with
-sufficient iterations so we developed a batch system.  We specify the number of
-jobs we want to run on via command line:
+Our code for computing the cylinder vertices given the Lindenmayer graphics string (which we've chosen to call L-strings) is shown below.\footnote{
+    We would normally not provide this much detail, but the discussion about optimizing the Blender
+    scene creation later depends on understanding the nontrivial data structures it operates on.}
+
+\begin{minted}{python}
+    def compute(self, commands):
+        """Generate the 3D cylinders from the given graphics commands.
+
+        :param commands: A string of successive graphics commands.
+        :returns: A dictionary of (length, [{cyl 1}, {cyl 2}, ...]) pairs.
+        """
+        cylinders = []
+        commands = iter(commands)
+        for command in commands:
+            perturbation = (
+                np.random.normal(scale=self.randomness) if self.randomness is not None else 0
+            )
+
+            length = 0
+            start = self.turtle.position
+            # Consume consecutive forward commands.
+            while command in ("G", "F"):
+                # Perturb only the angle. The drawing assumes many cylinders of the same length.
+                self.mappings[command](self.unit)
+                length += self.unit
+                try:
+                    command = next(commands)
+                except StopIteration:
+                    # We've consumed the last command.
+                    break
+            end = self.turtle.position
+
+            if length > 0:
+                if self.proportion is not None:
+                    self.radius = self.proportion * length
+
+                cylinders.append(
+                    {
+                        "from": start,
+                        "to": end,
+                        "radius": self.radius,
+                        "material": "Branch" if length > 1 else "Leaf",
+                        "length": length,
+                    }
+                )
+            if command in ("f", "g"):
+                self.mappings[command](self.unit)
+
+            if command in self.mappings and command not in ("G", "F", "f", "g"):
+                if command in ("+", "^", ">"):
+                    self.mappings[command](+self.angle + perturbation)
+                elif command in ("-", "v", "<"):
+                    self.mappings[command](-self.angle + perturbation)
+                else:
+                    self.mappings[command]()
+
+        return [dict(t) for t in {tuple(d.items()) for d in cylinders}]
+\end{minted}
+
+Notice that subsequent \mintinline{text}{F} and \mintinline{text}{G} commands are consumed and only \textit{one} cylinder is produced.
+This was necessary because Blender struggles to cope with large numbers of objects, even though it can easily handle large objects.
+
+The particularly disgusting implementation is due to the fact that adding an object to the Blender scene forces an entire scene update.
+Once you get past a few thousand objects (and note we're dealing with hundreds of thousands) adding an object to the scene begins to take quite some time --- the time it takes to add a single cylinder scales linearly with the number of existing cylinders, so the time it takes to add \textit{all} the cylinders scales exponentially.
+
+We ended up implementing a multi-faceted approach to improving the scene creation time.
+The particular facet that impacts the disgustingness of the code above is the ability of Blender to duplicated and manipulated \textit{copies} of existing cylinders in the scene.
+
+In order to facilitate this copying, the \mintinline{python}{Graphics.compute()} function returns a \textit{dictionary} of
+\[L \to \{\text{all cylinders with length $L$}\} \]
+mappings for each cylinder length $L$ that is generated.
+
+This way, the correspondingly disgusting code to add the cylinders to the Blender scene can create a master cylinder of each size, then produce transformed copies of each master cylinder for each corresponding cylinder.
+
+We started to have L-strings that
+were hundreds and hundreds of thousands of characters long. Speed became an issue with
+sufficient iterations so we developed a batch system. We specify the number of
+jobs we want to run via command line arguments\footnote{More explicit script documentation is available on the repository \href{https://github.com/macattackftw/fractal_trees}{README} page.}
 
 \mintinline{shell}{./batch.sh data/b3d.json --jobs 32}
 
-Essentially this chops up the \mintinline{text}{cylinders} list into 32 pieces and runs
-them concurrently. Runtimes went from 45 minutes to a few seconds. The
-batch process fires up \mintinline{text}{--jobs N} instances of Blender. This can
-quickly consume all RAM. We had to play around with the limits of our
-individual machines to find the maximums. This batch process allowed us to
-break 19,000 cylinders which was a hard threshold we were struggling to surpass.
-We were able to generate over 400,000 cylinders without issue utilizing the
-batch method.
+The above example chops up the generated \mintinline{text}{cylinders} list\footnote{Just to be clear,
+    this is a dictionary of length to lists of cylinders mappings, where each cylinder in the list
+    is itself a dictionary as described in \autoref{table:dict_cylinders}.}
+into 32 pieces and runs a background Blender process producing a small portion of the overall fractal.
 
-Individually generated \mintinline{text}{.blend} files are joined into a
-single entity which reduces the size of the stored 3D object. If the resulting
-\mintinline{text}{.fbx} file is under 50MB we were able to upload it to
+After each portion is created, the \mintinline{text}{batch.sh} script joins all of the fragments into a single master Blender scene.
+Parallelizing the scene creation like this caused runtimes to go from from $\sim45$ minutes to a few seconds.
+
+The batch process fires up \mintinline{text}{--jobs N} instances of Blender. This can
+quickly consume all RAM.\footnote{
+    RAM usage quickly became one of our limiting factors.
+    We could have pushed this parallelism even farther, but simple loading the end scene in blender took, in extreme cases, took over 12 GB of RAM.
+    Rendering such a scene was was found to be impossible, even with \textit{large} amounts of swap space (upwards of 32 GB).
+}
+
+Before parallelizing the scene creation, we were capped at fractals containing only 19,000 cylinders.
+After parallelizing the scene creation, each individual job had this cap, and we were able to generate fractals using well over 500,000 cylinders.
+
+If the resulting \mintinline{text}{.fbx} file was under 50MB we were able to upload it to
 \href{https://sketchfab.com/macattackftw/models}{Sketchfab}.
+Often, however, the resulting files were well over a gigabyte each.
 
 \subsubsection{Turtle}
-The turtle is a very simple python class. Blender's mintinline{python}{mathutils} library makes turtles
-very easy to implement. Prior to finding this we spent several days trying to
-get Quaternions working. The \mintinline{python}{turtle} class only has a few
-functions:
+The \mintinline{python}{Turtle3D} class has a very simple interface:
 
 \begin{itemize}
-    \item push
-    \item pop
-    \item move
-    \item roll
-    \item pitch
-    \item yaw
-    \item position
+    \item \mintinline{python}{Turtle3D.push()}
+    \item \mintinline{python}{Turtle3D.pop()}
+    \item \mintinline{python}{Turtle3D.move(stepsize)}
+    \item \mintinline{python}{Turtle3D.roll(angle)}
+    \item \mintinline{python}{Turtle3D.pitch(angle)}
+    \item \mintinline{python}{Turtle3D.yaw(angle)}
 \end{itemize}
 
-Roll, pitch, and yaw are simply matrix multiplications applied to the existing
-rotation. Move is a matrix multiplication applied to the existing position.
-Push and pop are utilized for setting and then returning to that position
-respectively.
+This class is an extension of the traditional planar Python standard library \mintinline{python}{turtle} module in three dimensions.
 
-% \todoinline{
-%     McGough has seemed to like my (brief) discussion of my previous implementations.
-%     We should not give the whole thing, just the interesting bits and pieces.
-% }
+Transitioning to 3D space was incredibly simple due to Blender's \mintinline{python}{mathutils.Matrix}
+class as seen in \autoref{code:roll_pitch_yaw}.
+We spent a lot of time attempting to manipulate quaternions but found the \mintinline{python}{mathutils} module met
+all of our requirements and didn't give us a headache.\footnote{
+    Seriously. Quaternions are great and all, but we struggled for \textit{days} to get the
+    transformations to be applied on each object's \textit{local} reference frame instead of on
+    the global one.
+}
+
+\begin{listing}[H]
+    \begin{minted}{python}
+        def move(self, stepsize):
+            """Move turtle in its heading direction."""
+            vec = matmul(self.mat, Vector((stepsize, 0, 0, 0)))
+            self.mat.col[3] += vec
+
+        def yaw(self, angle):
+            """Yaw the Turtle around its local Z axis."""
+            self.mat = matmul(self.mat, Matrix.Rotation(angle, 4, "Z"))
+
+        def pitch(self, angle):
+            """Pitch the Turtle around its local Y axis."""
+            self.mat = matmul(self.mat, Matrix.Rotation(angle, 4, "Y"))
+
+        def roll(self, angle):
+            """Roll the Turtle around its local X axis."""
+            self.mat = matmul(self.mat, Matrix.Rotation(angle, 4, "X"))
+    \end{minted}
+    \caption{Roll, Pitch, Yaw code}\label{code:roll_pitch_yaw}
+\end{listing}
+
+Roll, pitch, and yaw are simply matrix multiplications applied to the existing
+rotation. Move is a matrix multiplication applied to a unit vector pointing straight up, which is
+then added to the turtle's current location.
 
 \subsubsection{Existing Implementations}
 There are a number of existing implementations for Lindenmayer Systems in Python --- at least one of which is even done in three dimensions.
@@ -389,107 +476,35 @@ Due to the spirit of the assignment we decided to avoid blindly using the Linden
 However, we still took inspiration from Lindenmaker's implementation of the 3D turtle because we struggled getting quaternion transformations to apply to each object's \textit{local} reference frame.
 
 \subsubsection{Computing the Vertices}
-Our code for computing the cylinder vertices given the Lindenmayer graphics string (which we've chosen to call L-strings) is shown below.\footnote{We would normally not provide this much detail, but the discussion about optimizing the Blender scene creation later depends on understanding the nontrivial data structures it operates on.}
-
-\begin{minted}{python}
-    def compute(self, commands):
-        """Generate the 3D cylinders from the given graphics commands.
-
-        :param commands: A string of successive graphics commands.
-        :returns: A dictionary of (length, [{cyl 1}, {cyl 2}, ...]) pairs.
-        """
-        cylinders = []
-        commands = iter(commands)
-        for command in commands:
-            perturbation = (
-                np.random.normal(scale=self.randomness) if self.randomness is not None else 0
-            )
-
-            length = 0
-            start = self.turtle.position
-            # Consume consecutive forward commands.
-            while command in ("G", "F"):
-                # Perturb only the angle. The drawing assumes many cylinders of the same length.
-                self.mappings[command](self.unit)
-                length += self.unit
-                try:
-                    command = next(commands)
-                except StopIteration:
-                    # We've consumed the last command.
-                    break
-            end = self.turtle.position
-
-            if length > 0:
-                if self.proportion is not None:
-                    self.radius = self.proportion * length
-
-                cylinders.append(
-                    {
-                        "from": start,
-                        "to": end,
-                        "radius": self.radius,
-                        "material": "Branch" if length > 1 else "Leaf",
-                        "length": length,
-                    }
-                )
-            if command in ("f", "g"):
-                self.mappings[command](self.unit)
-
-            if command in self.mappings and command not in ("G", "F", "f", "g"):
-                if command in ("+", "^", ">"):
-                    self.mappings[command](+self.angle + perturbation)
-                elif command in ("-", "v", "<"):
-                    self.mappings[command](-self.angle + perturbation)
-                else:
-                    self.mappings[command]()
-
-        return [dict(t) for t in {tuple(d.items()) for d in cylinders}]
-\end{minted}
-
-Notice that subsequent \mintinline{text}{F} and \mintinline{text}{G} commands are consumed and only \textit{one} cylinder is produced.
-This was necessary because Blender struggles to cope with large numbers of objects, even though it can easily handle large objects.
-
-The particularly disgusting implementation is due to the fact that adding an object to the Blender scene forces an entire scene update.
-Once you get past a few thousand objects (and note we're dealing with hundreds of thousands) adding an object to the scene begins to take quite some time --- the time it takes to add a single cylinder scales linearly with the number of existing cylinders, so the time it takes to add \textit{all} the cylinders scales exponentially.
-
-We ended up implementing a multi-faceted approach to improving the scene creation time.
-The particular facet that impacts the disgustingness of the code above is the ability of Blender to duplicated and manipulated \textit{copies} of existing cylinders in the scene.
-
-In order to facilitate this copying, the \mintinline{python}{Graphics.compute()} function returns a \textit{dictionary} of
-\[L \to \{\text{all cylinders with length $L$}\} \]
-mappings for each cylinder length $L$ that is generated.
-
-This way, the correspondingly disgusting code to add the cylinders to the Blender scene can create a master cylinder of each size, then produce transformed copies of each master cylinder for each corresponding cylinder.
 
 \subsubsection{Usage}
 We initially designed this to be ran in a single thread with no concurrent
-usage. This proved inadequate for sufficiently large L-Systems. The recommended
-mode of operation is batch and to do so simply generate a JSON file in
-the format shown in \autoref{code:prob1_json}. Save the file
-in whatever folder you wish, then run:
+usage. This quickly proved inadequate for sufficiently large L-Systems.
+The recommended usage of our project is to simply generate a JSON configuration file using
+the format specified in \autoref{code:prob1_json} and \autoref{tab:json_format}.
+Assuming the configuration file is saved as \mintinline{text}{myJSON.json}, you can create your
+fractal scene by running the \mintinline{text}{batch.sh} script as shown below.
 
-\mintinline{shell}{./batch.sh data/myJSON.json --jobs N}
+\mintinline{shell}{./batch.sh myJSON.json --jobs N}
 
-To keep things neat we recommend placing the JSON file in the data
-folder. Jobs (\mintinline{text}{N}) can be from 1 to as much RAM as your system can
-handle. It is not recommended to go beyond 32 jobs unless you have more than
-16GB of RAM.
+The number of jobs used is limited only by the number of processors and RAM available.
+Our initial experimentation showed that using more processes than processors was acceptable because
+we needed to keep the number of cylinders in each fractal fragment under 20,000.
+It is not recommended to go beyond 32 jobs unless you have more than 16GB of RAM due to how expensive
+Blender is resource-wise.
 
-The final file will be \mintinline{text}{data/myJSON.blend}. All of the
-\mintinline{text}{myJSON-job-*-.blend} are from the \mintinline{text}{N} jobs scheduled and are the
-individual components of the final \mintinline{text}{.blend} file.
+It is possible to use the finer-grained Python scripts to leverage more control on how the jobs are
+performed in parallel, but we found that we were too constrained by our available system resources for
+this finer level of control to be useful.
 
-% \todoinline[caption=Script usage]{
-%     Discuss how to use each of the scripts we created, spending the most time on \texttt{blender.py} and \texttt{batch.sh}.
-
-%     Make sure to point out that the \mintinline{python}{bpy} and \mintinline{python}{mathutils} libraries are provided by Blender, and that to use them we need to run our scripts in funky ways.
-% }
+The final resulting Blender file will be saved as \mintinline{text}{myJSON.blend}.
+All of the resulting \mintinline{text}{myJSON-job-*-.blend} are intermediate results from the scheduled
+jobs, and are the individual components that are joined together to form the final \mintinline{text}{myJSON.blend} file.
 
 \subsection{Results}
 Results of Problem one can be seen in \autoref{fig:prob1_45},
-\autoref{fig:prob1_90}, and \autoref{fig:prob1_120}. The \mintinline{text}{.fbx} files can be
-found on
-\href{https://sketchfab.com/macattackftw/collections/problem-1}{Sketchfab}.
+\autoref{fig:prob1_90}, and \autoref{fig:prob1_120}. The interactive \mintinline{text}{.fbx} files can be
+found on \href{https://sketchfab.com/macattackftw/collections/problem-1}{Sketchfab}.
 
 \begin{figure}[H]
     \centering
@@ -509,28 +524,18 @@ found on
     \caption{Problem 1 where $\theta = 120^\circ$}\label{fig:prob1_120}
 \end{figure}
 
-% \subsubsection{The Lindenmayer System for the Given Problem}
-% \todoinline[caption=results for given problem]{
-%     Show our results for the given problem.
-
-%     Show the production rules, and generated graphics.
-%     Play with the scale and the yaw angle.
-% }
-
-% \todoinline[caption=Move experimentation to problem 2]{
-%     Leave the 3D and other experimentation to problem 2, because it asks you to experiment, and we can get more mileage out of it there.
-% }
-
 \subsection{Conclusion}
-L-Systems are great for generation of interesting fractal patterns. We
-generated several additional variations which can be found
-\href{https://sketchfab.com/macattackftw/models}{here}. We wanted a visually
-appealing implementation and we accomplished that. The L-System itself is
-rather straightforward. Storing cylinder start/stop locations was relatively
-simple, the bulk of our work was spent on visualizing and optimizing to work
-with Blender. While that was not the goal of the problem it was useful to
+L-Systems are great for the generation of interesting fractal patterns.
+We generated several additional variations which can be found on SketchFab
+\href{https://sketchfab.com/macattackftw/models}{here}.
+
+We wanted a visually appealing implementation and we accomplished that.
+The L-System itself is rather straightforward.
+Storing cylinder start/stop locations was relatively simple, and the bulk of our
+work was spent on visualizing and optimizing the generated fractals to work with Blender.
+While that was not the goal of the problem it was useful to
 experiment with an unfamiliar API and integrate our product with it.
 
-There could be future work in expanding color schemes, variable radii, and
-further optimizing blender usage (such as chopping up the JSON file based on
+There could be future work in expanding color schemes, variable radii, random perturbations,
+and further optimizing blender usage (such as chopping up the JSON file based on
 batches). We thoroughly explored L-Systems and it was a fun project.
