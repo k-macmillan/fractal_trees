@@ -7,7 +7,7 @@
     "iterations": 4,
     "randomness": null,
     "rules": {
-        "G": "F+[[G]-G]-^[[G]vG]v+-F[-FG][vFG]+G",
+        "G": "F[+FFG][^FFG][<FFG][-FFG][vFFG][>FFG][G]-FG",
         "F": "FF"
     }
 }
