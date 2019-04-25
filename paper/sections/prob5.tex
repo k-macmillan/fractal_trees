@@ -314,29 +314,28 @@ Notice that we were even able to reproduce the color scheme --- as scarring as d
     \end{itemize}
 }
 
-The values used to generate the patterns in \autoref{prob5:fig:results} are summarized in \autoref{prob5:tab:parameters}.\todo{Update these values before turning in the final version of the paper.}
+The values used to generate the patterns in \autoref{prob5:fig:results} are summarized in \autoref{prob5:tab:parameters}.
 The parameter $r$ is the radius of the initial center concentration of the $U$ and $V$ chemicals.
 The $s$ parameter is the scale of the random values uniformly added throughout the reactor.
 
 \begin{table}[H]
     \centering
     \caption{The parameters used to reproduce the Gray-Scott patterns}\label{prob5:tab:parameters}
-    \begin{tabular}{@{}llllll@{}}
+    \begin{tabular}{@{}lllllll@{}}
         \toprule
-        % TODO: Update these values from the Makefile once they're finalized.
-        pattern       & $k$    & $f$   & $r$ & $s$  & iterations \\ \midrule
-        $\alpha$      & 0.05   & 0.017 & 5   & 0.02 & 5000       \\
-        $\beta$       & 0.045  & 0.019 & 2   & 0.02 & 5000       \\
-        $\gamma$      & 0.052  & 0.021 & 5   & 0.02 & 5000       \\
-        $\delta$      & 0.052  & 0.026 & 5   & 0.02 & 5000       \\
-        $\varepsilon$ & 0.052  & 0.017 & 2   & 0.02 & 5000       \\
-        $\zeta$       & 0.06   & 0.023 & 2   & 0.1  & 5000       \\
-        $\eta$        & 0.06   & 0.028 & 2   & 0.1  & 5000       \\
-        $\theta$      & 0.06   & 0.04  & 2   & 0.1  & 5000       \\
-        $\iota$       & 0.06   & 0.054 & 2   & 0.2  & 5000       \\
-        $\kappa$      & 0.064  & 0.05  & 5   & 0.2  & 5000       \\
-        $\lambda$     & 0.066  & 0.04  & 5   & 0.02 & 10000      \\
-        $\mu$         & 0.0665 & 0.055 & 32  & 0.1  & 15000      \\ \bottomrule
+        pattern       & $k$    & $f$   & $r$ & $s$  & iterations & time (mm:ss) \\ \midrule
+        $\alpha$      & 0.05   & 0.017 & 5   & 0.02 & 10000      & 2:03         \\
+        $\beta$       & 0.045  & 0.019 & 2   & 0.02 & 10000      & 2:03         \\
+        $\gamma$      & 0.052  & 0.021 & 5   & 0.02 & 20000      & 0:48         \\
+        $\delta$      & 0.052  & 0.026 & 5   & 0.02 & 10000      & 2:02         \\
+        $\varepsilon$ & 0.052  & 0.017 & 2   & 0.02 & 10000      & 2:04         \\
+        $\zeta$       & 0.06   & 0.023 & 2   & 0.1  & 10000      & 2:03         \\
+        $\eta$        & 0.06   & 0.028 & 2   & 0.1  & 10000      & 2:03         \\
+        $\theta$      & 0.06   & 0.04  & 2   & 0.1  & 10000      & 0:58         \\
+        $\iota$       & 0.06   & 0.054 & 2   & 0.2  & 10000      & 1:02         \\
+        $\kappa$      & 0.064  & 0.05  & 5   & 0.2  & 10000      & 0:57         \\
+        $\lambda$     & 0.066  & 0.04  & 5   & 0.02 & 20000      & 1:22         \\
+        $\mu$         & 0.0665 & 0.055 & 32  & 0.1  & 20000      & 2:38         \\ \bottomrule
     \end{tabular}
 \end{table}
 
@@ -344,3 +343,34 @@ Increasing the random scale seemed to have the effect of removing the regularity
 However, if the scale was increased too high, the reaction would cross the tipping point and converge to a uniform concentration of the two chemicals.
 Increasing the radius of the initial high concentration area made the patterns spread faster --- requiring fewer iterations to display the desired patterns.
 Observe also that the $\lambda$ and $\mu$ patterns required more time to develop their desired structure than the rest of the patterns.
+
+Notice that the timings vary wildly for each of the different patterns.
+This is a consequence of running the jobs in parallel and starving them for resources.
+Of note, pattern $\gamma$ took 48 second to run 20,000 iterations, even though pattern $\alpha$ took a little over two minutes to run 10,000 iterations.
+These differences are a result of the project makefile kicking up too many jobs in parallel on an already fairly laden system.\footnote{And by laden I mean Spotify, Discord, and Firefox were running in the background\dots}
+
+These results were ran on the following system.
+
+\begin{listing}[h]
+    \begin{minted}{text}
+    $ screenfetch
+                              ./+o+-       nots@abyss
+                      yyyyy- -yyyyyy+      OS: Ubuntu 18.10 cosmic
+                   ://+//////-yyyyyyo      Kernel: x86_64 Linux 4.18.0-17-generic
+               .++ .:/++++++/-.+sss/`      Uptime: 10d 6h 42m
+             .:++o:  /++++++++/:--:/-      Packages: 2517
+            o:+o+:++.`..```.-/oo+++++/     Shell: bash 4.4.19
+           .:+o:+o/.          `+sssoo+/    Resolution: 7680x2160
+      .++/+:+oo+o:`             /sssooo.   DE: GNOME
+     /+++//+:`oo+o               /::--:.   WM: GNOME Shell
+     \+/+o+++`o++o               ++////.   WM Theme: Adwaita
+      .++.o+++oo+:`             /dddhhh.   GTK Theme: Yaru [GTK2/3]
+           .+.o+oo:.          `oddhhhh+    Icon Theme: Numix-Circle
+            \+.++o+o``-````.:ohdhhhhh+     Font: Ubuntu 12
+             `:o+++ `ohhhhhhhhyo++os:      CPU: Intel Core i7-6700K @ 8x 4.4GHz
+               .o:`.syhhhhhhh/.oo++o`      GPU: GeForce GTX 1080
+                   /osyyyyyyo++ooo+++/     RAM: 6536MiB / 15998MiB
+                       ````` +oo+++o\:
+                              `oo++.
+    \end{minted}
+\end{listing}

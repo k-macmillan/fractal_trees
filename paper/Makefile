@@ -279,7 +279,7 @@ $(REACTION_DIR)/beta.eps: $(REACTION_DEPS)
 
 $(REACTION_DIR)/gamma.eps: $(REACTION_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
-		--iterations $(REACTION_ITERS)                                                             \
+		--iterations $(shell expr $(REACTION_ITERS) \* 2 )                                         \
 		--kill 0.052                                                                               \
 		--feed 0.021                                                                               \
 		--radius 5                                                                                 \
@@ -362,7 +362,6 @@ $(REACTION_DIR)/kappa.eps: $(REACTION_DEPS)
 		--title "Pattern $$\\kappa$$"                                                              \
 		--output $(REACTION_DIR)/kappa.eps
 
-# TODO: Play with the additional number of iterations once testing phase is over
 $(REACTION_DIR)/lambda.eps: $(REACTION_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
 		--iterations $(shell expr $(REACTION_ITERS) \* 2 )                                         \
@@ -373,7 +372,6 @@ $(REACTION_DIR)/lambda.eps: $(REACTION_DEPS)
 		--title "Pattern $$\\lambda$$"                                                             \
 		--output $(REACTION_DIR)/lambda.eps
 
-# TODO: Play with the additional number of iterations once testing phase is over
 $(REACTION_DIR)/mu.eps: $(REACTION_DEPS)
 	PYTHONPATH=$(REPO_ROOT) python3 $(REPO_ROOT)/scripts/reaction.py                               \
 		--iterations $(shell expr $(REACTION_ITERS) \* 2 )                                         \
