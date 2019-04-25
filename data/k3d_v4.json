@@ -2,9 +2,9 @@
     "unit": 1,
     "angle": 0.733038273,
     "radius": null,
-    "proportion": null,
+    "proportion": 0.05,
     "axiom": "F",
-    "iterations": 2,
+    "iterations": 3,
     "randomness": null,
     "rules": {
         "F": "GF[vF-F^F+F<F-F>F+F][^F+FvF-F>F+F<F-F]",
